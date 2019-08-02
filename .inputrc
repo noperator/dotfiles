@@ -1,0 +1,27 @@
+# Readline in Vi mode.
+set editing-mode vi
+set keyseq-timeout 0.1
+
+# Note: vi-*-mode-string requires Bash version >= 4.4.
+set show-mode-in-prompt on
+# Block cursor for insert mode.
+set vi-ins-mode-string \1\e[2 q\2
+# Underscore cursor for command mode.
+set vi-cmd-mode-string \1\e[4 q\2
+
+# Ctrl+L clears screen in both modes.
+set keymap vi-command
+Control-l: clear-screen
+set keymap vi-insert
+Control-l: clear-screen
+
+# Color files by types.
+set colored-stats On
+# Append char to indicate type.
+set visible-stats On
+# Mark symlinked directories.
+set mark-symlinked-directories On
+# Color the common prefix.
+set colored-completion-prefix On
+# Color the common prefix in menu-complete.
+set menu-complete-display-prefix On
