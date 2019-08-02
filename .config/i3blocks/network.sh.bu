@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# Note: /sys/class/net/*/flags = 0x1003 (on) and 0x1002 (off).
+
+WIFI_IF=$(ls /sys/class/net | grep wl)
+ETH_IF=$(ls /sys/class/net | grep en)
+
+if [[ `grep -E '0x1.03' "/sys/class/net/$ETH_IF/flags"` ]]; then
+  ETH_ENABLED=true
+else
+  ETH_ENABLED=false
+fi
+
+if [[ `grep -E '0x1.03' "/sys/class/net/$WIFI_IF/flags"` ]]; then
+  WIFI_ENABLED=true
+else
+  WIFI_ENABLED=false
+fi
+
+if [[ "$WIFI_ENABLED" = 'true' ]] && [[ `iwconfig "$WIFI_IF" | grep 'Not-Associated'` = '' ]]; then
+  WIFI_CONNECTED=true
+else
+  WIFI_CONNECTED=false
+fi
+
+if [[ "$WIFI_CONNECTED" = 'true' ]] || [[ "$ETH_ENABLED" = 'true' ]] && [[ `ip route | grep 'default'` ]]; then
+  ROUTE_EXISTS=true
+else
+  ROUTE_EXISTS=false
+fi
+
+if [[ "$ROUTE_EXISTS" = 'true' ]] && [[ `pgrep -ai openvpn` ]] && [[ -e /run/openvpn/run.pid ]]; then
+  VPN_ENABLED=true
+else
+  VPN_ENABLED=false
+fi
+
+# echo $ETH_ENABLED
+# echo $WIFI_ENABLED
+# echo $WIFI_CONNECTED
+# echo $ROUTE_EXISTS
+# echo $VPN_ENABLED

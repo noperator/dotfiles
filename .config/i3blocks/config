@@ -1,0 +1,110 @@
+
+command=/usr/lib/i3blocks/$BLOCK_NAME
+separator_block_width=20
+
+# --------------------------------------------------
+# Miscellaneous.
+# --------------------------------------------------
+
+[fprintd]
+command=$HOME/.config/i3blocks/fprintd.sh
+interval=1
+signal=11
+
+[cryfs]
+command=$HOME/.config/i3blocks/cryfs.sh
+interval=20
+signal=1
+
+[bluetooth]
+command=$HOME/.config/i3blocks/bluetooth.sh
+interval=20
+signal=2
+
+
+# --------------------------------------------------
+# Network status.
+# --------------------------------------------------
+
+[openvpn]
+command=$HOME/.config/i3blocks/openvpn.sh
+interval=20
+signal=3
+separator=false
+separator_block_width=10
+
+[external_ip]
+command=$HOME/.config/i3blocks/ext_ip.sh
+interval=90
+signal=6
+
+[wifi]
+command=$HOME/.config/i3blocks/wifi.sh
+interval=5
+signal=4
+separator=false
+separator_block_width=10
+
+[wifi_quality]
+command=$HOME/.config/i3blocks/wifi_quality.sh
+interval=20
+signal=12
+separator=false
+separator_block_width=10
+
+[wifi_ip]
+command=$HOME/.config/i3blocks/wifi_ip.sh
+interval=20
+signal=5
+
+[ethernet]
+command=$HOME/.config/i3blocks/eth.sh
+interval=20
+signal=7
+separator=false
+separator_block_width=10
+
+[eth_ip]
+command=$HOME/.config/i3blocks/eth_ip.sh
+interval=20
+signal=8
+
+# [speed]
+# command=$HOME/.config/i3blocks/speed.sh
+# # interval=300
+# interval=60
+
+[disk]
+command=$HOME/.config/i3blocks/disk.sh
+interval=30
+
+[memory]
+command=$HOME/.config/i3blocks/mem.sh
+interval=30
+separator=false
+separator_block_width=5
+
+[swap]
+command=$HOME/.config/i3blocks/swap.sh
+interval=30
+
+[volume]
+label=♪
+# label=🔊
+instance=Master
+interval=once
+signal=10
+
+[brightness]
+command=$HOME/.config/i3blocks/brightness.sh
+interval=once
+signal=9
+
+[battery]
+command=$HOME/.config/i3blocks/battery.sh
+interval=30
+
+[time]
+# command=date '+%a %m-%d %H:%M '
+command=date '+%a %d %b %H:%M %Z '
+interval=30

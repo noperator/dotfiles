@@ -1,0 +1,37 @@
+
+http://www.fileformat.info/info/unicode/char/search.htm
+https://unicode-table.com/en/#miscellaneous-symbols-and-pictographs
+
+power
+🔌
+⌁
+⌁
+⚡
+🔋
+
+folder
+📁
+📂
+
+lock
+🔐
+🔒
+🔓
+🔑
+
+network
+🖧 1F5A7
+🌍 1F30D
+📶
+📡
+🌎 1F30E
+
+monitor
+▦
+📚
+
+volume
+🔇
+🔈
+🔉
+🔊
