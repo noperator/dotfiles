@@ -66,3 +66,20 @@ geo() { curl -s "https://ipapi.co/$@/json/"; }
 sudo() { errcho "${red}[sudo] $@${end}"; "$(which sudo)" "$@"; }
 tree() { "$(which tree)" -tD "$@" | ccat; }
 wl() { which "$@" && ls -l $(which "$@"); }
+
+TERA=1099511627776
+GIGA=1073741824
+MEGA=1048576
+KILO=1024
+dud() {
+  du -s * | sort -rn | while read l; do
+    SIZE=$( echo "`echo \"$l\" | awk '{print $1}'`*512" | bc )
+    NAME=$( echo "$l" | sed -E 's/^[0-9]*[[:space:]]*//' |\
+            sed -E 's/[[:space:]]*$//' )
+    if   [[ $SIZE -ge $GIGA ]]; then DENOM=$GIGA && DENOM_S="${red}GB${end}"
+    elif [[ $SIZE -ge $MEGA ]]; then DENOM=$MEGA && DENOM_S="${yel}MB${end}"
+    elif [[ $SIZE -ge $KILO ]]; then DENOM=$KILO && DENOM_S="${grn}KB${end}"
+    else                             DENOM=1     && DENOM_S="${gry}B${end}"; fi
+    python2 -c "print str(round(${SIZE}.0/$DENOM,2)) + str(\"|$DENOM_S|$NAME\")"
+  done | column -t -s '|'
+}
