@@ -1,0 +1,22 @@
+# Path
+export PATH="/usr/local/sbin:$PATH"
+
+# Config
+alias vc="vim $HOME/.chunkwmrc"
+alias vs="vim $HOME/.skhdrc"
+alias vk="vim $HOME/.config/kitty/kitty.conf"
+
+# Directory shortcuts
+alias cdw="cd $HOME/Library/Application\ Support/Übersicht/widgets"
+
+# Brew
+alias bs='brew search'
+alias bi='brew install'
+alias bci='brew cask install'
+
+# Misc
+alias find='gfind'
+ping() { "$(which ping)" -c 1 -W 2000 "$@" | g 'bytes from' || echo "No reply from $@."; }
+pgw () { ping "$(netstat -f inet -nr | awk '/default/ {print $2}')"; }
+alias wn='osascript -e "set Volume 2"; (no play -n synth brownnoise &)'
+alias nwn='pkill brownnoise'
