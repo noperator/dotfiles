@@ -17,7 +17,7 @@ PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 # Grep
 alias g='grep -iE --color'
 alias vg='g -v'
-gir() { g -r "$@" .; }
+gr() { g -r "$@" .; }
 
 # Config
 alias vv="vim $HOME/.vimrc"
@@ -29,10 +29,13 @@ gbh() { g "$@" "$HOME/.bash_history"; }
 gbr() { g "$@" "$HOME/.bashrc"; }
 
 # Directory shortcuts
+alias cdt='cd /tmp'
 alias cds="cd $HOME/.ssh"
+alias cdl="cd $HOME/Downloads"
+alias ltd="lt $HOME/Downloads"
 
 # find
-ff()  { find "$@" ! -empty -type f -printf '%.19T+@%s@%p\n' 2>/dev/null | while read LINE; do printf '%q\n' "$LINE"; done | column -t -s '@' | cut -c -"$COLUMNS"; }
+ff() { find "$@" ! -empty -type f -printf '%.19T+@%s@%p\n' 2>/dev/null | while read LINE; do printf '%q\n' "$LINE"; done | column -t -s '@' | cut -c -"$COLUMNS"; }
 ft() { ff "$@" | sort -n; }
 fs() { ff "$@" | sort -n -k 2; }
 
@@ -53,9 +56,6 @@ export EDITOR="$VISUAL"
 alias no='>/dev/null 2>&1'
 alias errcho='>&2 echo'
 alias l='clear'
-alias cdt='cd /tmp'
-alias cdl="cd $HOME/Downloads"
-alias ltd="lt $HOME/Downloads"
 alias pg='pgrep -afli'
 alias pkill='/usr/bin/pkill -afi'
 alias less='less -i'
