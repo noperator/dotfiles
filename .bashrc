@@ -42,13 +42,19 @@ fs() { ff "$@" | sort -n -k 2; }
 # ls
 alias ls='ls -G'
 alias lt='ls -FlAtr'
-alias lh='ls -laSrh'
+alias lh='ls -SlAhr'
 
 # LastPass
 alias lps='lpass show -Gx'
 alias lpe='lpass edit'
 alias lpt='lpass status'
 alias lpa='lpass add'
+
+# Git
+alias gc='git commit -m'
+alias gd='git diff'
+alias gs='git status'
+gcl() { git clone "$@" && cd $(echo "$@" | sed -E 's|.*/([^/]*)\.git|\1|'); }
 
 # Misc
 export VISUAL='vim'
@@ -57,7 +63,7 @@ alias no='>/dev/null 2>&1'
 alias errcho='>&2 echo'
 alias l='clear'
 alias pg='pgrep -afli'
-alias pkill='/usr/bin/pkill -afi'
+alias pkill="$(which pkill) -afi"
 alias less='less -i'
 alias mount="$(which mount) | sed -E 's/ on |\(|\)/@/g' | column -t -s @ | cut -c -\$COLUMNS"
 alias png='ping google.com'
