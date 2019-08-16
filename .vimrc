@@ -37,12 +37,21 @@ set ignorecase
 set smartcase
 set hlsearch
 
-" Colors. (https://jonasjacek.github.io/colors)
+" Colors.
+" https://jonasjacek.github.io/colors
+" https://github.com/altercation/vim-colors-solarized
 syntax on
-highlight networkIdentifier ctermfg=9
-" syntax match networkIdentifier '\v([0-9A-Za-z][0-9A-Za-z-]*[0-9A-Za-z]\.)+[0-9A-Za-z]+'  " Domain name.
-syntax match networkIdentifier '\v([0-9]{1,3}\.){3}[0-9]{1,3}'                           " IP address.
-syntax match networkIdentifier '\v([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'               " MAC address.
+autocmd BufRead */Hacktivity* highlight domain ctermfg=3
+\ | syntax match domain '\v([0-9A-Za-z]([0-9A-Za-z-]*[0-9A-Za-z])?\.)+[0-9A-Za-z]+'
+\ | highlight ip ctermfg=6
+\ | syntax match ip '\v([0-9]{1,3}\.){3}[0-9]{1,3}'
+\ | highlight timestamp ctermfg=2
+\ | syntax match timestamp '\v[0-9]{4}(-[0-9]{2}){2}T([0-9]{2}:){2}[0-9]{2}Z'
+\ | highlight comments ctermfg=10
+\ | syntax match comments '\v//.*|\{\{\{|\}\}\}'
+\ | highlight header cterm=underline ctermfg=4
+\ | syntax match header '\v^# \[.*\] #'
+" \ | syntax match networkIdentifier '\v([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
 
 " Lines.
 set linebreak  " Don't line break in the middle of a word.
@@ -53,3 +62,6 @@ hi SpellBad cterm=underline
 
 " Misc.
 set backspace=indent,eol,start
+
+" Underline current line with hyphens.
+nnoremap U yyp<c-v>$r-
