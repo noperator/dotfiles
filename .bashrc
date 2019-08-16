@@ -24,7 +24,7 @@ alias vv="vim $HOME/.vimrc"
 alias vb="vim $HOME/.bashrc"
 alias sb="source $HOME/.bash_profile"
 alias vbh="vim $HOME/.bash_history"
-alias tbh="tail $HOME/.bash_history"
+tbh() { tail -n $( if [[ -z "$1" ]]; then echo 10; else echo "$1"; fi ) "$HOME/.bash_history"; }
 gbh() { g "$@" "$HOME/.bash_history"; }
 gbr() { g "$@" "$HOME/.bashrc"; }
 
@@ -41,8 +41,9 @@ fs() { ff "$@" | sort -n -k 2; }
 
 # ls
 alias ls='ls -G'
-alias lt='ls -FlAtr'
-alias lh='ls -SlAhr'
+alias ll='ls -lA'
+alias lt='ll -Frt'
+alias lh='ll -FrSh'
 
 # LastPass
 alias lps='lpass show -Gx'
@@ -59,6 +60,7 @@ gcl() { git clone "$@" && cd $(echo "$@" | sed -E 's|.*/([^/]*)\.git|\1|'); }
 # Misc
 export VISUAL='vim'
 export EDITOR="$VISUAL"
+alias vr='vim -R'
 alias no='>/dev/null 2>&1'
 alias errcho='>&2 echo'
 alias l='clear'
