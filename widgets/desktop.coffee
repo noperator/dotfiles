@@ -16,7 +16,10 @@ render: (output) ->
         when '2' then icon = "./assets/icons/firefox.svg"
         when '3' then icon = "./assets/icons/mail.svg"
         when '4' then icon = "./assets/icons/chat.svg"
-        when '6' then icon = "./assets/icons/irc.svg"
+        when '5' then icon = "./assets/icons/skull.svg"
+        when '6' then icon = "./assets/icons/ghidra.svg"
+        when '7' then icon = "./assets/icons/burp.svg"
+        when '8' then icon = "./assets/icons/chrome.svg"
         else icon = "./assets/icons/term.svg"
     htmlString += "<li id=\"desktop#{spaces[i]}\"><img src=\"#{icon}\" /></li>"
 
