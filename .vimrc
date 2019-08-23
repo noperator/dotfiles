@@ -48,7 +48,7 @@ autocmd BufRead */Hacktivity* highlight domain ctermfg=3
 \ | highlight timestamp ctermfg=2
 \ | syntax match timestamp '\v[0-9]{4}(-[0-9]{2}){2}T([0-9]{2}:){2}[0-9]{2}Z'
 \ | highlight comments ctermfg=10
-\ | syntax match comments '\v//.*|\{\{\{|\}\}\}'
+\ | syntax match comments '\v(^|[^:])//.*|\{\{\{|\}\}\}'
 \ | highlight header cterm=underline ctermfg=4
 \ | syntax match header '\v^# \[.*\] #'
 " \ | syntax match networkIdentifier '\v([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
