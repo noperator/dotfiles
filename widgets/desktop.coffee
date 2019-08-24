@@ -14,8 +14,8 @@ render: (output) ->
   for i in [0..spaces.length - 1]
     switch spaces[i]
         when '2' then icon = "./assets/icons/firefox.svg"
-        when '3' then icon = "./assets/icons/mail.svg"
-        when '4' then icon = "./assets/icons/chat.svg"
+        when '3' then icon = "./assets/icons/outlook.svg"
+        when '4' then icon = "./assets/icons/teams.svg"
         when '5' then icon = "./assets/icons/skull.svg"
         when '6' then icon = "./assets/icons/ghidra.svg"
         when '7' then icon = "./assets/icons/burp.svg"
