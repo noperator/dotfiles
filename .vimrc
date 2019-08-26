@@ -62,6 +62,8 @@ hi SpellBad cterm=underline
 
 " Misc.
 set backspace=indent,eol,start
+cnoreabbrev <expr> Wq ((getcmdtype() is# ':' && getcmdline() is# 'Wq')?('wq'):('Wq'))
+cnoreabbrev <expr> W ((getcmdtype() is# ':' && getcmdline() is# 'W')?('w'):('W'))
 
 " Underline current line with hyphens.
 nnoremap U yyp<c-v>$r-
