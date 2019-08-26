@@ -156,3 +156,7 @@ alt - p : yabai -m window --toggle sticky;\
 # change layout of desktop
 ctrl + alt - a : yabai -m space --layout bsp
 ctrl + alt - d : yabai -m space --layout float
+
+# send space to display
+cmd + alt - 1: yabai -m space --display 1
+cmd + alt - 2: yabai -m space --display 2
