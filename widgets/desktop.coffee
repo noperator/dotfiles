@@ -1,10 +1,8 @@
-command: "echo $(x=$(/usr/local/bin/chunkc tiling::query -d id);echo $(/usr/local/bin/chunkc tiling::query -D $(/usr/local/bin/chunkc tiling::query -m id))\",$x\")"
+command: "/usr/local/bin/yabai -m query --spaces"
 
 refreshFrequency: 100
 
-render: (output) ->
-  values = output.split(',')
-  spaces = values[0].split(' ')
+generateIcons: (spaces) ->
 
   htmlString = """
     <div class="currentDesktop-container" data-count="#{spaces.length}">
@@ -12,25 +10,33 @@ render: (output) ->
   """
 
   for i in [0..spaces.length - 1]
-    switch spaces[i]
-        when '2' then icon = "./assets/icons/firefox.svg"
-        when '3' then icon = "./assets/icons/outlook.svg"
-        when '4' then icon = "./assets/icons/teams.svg"
-        when '5' then icon = "./assets/icons/skull.svg"
-        when '6' then icon = "./assets/icons/ghidra.svg"
-        when '7' then icon = "./assets/icons/burp.svg"
-        when '8' then icon = "./assets/icons/chrome.svg"
-        else icon = "./assets/icons/term.svg"
-    htmlString += "<li id=\"desktop#{spaces[i]}\"><img src=\"#{icon}\" /></li>"
+    switch spaces[i]['index']
+        when 1 then numeral = 'I'
+        when 2 then numeral = 'II'
+        when 3 then numeral = 'III'
+        when 4 then numeral = 'IV'
+        when 5 then numeral = 'V'
+        when 6 then numeral = 'VI'
+        when 7 then numeral = 'VII'
+        when 8 then numeral = 'VII'
+        when 9 then numeral = 'IX'
+        else numeral = '?'
+    htmlString += "<li id=\"desktop#{spaces[i]['index']}\">#{numeral}</li>"
 
   htmlString += """
       </ul>
     </div>
   """
 
+  return htmlString
+
+render: (output) ->
+  spaces = JSON.parse(output)
+  htmlString = @generateIcons(spaces)
+
 style: """
   position: relative
-  margin-top: 5px
+  margin-top: 7px
   font: 14px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
   color: #aaa
   font-weight: 700
@@ -41,39 +47,25 @@ style: """
     padding: 0
 
   li
-    display: inline
-    margin: 0 10px
-
-    img
-      max-height: 20px
-      max-width: 20px
+    display: inline-block
+    text-align: center
+    width: 15px
+    margin: 0 7px
 
   li.active
     color: #ededed
     border-bottom: 2px solid #ededed
 """
 
-generateIcons: (spaces) ->
-  for i in [0..spaces.length - 1]
-    switch spaces[i]
-        when '2' then icon = "./assets/icons/firefox.svg"
-        when '3' then icon = "./assets/icons/mail.svg"
-        when '4' then icon = "./assets/icons/chat.svg"
-        when '6' then icon = "./assets/icons/irc.svg"
-        else icon = "./assets/icons/term.svg"
-    return "<li id=\"desktop#{spaces[i]}\"><img src=\"#{icon}\" /></li>"
-
 update: (output, domEl) ->
-  values = output.split(',')
-  spaces = values[0].split(' ')
-  space = values[1]
-
+  spaces = JSON.parse(output)
   htmlString = @generateIcons(spaces)
+  visible = (space['index'] for space in spaces when space['visible'] == 1)
 
   if ($(domEl).find('.currentDesktop-container').attr('data-count') != spaces.length.toString())
-     $(domEl).find('.currentDesktop-container').attr('data-count', "#{spaces.length}")
-     $(domEl).find('ul').html(htmlString)
-     $(domEl).find("li#desktop#{space}").addClass('active')
+    $(domEl).find('.currentDesktop-container').attr('data-count', "#{spaces.length}")
+    $(domEl).find('ul').html(htmlString)
   else
     $(domEl).find('li.active').removeClass('active')
+  for space in visible
     $(domEl).find("li#desktop#{space}").addClass('active')
