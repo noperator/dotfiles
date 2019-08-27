@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # bar settings
-yabai -m config status_bar                   on
+yabai -m config status_bar                   off
 yabai -m config status_bar_text_font         "Helvetica Neue:Bold:12.0"
 yabai -m config status_bar_icon_font         "FontAwesome:Regular:12.0"
 yabai -m config status_bar_background_color  0xff202020
@@ -12,7 +12,7 @@ yabai -m config status_bar_space_icon        
 yabai -m config status_bar_clock_icon        
 
 # global settings
-yabai -m config mouse_follows_focus          off
+yabai -m config mouse_follows_focus          on
 yabai -m config focus_follows_mouse          autofocus
 yabai -m config window_placement             second_child
 yabai -m config window_topmost               off
@@ -34,11 +34,11 @@ yabai -m config mouse_action2                resize
 
 # general space settings
 yabai -m config layout                       bsp
-yabai -m config top_padding                  10
-yabai -m config bottom_padding               10
-yabai -m config left_padding                 10
-yabai -m config right_padding                10
-yabai -m config window_gap                   10
+yabai -m config top_padding                  32
+yabai -m config bottom_padding               4
+yabai -m config left_padding                 4
+yabai -m config right_padding                4
+yabai -m config window_gap                   4
 
 # ignore teams notification window
 yabai -m rule --add \
