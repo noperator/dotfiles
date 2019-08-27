@@ -3,6 +3,7 @@ export PATH="/usr/local/sbin:$PATH"
 
 # Config
 alias vc="vim $HOME/.chunkwmrc"
+alias vy="vim $HOME/.yabairc"
 alias vs="vim $HOME/.skhdrc"
 alias vk="vim $HOME/.config/kitty/kitty.conf"
 
@@ -25,3 +26,6 @@ alias wn='osascript -e "set Volume 2"; (no play -n synth brownnoise &)'
 alias nwn='pkill brownnoise'
 alias rc='launchctl stop homebrew.mxcl.chunkwm'
 alias tp='open -a Typora'
+alias q='no qlmanage -p'
+alias ssh="TERM=linux $(which ssh)"
+alias pc='pbcopy'

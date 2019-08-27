@@ -17,7 +17,7 @@ PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 # Grep
 alias g='grep -iE --color'
 alias vg='g -v'
-gr() { g -r "$@" .; }
+gr() { g -r "$@" . | sed 's/:/ : /'; }
 
 # Config
 alias vv="vim $HOME/.vimrc"
@@ -33,6 +33,7 @@ alias cdt='cd /tmp'
 alias cds="cd $HOME/.ssh"
 alias cdl="cd $HOME/Downloads"
 alias ltd="lt $HOME/Downloads"
+alias ltt="lt /tmp/"
 
 # find
 ff() { find "$@" ! -empty -type f -printf '%.19T+@%s@%p\n' 2>/dev/null | while read LINE; do printf '%q\n' "$LINE"; done | column -t -s '@' | cut -c -"$COLUMNS"; }
@@ -52,6 +53,7 @@ alias lpt='lpass status'
 alias lpa='lpass add'
 
 # Git
+alias ga='git add'
 alias gc='git commit -m'
 alias gd='git diff'
 alias gs='git status'
@@ -72,7 +74,7 @@ alias png='ping google.com'
 arping() { "$(which arping)" -c 1 "$@" | g 'bytes from' || echo "No reply from $@."; }
 geo() { curl -s "https://ipapi.co/$@/json/"; }
 sudo() { errcho "${red}[sudo] $@${end}"; "$(which sudo)" "$@"; }
-tree() { "$(which tree)" -tD "$@" | ccat; }
+tree() { "$(which tree)" -taD "$@" | ccat; }
 wl() { which "$@" && ls -l $(which "$@"); }
 
 TERA=1099511627776
