@@ -46,7 +46,6 @@ ft() { ff "$@" | sort -n; }
 fs() { ff "$@" | sort -n -k 2; }
 
 # ls
-alias ls='ls -G'
 alias ll='ls -lA'
 alias lt='ll -Frt'
 alias lh='ll -FrSh'
