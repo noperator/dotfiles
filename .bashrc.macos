@@ -1,6 +1,3 @@
-# Path
-export PATH="/usr/local/sbin:$PATH"
-
 # Config
 alias vc="vim $HOME/.chunkwmrc"
 alias vy="vim $HOME/.yabairc"
