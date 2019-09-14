@@ -1,7 +1,17 @@
+" Notes/resources:
+" - Mappings (https://stackoverflow.com/q/3776117)
+"   - (re)?map:    recursive map (i.e., remap is on by default)
+"   - noremap:     non-recursive map
+"   - X(nore)?map: specify mode X
+" - Colors
+"   - https://jonasjacek.github.io/colors
+"   - https://github.com/altercation/vim-colors-solarized
+" - Indentation
+"   - tabstop     = ts  = number of spaces that <Tab> in file uses
+"   - softtabstop = sts = number of spaces that <Tab> uses while editing
+"   - shiftwidth  = sw  = number of spaces to use for (auto)indent step
+
 " File-specific indentation.
-" - tabstop     = ts  = number of spaces that <Tab> in file uses
-" - softtabstop = sts = number of spaces that <Tab> uses while editing
-" - shiftwidth  = sw  = number of spaces to use for (auto)indent step
 autocmd FileType javascript setl ts=2 sts=2 sw=2
 autocmd FileType python     setl ts=4 sts=4 sw=4 fdm=indent
 
@@ -38,8 +48,6 @@ set smartcase
 set hlsearch
 
 " Colors.
-" https://jonasjacek.github.io/colors
-" https://github.com/altercation/vim-colors-solarized
 syntax on
 autocmd BufRead */Hacktivity* highlight domain ctermfg=3
 \ | syntax match domain '\v([0-9A-Za-z]([0-9A-Za-z-]*[0-9A-Za-z])?\.)+[0-9A-Za-z]+'
@@ -60,10 +68,16 @@ set linebreak  " Don't line break in the middle of a word.
 hi clear SpellBad
 hi SpellBad cterm=underline
 
-" Misc.
+" Backspace wasn't working; this fixed it.
 set backspace=indent,eol,start
+
+" Alias commonly mistaken commands.
 cnoreabbrev <expr> Wq ((getcmdtype() is# ':' && getcmdline() is# 'Wq')?('wq'):('Wq'))
 cnoreabbrev <expr> W ((getcmdtype() is# ':' && getcmdline() is# 'W')?('w'):('W'))
 
 " Underline current line with hyphens.
-nnoremap U yyp<c-v>$r-
+nmap U yyp<c-v>$r-
+
+" Tab navigation like qutebrowser.
+nmap K :tabprevious<CR>
+nmap J :tabnext<CR>
