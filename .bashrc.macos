@@ -14,6 +14,8 @@ alias cdw="cd $HOME/Library/Application\ Support/Übersicht/widgets"
 alias bs='brew search'
 alias bi='brew install'
 alias bci='brew cask install'
+alias bsl='brew services list'
+alias bsr='brew services restart'
 
 # ps
 alias ph='pstree'
@@ -29,3 +31,4 @@ alias tp='open -a Typora'
 alias q='no qlmanage -p'
 alias ssh="TERM=linux $(which ssh)"
 alias pc='pbcopy'
+alias ls='ls -G'

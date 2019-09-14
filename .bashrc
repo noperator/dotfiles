@@ -26,6 +26,7 @@ gr() { g -r "$@" . | sed 's/:/ : /'; }
 # Config
 alias vv="vim $HOME/.vimrc"
 alias vb="vim $HOME/.bashrc"
+alias vbp="vim $HOME/.bash_profile"
 alias sb="source $HOME/.bash_profile"
 alias vbh="vim $HOME/.bash_history"
 tbh() { tail -n $( if [[ -z "$1" ]]; then echo 10; else echo "$1"; fi ) "$HOME/.bash_history"; }
