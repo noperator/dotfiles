@@ -10,7 +10,8 @@ gry=$'\e[0;37m' ; GRY='\[\e[0;37m\]' ; BGRY='\[\e[1;37m\]'
 end=$'\e[0m'    ; END='\[\e[m\]'
 
 # Prompt
-PS1="${BYEL}\W${END} ${BCYN}$(printf '\xf0\x9d\x84\xa2')${END} "
+# PS1="${BYEL}\W${END} ${BCYN}$(printf '\xf0\x9d\x84\xa2')${END} "
+PS1="${BGRN}\u${END}${BBLU}@${END}${BRED}$(hostname -f) ${END}${BYEL}\W${END} ${BCYN}\m${END} "
 PS2="${BCYN}$(printf '\xe2\x80\xa6')${END} "
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
@@ -71,11 +72,16 @@ alias pkill="$(which pkill) -afi"
 alias less='less -i'
 alias mount="$(which mount) | sed -E 's/ on |\(|\)/@/g' | column -t -s @ | cut -c -\$COLUMNS"
 alias png='ping google.com'
+alias et='exiftool'
+alias ec='et -overwrite_original_in_place -all=""'
 arping() { "$(which arping)" -c 1 "$@" | g 'bytes from' || echo "No reply from $@."; }
 geo() { curl -s "https://ipapi.co/$@/json/"; }
 sudo() { errcho "${red}[sudo] $@${end}"; "$(which sudo)" "$@"; }
 tree() { "$(which tree)" -taD "$@" | ccat; }
 wl() { which "$@" && ls -l $(which "$@"); }
+alias c='curl -skA "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0) Gecko/20100101 Firefox/68.0"'
+alias de='date "+%s"'
+pwg() { LC_ALL=C tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c 32 ; echo; }
 
 TERA=1099511627776
 GIGA=1073741824
