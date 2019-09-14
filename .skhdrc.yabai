@@ -31,21 +31,20 @@ shift + alt - 0 : yabai -m space --balance
 # make floating window fill right-half of screen
 # shift + alt - right  : yabai -m window --grid 1:2:1:0:1:1
 
-# create desktop, move window and follow focus - uses jq for parsing json (brew install jq)
+# create space and move window
 shift + cmd - n : yabai -m space --create && \
                   index="$(yabai -m query --spaces --display | jq 'map(select(."native-fullscreen" == 0))[-1].index')" && \
-                  yabai -m window --space "${index}" && \
-                  yabai -m space --focus "${index}"
+                  yabai -m window --space "${index}"
 
-# create desktop and follow focus - uses jq for parsing json (brew install jq)
+# create space and follow focus
 cmd + alt - n : yabai -m space --create && \
                 index="$(yabai -m query --spaces --display | jq 'map(select(."native-fullscreen" == 0))[-1].index')" && \
                 yabai -m space --focus "${index}"
 
-# destroy desktop
+# destroy space
 cmd + alt - w : yabai -m space --destroy
 
-# fast focus desktop
+# fast focus space
 # cmd + alt - x : yabai -m space --focus recent
 # cmd + alt - z : yabai -m space --focus prev
 # cmd + alt - c : yabai -m space --focus next
@@ -60,7 +59,7 @@ cmd - 8 : yabai -m space --focus 8
 cmd - 9 : yabai -m space --focus 9
 cmd - 0 : yabai -m space --focus 10
 
-# send window to desktop
+# send window to space
 # shift + cmd - x : yabai -m window --space recent; yabai -m space --focus recent
 # shift + cmd - z : yabai -m window --space prev; yabai -m space --focus prev
 # shift + cmd - c : yabai -m window --space next; yabai -m space --focus next
@@ -124,7 +123,7 @@ alt - y : yabai -m space --mirror y-axis
 # mirror tree x-axis
 alt - x : yabai -m space --mirror x-axis
 
-# toggle desktop offset
+# toggle space offset
 alt - a : yabai -m space --toggle padding; yabai -m space --toggle gap
 
 # toggle window parent zoom
@@ -153,7 +152,7 @@ alt - s : yabai -m window --toggle sticky
 alt - p : yabai -m window --toggle sticky;\
           yabai -m window --grid 5:5:4:0:1:1
 
-# change layout of desktop
+# change layout of space
 ctrl + alt - a : yabai -m space --layout bsp
 ctrl + alt - d : yabai -m space --layout float
 
