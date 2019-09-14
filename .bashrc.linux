@@ -1,1 +1,15 @@
+# ps
+alias ps="$(which ps) --ppid 2 -p 2 -N -C ps -N -o user,pid,ppid,vsize:8,time,stime,cmd"
+alias ph="ps -H"
+alias pt="ps --sort=start_time"
+alias pm="ps --sort=vsize"
+
+# ss
+alias sn="sudo ss -antup | tail -n +2 | awk '{print \$1,\$2,\$5,\$6,\$7}' | sed -E 's/users:\(\(\"|,fd=.*//g ; s/\",pid=/\//g' | column -t | sort -k 5 | cut -c -\$COLUMNS"
+alias sne="sn | grep 'ESTAB' | column -t"
+alias snl="sn | grep -vE 'ESTAB|CLOSE-WAIT|LAST-ACK|TIME-WAIT|SYN-SENT' | column -t"
+alias snu="sn | grep '^udp' | column -t"
+
+# Misc
 alias ls='ls --color'
+alias docker="sudo $(which docker)"
