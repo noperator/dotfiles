@@ -1,3 +1,5 @@
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
+
 # Colors
 blk=$'\e[0;30m' ; BLK='\[\e[0;30m\]' ; BBLK='\[\e[1;30m\]'
 red=$'\e[0;31m' ; RED='\[\e[0;31m\]' ; BRED='\[\e[1;31m\]'
@@ -31,10 +33,11 @@ gbh() { g "$@" "$HOME/.bash_history"; }
 gbr() { g "$@" "$HOME/.bashrc"; }
 
 # Directory shortcuts
-alias cdt='cd /tmp'
 alias cds="cd $HOME/.ssh"
+alias cdf="cd $HOME/dotfiles"
 alias cdl="cd $HOME/Downloads"
 alias ltd="lt $HOME/Downloads"
+alias cdt='cd /tmp'
 alias ltt="lt /tmp/"
 
 # find
