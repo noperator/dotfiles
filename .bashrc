@@ -13,8 +13,8 @@ end=$'\e[0m'    ; END='\[\e[m\]'
 
 # Prompt
 # PS1="${BYEL}\W${END} ${BCYN}$(printf '\xf0\x9d\x84\xa2')${END} "
-PS1="${BGRN}\u${END}${BBLU}@${END}${BRED}$(hostname -f) ${END}${BYEL}\W${END} ${BCYN}$(printf '\xf0\x9d\x84\xa2')${END} "
 # PS1="${BGRN}\u${END}${BBLU}@${END}${BRED}$(hostname -f) ${END}${BYEL}\W${END} ${BCYN}\m${END} "
+PS1="${BGRN}\u${END}${BBLU}@${END}${BRED}$(hostname -f) ${END}${BYEL}\W${END} ${BCYN}$(printf '\xf0\x9d\x84\xa2')${END} "
 PS2="${BCYN}$(printf '\xe2\x80\xa6')${END} "
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
@@ -63,6 +63,13 @@ alias gc='git commit -m'
 alias gd='git diff'
 alias gs='git status'
 gcl() { git clone "$@" && cd $(echo "$@" | sed -E 's|.*/([^/]*)\.git|\1|'); }
+
+# Docker
+alias dil='docker image ls'
+alias dcl='docker container ls --format "{{.ID}}@{{.Image}}@{{.Command}}@{{.Status}}" | head | column -t -s "@"'
+alias dcla='docker container ls -a --format "{{.ID}}@{{.Image}}@{{.Command}}@{{.Status}}" | head | column -t -s "@"'
+alias ddf='docker system df'
+dh() { docker history --format '{{.ID}}@{{.CreatedSince}}@{{.Size}}@{{.Comment}}' "$1" | head | column -t -s '@'; }
 
 # Misc
 export VISUAL='vim'
