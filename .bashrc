@@ -1,7 +1,7 @@
 if [[ -z "$TMUX" ]]; then
-    export INPUTRC=~/.inputrc
+    export INPUTRC="$HOME/.inputrc"
 else
-    export INPUTRC=~/.inputrc.tmux
+    export INPUTRC="$HOME/.inputrc.tmux"
 fi
 
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
