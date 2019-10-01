@@ -65,10 +65,10 @@ alias lpa='lpass add'
 
 # Git
 alias ga='git add'
-alias gc='git commit -m'
+alias gc='git commit --message'
 alias gd='git diff'
 alias gs='git status'
-gcl() { git clone "$@" && cd $(echo "$@" | sed -E 's|.*/([^/]*)\.git|\1|'); }
+alias gcl='git config --list --show-origin'
 
 # Docker
 alias dil='docker image ls'
@@ -99,6 +99,7 @@ alias c='curl -skA "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0) Gecko
 alias de='date "+%s"'
 pwg() { LC_ALL=C tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c 32 ; echo; }
 alias et="TERM=linux $(which et)"
+alias vd='vimdiff'
 
 TERA=1099511627776
 GIGA=1073741824
