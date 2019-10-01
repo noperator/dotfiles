@@ -49,17 +49,23 @@ set hlsearch
 
 " Colors.
 syntax on
-autocmd BufRead */Hacktivity* highlight domain ctermfg=3
-\ | syntax match domain '\v([0-9A-Za-z]([0-9A-Za-z-]*[0-9A-Za-z])?\.)+[0-9A-Za-z]+'
-\ | highlight ip ctermfg=6
+highlight style      ctermfg=4  cterm=underline
+highlight redacted   ctermfg=1
+highlight attachment ctermfg=2
+highlight timestamp  ctermfg=2
+highlight domain     ctermfg=3
+highlight header     ctermfg=4  cterm=underline
+highlight ip         ctermfg=6
+highlight comments   ctermfg=10
+autocmd BufRead */{Hacktivity,quality_assurance}* syntax match domain '\v([0-9A-Za-z]([0-9A-Za-z-]*[0-9A-Za-z])?\.)+[0-9A-Za-z]+'
 \ | syntax match ip '\v([0-9]{1,3}\.){3}[0-9]{1,3}'
-\ | highlight timestamp ctermfg=2
 \ | syntax match timestamp '\v[0-9]{4}(-[0-9]{2}){2}T([0-9]{2}:){2}[0-9]{2}Z'
-\ | highlight comments ctermfg=10
 \ | syntax match comments '\v(^|[^:])//.*|\{\{\{|\}\}\}'
-\ | highlight header cterm=underline ctermfg=4
-\ | syntax match header '\v^# \[.*\] #'
-" \ | syntax match networkIdentifier '\v([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
+\ | syntax match header '\v^# ?\[.*\] ?#'
+\ | syntax match style '\v^(bc|p)\.{1,2}'
+\ | syntax match attachment '\v^!.*!$'
+\ | syntax match redacted '\[REDACTED\]'
+" \ | syntax match macaddress '\v([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
 
 " Lines.
 set linebreak  " Don't line break in the middle of a word.
