@@ -1,3 +1,9 @@
+for FILE in .bashrc.macos .bashrc.linux; do
+    if [[ -f "$HOME/$FILE" ]]; then
+        source "$HOME/$FILE"
+    fi
+done
+
 if [[ -z "$TMUX" ]]; then
     export INPUTRC="$HOME/.inputrc"
 else
@@ -117,3 +123,9 @@ dud() {
     python2 -c "print str(round(${SIZE}.0/$DENOM,2)) + str(\"|$DENOM_S|$NAME\")"
   done | column -t -s '|'
 }
+
+for FILE in .bashrc.extra; do
+    if [[ -f "$HOME/$FILE" ]]; then
+        source "$HOME/$FILE"
+    fi
+done
