@@ -27,7 +27,7 @@ PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 # Grep
 alias g='grep -iE --color'
 alias vg='g -v'
-gr() { g -r "$@" . | sed 's/:/ : /'; }
+gr() { g -r "$@" . | sed 's/:/ : /' | g "$@"; }
 
 # Config
 alias vv="vim $HOME/.vimrc"
@@ -68,7 +68,7 @@ alias ga='git add'
 alias gc='git commit --message'
 alias gd='git diff'
 alias gs='git status'
-alias gcl='git config --list --show-origin'
+alias gcl='git config --list --show-origin | column -t'
 
 # Docker
 alias dil='docker image ls'
