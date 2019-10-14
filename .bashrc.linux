@@ -13,3 +13,4 @@ alias snu="sn | grep '^udp' | column -t"
 # Misc
 alias ls='ls --color'
 alias docker="sudo $(which docker)"
+ping() { "$(which ping)" -c 1 -w 2 "$@" | grep 'bytes from' || echo "No reply from $@."; }
