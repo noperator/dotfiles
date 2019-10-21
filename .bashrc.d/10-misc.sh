@@ -11,6 +11,7 @@ alias vd='vimdiff'
 alias vr='vim -R'
 alias g='grep -iE --color'
 alias vg='g -v'
+alias cls='printf "\033c"'
 gr() { g -r "$@" . | sed 's/:/ : /' | g "$@"; }
 sudo() { errcho "${red}[sudo] $@${end}"; "$(which sudo)" "$@"; }
 wl() { which "$@" && ls -l $(which "$@"); }
