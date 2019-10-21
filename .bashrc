@@ -1,4 +1,4 @@
-for FILE in $(find "$HOME/.bashrc.d" -iname '*.sh'); do
+for FILE in $(find "$HOME/.bashrc.d/" -iname '*.sh'); do
     source "$FILE"
 done
 
