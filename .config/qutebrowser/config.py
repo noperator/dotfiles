@@ -44,6 +44,15 @@ config.set('content.javascript.enabled', True, 'qute://*/*')
 # Type: Bool
 c.content.pdfjs = True
 
+# Allow websites to register protocol handlers via
+# `navigator.registerProtocolHandler`.
+# Type: BoolAsk
+# Valid values:
+#   - true
+#   - false
+#   - ask
+config.set('content.register_protocol_handler', False, 'https://mail.google.com?extsrc=mailto&url=%25s')
+
 # Directory to save downloads to. If unset, a sensible OS-specific
 # default is used.
 # Type: Directory
