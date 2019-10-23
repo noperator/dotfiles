@@ -205,7 +205,7 @@ new_window 1pixel
 bindsym $mod+shift+z exec i3lock -tfi $HOME/.config/bsod_1920x1080.png
 
 # Startup services.
-exec --no-startup-id redshift -l `cat $HOME/.config/i3blocks/coord.txt | tr -d '\n'` &
+exec --no-startup-id redshift -l `cat /tmp/coord.txt | tr -d '\n'` &
 exec --no-startup-id $HOME/.dropbox-dist/dropboxd &
  
 # Move workspaces between screens.
