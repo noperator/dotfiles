@@ -37,7 +37,8 @@ bindsym $mod+Return exec "$HOME/.config/i3/cwd.sh"
 bindsym $mod+Shift+q kill
 
 # Start dmenu (a program launcher).
-bindsym $mod+d exec dmenu_run
+# bindsym $mod+d exec "$HOME/.config/i3/dmenu_run.sh"
+bindsym $mod+space exec dmenu_run
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -85,7 +86,7 @@ bindsym $mod+e layout toggle split
 bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+# bindsym $mod+space focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -210,3 +211,24 @@ exec --no-startup-id $HOME/.dropbox-dist/dropboxd &
 # Move workspaces between screens.
 bindsym Shift+$mod+bracketright move workspace to output right
 bindsym Shift+$mod+bracketleft move workspace to output left
+
+# Autostart workspaces.
+# assign [class="^URxvt$"] term
+# exec --no-startup-id urxvt
+# exec --no-startup-id urxvt
+# assign [class="^qutebrowser$"] web
+# exec --no-startup-id qutebrowser
+# assign [class="^Slack$"] slack
+# exec --no-startup-id slack
+
+# exec --no-startup-id i3-msg 'workspace term; exec urxvt; workspace term'
+# exec --no-startup-id i3-msg 'workspace term; exec urxvt; workspace term'
+# exec --no-startup-id i3-msg 'workspace web; exec qutebrowser; workspace term'
+# exec --no-startup-id i3-msg 'workspace slack; exec slack; workspace term'
+
+# exec --no-startup-id "i3-msg 'workspace term; append_layout /home/clg/tree.json'"
+# exec --no-startup-id i3-msg 'workspace term; exec urxvt; exec urxvt; workspace web; exec qutebrowser; workspace slack; exec slack; workspace term'
+
+# Caps lock.
+# bindsym --release Caps_Lock exec pkill -SIGRTMIN+11 i3blocks
+

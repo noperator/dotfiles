@@ -6,3 +6,4 @@ BRIGHTNESS=$(xbacklight -get | sed 's/\..*//')
 
 echo "☀ $BRIGHTNESS%"
 echo "☀ $BRIGHTNESS%"
+echo

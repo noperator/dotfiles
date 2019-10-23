@@ -1,4 +1,3 @@
-
 command=/usr/lib/i3blocks/$BLOCK_NAME
 separator_block_width=20
 
@@ -57,17 +56,17 @@ command=$HOME/.config/i3blocks/wifi_ip.sh
 interval=20
 signal=5
 
-[ethernet]
-command=$HOME/.config/i3blocks/eth.sh
-interval=20
-signal=7
-separator=false
-separator_block_width=10
+# [ethernet]
+# command=$HOME/.config/i3blocks/eth.sh
+# interval=20
+# signal=7
+# separator=false
+# separator_block_width=10
 
-[eth_ip]
-command=$HOME/.config/i3blocks/eth_ip.sh
-interval=20
-signal=8
+# [eth_ip]
+# command=$HOME/.config/i3blocks/eth_ip.sh
+# interval=20
+# signal=8
 
 # [speed]
 # command=$HOME/.config/i3blocks/speed.sh
@@ -89,9 +88,7 @@ command=$HOME/.config/i3blocks/swap.sh
 interval=30
 
 [volume]
-label=♪
-# label=🔊
-instance=Master
+command=$HOME/.config/i3blocks/volume.sh
 interval=once
 signal=10
 
@@ -104,7 +101,6 @@ signal=9
 command=$HOME/.config/i3blocks/battery.sh
 interval=30
 
-[time]
-# command=date '+%a %m-%d %H:%M '
-command=date '+%a %d %b %H:%M %Z '
+[date]
+command=$HOME/.config/i3blocks/date.sh
 interval=30

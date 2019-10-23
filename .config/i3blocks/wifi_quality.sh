@@ -16,8 +16,6 @@ if [[ "$QUALITY" -le 40 ]]; then
     echo "$RED"
 elif [[ "$QUALITY" -le 60 ]]; then
     echo "$YELLOW"
+else
+    echo
 fi
-
-
-
-
