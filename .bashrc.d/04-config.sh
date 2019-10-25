@@ -6,8 +6,8 @@ alias vbp="vim $HOME/.bash_profile"
 alias sb="source $HOME/.bash_profile"
 alias vbh="vim $HOME/.bash_history"
 tbh() { tail -n $( if [[ -z "$1" ]]; then echo 10; else echo "$1"; fi ) "$HOME/.bash_history"; }
-gbh() { g "$@" "$HOME/.bash_history"; }
-gbr() { g "$@" "$HOME/.bashrc"; }
+gbh() { grep -iE --color "$@" "$HOME/.bash_history"; }
+gbr() { grep -iE --color "$@" "$HOME/.bashrc"; }
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     alias vc="vim $HOME/.chunkwmrc"
