@@ -6,7 +6,17 @@ alias cdl="cd $HOME/Downloads"
 alias ltd="lt $HOME/Downloads"
 alias cdt='cd /tmp'
 alias ltt="lt /tmp/"
+alias cdbd="cd $HOME/.bashrc.d"
 
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    alias cdw="cd $HOME/Library/Application\ Support/Übersicht/widgets"
-fi
+case "$OSTYPE" in
+    'darwin'*)
+        alias cdw="cd $HOME/Library/Application\ Support/Übersicht/widgets"
+        ;;
+    'linux-gnu')
+        DROPBOX="$HOME/Dropbox"
+        NOTES="$DROPBOX/Notes"
+        alias cdb="cd $DROPBOX"
+        alias cdn="cd $DROPBOX/Notes"
+        alias cdi3b="cd $HOME/.config/i3blocks"
+        ;;
+esac
