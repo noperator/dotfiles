@@ -6,11 +6,12 @@ case "$OSTYPE" in
         alias ph="ps -H"
         alias pt="ps --sort=start_time"
         alias pm="ps --sort=vsize"
+        alias pkill="$(which pkill) -fi"
         ;;
     'darwin'*)
         alias ph='pstree'
+        alias pkill="$(which pkill) -afi"
         ;;
 esac
 
 alias pg='pgrep -afli'
-alias pkill="$(which pkill) -afi"
