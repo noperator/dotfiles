@@ -12,17 +12,28 @@ alias vr='vim -R'
 alias g='grep -iE --color'
 alias vg='g -v'
 alias cls='printf "\033c"'
+alias sudoedit="EDITOR=$EDITOR sudoedit"
 gr() { g -r "$@" . | sed 's/:/ : /' | g "$@"; }
 sudo() { errcho "${red}[sudo] $@${end}"; "$(which sudo)" "$@"; }
 wl() { which "$@" && ls -l $(which "$@"); }
 
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    alias find='gfind'
-    alias nwn='pkill brownnoise'
-    alias pc='pbcopy'
-    alias q='no qlmanage -p'
-    alias rc='launchctl stop homebrew.mxcl.chunkwm'
-    alias ssh="TERM=linux $(which ssh)"
-    alias tp='open -a Typora'
-    alias wn='osascript -e "set Volume 2"; (no play -n synth brownnoise &)'
-fi
+case "$OSTYPE" in
+    'darwin'*)
+        alias find='gfind'
+        alias nwn='pkill brownnoise'
+        alias pc='pbcopy'
+        alias q='no qlmanage -p'
+        alias rc='launchctl stop homebrew.mxcl.chunkwm'
+        alias ssh="TERM=linux $(which ssh)"
+        alias tp='open -a Typora'
+        alias wn='osascript -e "set Volume 2"; (no play -n synth brownnoise &)'
+        ;;
+    'linux-gnu')
+        alias z="zathura"
+        alias dbs="dropbox-cli status"
+        alias kq='pkill -9 qutebrowser'
+        alias fb="$HOME/.fehbg"
+        alias wn="nohup play -n synth brownnoise pinknoise >/dev/null 2>&1 &"
+        alias nn='pkill play'
+        ;;
+esac
