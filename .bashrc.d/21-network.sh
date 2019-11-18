@@ -13,8 +13,11 @@ if [[ "$OSTYPE" == 'linux-gnu' ]]; then
     alias ns='netctl start'
     nsn() { nsa; ns "$(ncl | head -n $1 | tail -n 1 | awk '{print $NF}')"; }
     alias ncl='/usr/bin/netctl list | grep -n "" | column -t -s :'
+    alias wm="sudo wifi-menu"
 
     pgw() { ping `ip route | awk '$1 == "default" {print $3}'`; }
+
+    bt() { echo "power $@" | bluetoothctl; (sleep 1; ri3b_bt;) & }
 fi
 
 case "$OSTYPE" in 
