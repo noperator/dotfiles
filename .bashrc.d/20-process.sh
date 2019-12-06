@@ -14,4 +14,4 @@ case "$OSTYPE" in
         ;;
 esac
 
-pg() { pgrep -afli "$@" | grep -iE --color "$@"; }
+pg() { pgrep -afli "$@" | grep -iE --color=always "$@" | grep -vE '^[0-9]+\ grep'; }
