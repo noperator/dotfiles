@@ -16,6 +16,13 @@ alias sudoedit="EDITOR=$EDITOR sudoedit"
 gr() { g -r "$@" . | sed 's/:/ : /' | g "$@"; }
 sudo() { errcho "${red}[sudo] $@${end}"; "$(which sudo)" "$@"; }
 wl() { which "$@" && ls -l $(which "$@"); }
+nowrap() {
+    [ -t 1 ] && tput rmam
+    "$@"; local ret="$?"
+    [ -t 1 ] && tput smam
+    return "$ret"
+}
+alias nowrap='nowrap '
 
 case "$OSTYPE" in
     'darwin'*)
