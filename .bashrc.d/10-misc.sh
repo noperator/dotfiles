@@ -23,6 +23,7 @@ nowrap() {
     return "$ret"
 }
 alias nowrap='nowrap '
+sgu() { echo "https://git.io/$(http --form POST https://git.io/create url=$1)"; }
 
 case "$OSTYPE" in
     'darwin'*)
