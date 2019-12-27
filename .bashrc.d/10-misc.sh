@@ -24,6 +24,7 @@ nowrap() {
 }
 alias nowrap='nowrap '
 sgu() { echo "https://git.io/$(http --form POST https://git.io/create url=$1)"; }
+alias csc="cat $HOME/.ssh/config"
 
 case "$OSTYPE" in
     'darwin'*)
