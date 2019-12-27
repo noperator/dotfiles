@@ -2,6 +2,7 @@
 
 alias ga='git add'
 alias gd='git diff'
+alias gds='git diff --staged'
 alias gs='git status'
 alias gcl="git config --list --show-origin | column -t -s \"$(printf '\t')\""
 gl() {
