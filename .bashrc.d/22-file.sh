@@ -16,7 +16,7 @@ ff() { find "$@" ! -empty -type f -printf '%.19T+@%s@%p\n' 2>/dev/null | while r
 ft() { ff "$@" | sort -n; }
 fs() { ff "$@" | sort -n -k 2; }
 tree() { "$(which tree)" -taD "$@" | ccat; }
-alias mount="$(which mount) | sed -E 's/ on |\(|\)/@/g' | column -t -s @ | cut -c -\$COLUMNS"
+alias mount="$(which mount) | sed -E 's/ on |\(|\)/#/g' | column -t -s '#' | cut -c -\$COLUMNS"
 
 TERA=1099511627776
 GIGA=1073741824
