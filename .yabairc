@@ -12,8 +12,8 @@ yabai -m config status_bar_space_icon        
 yabai -m config status_bar_clock_icon        
 
 # global settings
+yabai -m config focus_follows_mouse          off
 yabai -m config mouse_follows_focus          off
-yabai -m config focus_follows_mouse          auto
 yabai -m config window_placement             second_child
 yabai -m config window_topmost               off
 yabai -m config window_opacity               off
@@ -46,10 +46,8 @@ yabai -m rule --add \
     title='^Microsoft Teams Notification$' \
     border=off
 
-yabai -m rule --add \
-    event=window_focused \
+yabai -m signal --add \
+    event=space_changed \
     app='^Microsoft Teams$' \
     title='^Microsoft Teams Notification$' \
     action='yabai -m window --focus mouse > /dev/null 2>&1'
-
-echo "yabai configuration loaded.."
