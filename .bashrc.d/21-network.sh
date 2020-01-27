@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "$OSTYPE" == 'linux-gnu' ]]; then
+if [[ "$OSTYPE" == 'linux-gnu'* ]]; then
     # Socket statistics.
     alias snb="{ ss -Hantup4; ss -Hantup6; } | awk '{print \$1,\$2,\$5,\$6,\$7}' | sed -E 's/users:\(\(\"|,fd=.*//g ; s/\",pid=/\//g' | column -t | sort -k 5"
     alias sn="snb | cut -c -$COLUMNS"
