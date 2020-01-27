@@ -21,7 +21,7 @@ if [[ "$OSTYPE" == 'linux-gnu' ]]; then
 fi
 
 case "$OSTYPE" in 
-    'linux-gnu')
+    'linux-gnu'*)
         ping() { "$(which ping)" -c 1 -w 2 "$@" | grep 'bytes from' || echo "No reply from $@."; }
         ;;
     'darwin'*)

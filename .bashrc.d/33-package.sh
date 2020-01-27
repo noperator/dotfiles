@@ -8,7 +8,7 @@ case "$OSTYPE" in
         alias bsl='brew services list'
         alias bsr='brew services restart'
         ;;
-    'linux-gnu')
+    'linux-gnu'*)
         alias pss="pacman -Ss"
         alias pmi="sudo pacman -S"
         alias cs="cower --sort votes -c -s"

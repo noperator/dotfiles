@@ -37,7 +37,7 @@ case "$OSTYPE" in
         alias tp='open -a Typora'
         alias wn='osascript -e "set Volume 2"; (no play -n synth brownnoise &)'
         ;;
-    'linux-gnu')
+    'linux-gnu'*)
         alias z="zathura"
         alias dbs="dropbox-cli status"
         alias kq='pkill -9 qutebrowser'

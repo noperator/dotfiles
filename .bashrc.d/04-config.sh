@@ -16,7 +16,7 @@ case "$OSTYPE" in
         alias vs="vim $HOME/.skhdrc"
         alias vk="vim $HOME/.config/kitty/kitty.conf"
         ;;
-    'linux-gnu')
+    'linux-gnu'*)
         alias van="vim $DROPBOX/Code/guides/arch_notes.txt"
         alias vi3="vim $HOME/.config/i3/config"
         alias vi3b="vim $HOME/.config/i3blocks/config"

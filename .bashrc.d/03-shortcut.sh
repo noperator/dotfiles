@@ -12,7 +12,7 @@ case "$OSTYPE" in
     'darwin'*)
         alias cdw="cd $HOME/Library/Application\ Support/Übersicht/widgets"
         ;;
-    'linux-gnu')
+    'linux-gnu'*)
         DROPBOX="$HOME/Dropbox"
         NOTES="$DROPBOX/Notes"
         alias cdb="cd $DROPBOX"

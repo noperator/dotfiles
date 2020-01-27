@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "$OSTYPE" == 'linux-gnu' ]]; then
+if [[ "$OSTYPE" == 'linux-gnu'* ]]; then
     alias docker="sudo $(which docker)"
 fi
 

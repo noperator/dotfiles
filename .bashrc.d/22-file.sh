@@ -1,7 +1,7 @@
 #!/bin/bash
 
 case "$OSTYPE" in 
-    'linux-gnu')
+    'linux-gnu'*)
         alias ls='ls --color'
         ;;
     'darwin'*)
