@@ -3,7 +3,7 @@
 alias cds="cd $HOME/.ssh"
 alias cdf="cd $HOME/dotfiles"
 alias cdl="cd $HOME/Downloads"
-alias ltd="lt $HOME/Downloads"
+alias ltd="lt $HOME/Downloads | tail"
 alias cdt='cd /tmp'
 alias ltt="lt /tmp/"
 alias cdbd="cd $HOME/.bashrc.d"
