@@ -50,7 +50,14 @@ esac
 i() {
     echo "NAME: $@"
     echo -n 'SIZE: '
-    stat -f %z "$@"
+    case "$OSTYPE" in
+        'darwin'*)
+        stat -f %z "$@"
+        ;;
+        'linux-gnu'*)
+        stat --printf='%s\n' "$@"
+        ;;
+    esac
     echo -n 'TYPE: '
     file -b "$@"
     echo -n 'SHA1: '
