@@ -46,3 +46,13 @@ case "$OSTYPE" in
         alias nn='pkill play'
         ;;
 esac
+
+i() {
+    echo "NAME:    $@"
+    echo -n 'SIZE:    '
+    stat -f %z "$@"
+    echo -n 'TYPE:   '
+    file "$@" | cut -d : -f 2-
+    echo -n 'SHA1SUM: '
+    sha1sum "$@" | awk '{print $1}'
+}
