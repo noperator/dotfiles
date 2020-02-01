@@ -48,11 +48,11 @@ case "$OSTYPE" in
 esac
 
 i() {
-    echo "NAME:    $@"
-    echo -n 'SIZE:    '
+    echo "NAME: $@"
+    echo -n 'SIZE: '
     stat -f %z "$@"
-    echo -n 'TYPE:    '
+    echo -n 'TYPE: '
     file -b "$@"
-    echo -n 'SHA1SUM: '
+    echo -n 'SHA1: '
     sha1sum "$@" | awk '{print $1}'
 }
