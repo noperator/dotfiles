@@ -58,7 +58,7 @@ i() {
         stat --printf='%s\n' "$@" | tr '\n' ' '
         ;;
     esac
-    echo "($(du -h $@ | cut -f 1))"
+    echo "($(du -h $@ | awk '{print $1}'))"
     echo -n 'TYPE: '
     file -b "$@"
     echo -n 'SHA1: '
