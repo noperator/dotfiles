@@ -52,12 +52,13 @@ i() {
     echo -n 'SIZE: '
     case "$OSTYPE" in
         'darwin'*)
-        stat -f %z "$@"
+        stat -f %z "$@" | tr '\n' ' '
         ;;
         'linux-gnu'*)
-        stat --printf='%s\n' "$@"
+        stat --printf='%s\n' "$@" | tr '\n' ' '
         ;;
     esac
+    echo "($(du -h $@ | cut -f 1))"
     echo -n 'TYPE: '
     file -b "$@"
     echo -n 'SHA1: '
