@@ -2,3 +2,6 @@
 *.swp
 .ssh/
 .bashrc.extra
+.local/share/
+.config/autostart/
+.config/qutebrowser/
