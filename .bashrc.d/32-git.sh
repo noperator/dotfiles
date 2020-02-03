@@ -15,7 +15,7 @@ gc () {
     if [[ "$LENGTH" -gt 50 ]]; then
         echo "Subject is too long ($LENGTH characters). Let's get it down to 50."
     else
-        git commit --message "$MESSAGE"
+        git commit --message "$MESSAGE" && \
         gl
     fi
 }
