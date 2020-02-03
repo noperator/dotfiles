@@ -25,6 +25,7 @@ nowrap() {
 alias nowrap='nowrap '
 sgu() { echo "https://git.io/$(http --form POST https://git.io/create url=$1)"; }
 alias csc="cat $HOME/.ssh/config"
+skg () { ssh-keygen -t rsa -b 4096 -o -a 100 -q -N '' -f "$HOME/.ssh/$1"; }
 
 case "$OSTYPE" in
     'darwin'*)
