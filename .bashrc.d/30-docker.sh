@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ "$OSTYPE" == 'linux-gnu'* ]]; then
-    alias docker="sudo $(which docker)"
+    alias docker="sudo $(which docker 2> /dev/null)"
 fi
 
 alias dil='docker image ls'

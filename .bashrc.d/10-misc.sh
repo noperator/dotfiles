@@ -3,7 +3,7 @@
 alias de='date "+%s"'
 alias ec='exiftool -overwrite_original_in_place -all=""'
 alias errcho='>&2 echo'
-alias et="TERM=linux $(which et)"
+alias et="TERM=linux $(which et 2> /dev/null)"
 alias l='clear'
 alias less='less -i'
 alias no='>/dev/null 2>&1'
