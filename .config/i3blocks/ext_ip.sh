@@ -7,8 +7,8 @@ if [[ "$ROUTE_EXISTS" = 'true' ]]; then
     JSON=$(curl -s "https://ipapi.co/$IP/json")
     GEO=$(echo "$JSON" | jq -r '.city, .region_code, .country' | paste -sd '\ ' -)
     echo "$JSON" | jq -r '.latitude, .longitude' | paste -sd ':' - > "/tmp/coord.txt"
-    echo "$GEO $IP"
-    echo "$GEO $IP"
+    echo "$IP $GEO"
+    echo "$IP $GEO"
 else
     echo ' '
     echo ' '
