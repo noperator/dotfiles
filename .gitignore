@@ -5,3 +5,4 @@
 .local/share/
 .config/autostart/
 .config/qutebrowser/
+.config/Typora*
