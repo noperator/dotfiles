@@ -6,7 +6,7 @@
 
 BASS_CLEF=$(printf '\xf0\x9d\x84\xa2')
 ELLIPSIS=$(printf '\xe2\x80\xa6')
-if [[ $(tty) == *'tty'* ]]; then
+if [[ $(tty | grep -E 'tty[^s]' ) ]]; then
     PS1="${BYEL}\w${END} ${BCYN}\$${END} "
     PS2="${BCYN}>${END} "
 else
