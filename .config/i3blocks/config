@@ -44,17 +44,17 @@ signal=4
 separator=false
 separator_block_width=10
 
-[wifi_quality]
-command=$HOME/.config/i3blocks/wifi_quality.sh
-interval=20
-signal=12
-separator=false
-separator_block_width=10
-
 [wifi_ip]
 command=$HOME/.config/i3blocks/wifi_ip.sh
 interval=20
 signal=5
+separator=false
+separator_block_width=10
+
+[wifi_quality]
+command=$HOME/.config/i3blocks/wifi_quality.sh
+interval=20
+signal=12
 
 # [ethernet]
 # command=$HOME/.config/i3blocks/eth.sh
