@@ -12,4 +12,3 @@ if [[ "$WIFI_ENABLED" = 'true' ]]; then
 else
     echo "$BLACK"
 fi
-
