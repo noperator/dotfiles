@@ -2,8 +2,8 @@
 
 # Note: /sys/class/net/*/flags = 0x1003 (on) and 0x1002 (off).
 
-WIFI_IF=$(ls /sys/class/net | grep wl)
-ETH_IF=$(ls /sys/class/net | grep en)
+WIFI_IF=$(find /sys/class/net -iname 'wl*' -printf '%f\n')
+ETH_IF=$(find /sys/class/net -iname 'en*' -printf '%f\n')
 ETH_ENABLED=false
 WIFI_ENABLED=false
 WIFI_CONNECTED=false
@@ -17,7 +17,7 @@ VPN_ENABLED=false
 [[ `grep -E '0x1.03' "/sys/class/net/$WIFI_IF/flags"` ]] && WIFI_ENABLED=true
 
 # Wi-Fi connected?
-[[ "$WIFI_ENABLED" = 'true' ]] && [[ `iwconfig "$WIFI_IF" | grep 'Not-Associated'` = '' ]] && WIFI_CONNECTED=true
+[[ "$WIFI_ENABLED" = 'true' ]] && [[ `iw dev "$WIFI_IF" link | grep 'Not-Associated'` = '' ]] && WIFI_CONNECTED=true
 
 # Route exists?
 [[ "$WIFI_CONNECTED" = 'true' ]] || [[ "$ETH_ENABLED" = 'true' ]] && [[ `ip route | grep 'default'` ]] && ROUTE_EXISTS=true

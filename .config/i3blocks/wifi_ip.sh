@@ -4,9 +4,9 @@ source "$HOME/.config/i3blocks/network.sh"
 
 if [[ "$WIFI_CONNECTED" = 'true' ]]; then
   IPADDR=$(ip addr show "$WIFI_IF" | perl -n -e "/inet ([^\/]+).* scope global/ && print \$1 and exit")
-  SSID=$(iwgetid "$WIFI_IF" --raw)
-  echo "$SSID $IPADDR"
-  echo "$SSID $IPADDR"
+  SSID=$(iw dev wlp4s0 link | awk '/SSID:/ {print $2}')
+  echo "$IPADDR $SSID"
+  echo "$IPADDR $SSID"
 else
   echo ' '
   echo ' '
