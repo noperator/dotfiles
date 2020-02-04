@@ -9,6 +9,7 @@ gl() {
     nowrap git --no-pager log --max-count=20 --color=always --date=short --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an <%ae>%Cgreen%d %Creset%s' "$@"
     echo
 }
+alias glg='git log --graph --simplify-by-decoration --oneline --all'
 gc () {
     MESSAGE="$@"
     LENGTH=$(echo -n "$MESSAGE" | wc -c | tr -d ' ')
