@@ -19,4 +19,5 @@ gc () {
         gl
     fi
 }
+alias gcv='git commit -v'
 alias gb='git branch -a'
