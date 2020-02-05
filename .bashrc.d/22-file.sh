@@ -12,6 +12,7 @@ esac
 alias ll='ls -lA'
 alias lt='ll -Frt'
 alias lh='ll -FrSh'
+f() { find . -iname '*'"$@"'*'; }
 ff() { find "$@" ! -empty -type f -printf '%.19T+@%s@%p\n' 2>/dev/null | while read LINE; do printf '%q\n' "$LINE"; done | column -t -s '@' | cut -c -"$COLUMNS"; }
 ft() { ff "$@" | sort -n; }
 fs() { ff "$@" | sort -n -k 2; }
