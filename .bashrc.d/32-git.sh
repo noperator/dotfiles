@@ -7,7 +7,12 @@ alias gs='git status'
 alias gss='git status -s'
 alias gcl="git config --list --show-origin | column -t -s \"$(printf '\t')\""
 gl() {
-    nowrap git --no-pager log --max-count=20 --color=always --date=short --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an <%ae>%Cgreen%d %Creset%s' "$@"
+    if [[ -z "$@" ]]; then
+        FOLLOW=''fatal: --follow requires exactly one pathspec
+    else
+        FOLLOW='--follow'
+    fi
+    nowrap git --no-pager log --max-count=20 --color=always --date=short --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an <%ae>%Cgreen%d %Creset%s' $FOLLOW "$@"
     echo
 }
 alias glg='git log --graph --simplify-by-decoration --oneline --all'
