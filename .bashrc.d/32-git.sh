@@ -8,7 +8,7 @@ alias gss='git status -s'
 alias gcl="git config --list --show-origin | column -t -s \"$(printf '\t')\""
 gl() {
     if [[ -z "$@" ]]; then
-        FOLLOW=''fatal: --follow requires exactly one pathspec
+        FOLLOW=''
     else
         FOLLOW='--follow'
     fi
