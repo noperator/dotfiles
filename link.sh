@@ -29,6 +29,6 @@ case "$OSTYPE" in
     'darwin'*)
         link .skhdrc.yabai .skhdrc
         link .yabairc
-        # widgets
+        link widgets 'Library/Application Support/Übersicht/'
         ;;
 esac
