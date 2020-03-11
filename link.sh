@@ -1,20 +1,34 @@
 #!/bin/bash
 
-for FILE in .bash_profile .bashrc .bashrc.d .config .hushlogin .inputrc .inputrc.tmux .tmux.conf .vimrc; do
-    ln -s "$HOME/dotfiles/$FILE" "$HOME/"
+link() { ln -s "$HOME/dotfiles/$1" "$HOME/$2"; }
+
+for FILE in \
+.bash_profile \
+.bashrc \
+.bashrc.d \
+.config \
+.hushlogin \
+.inputrc \
+.inputrc.tmux \
+.tmux.conf \
+.vimrc \
+; do
+    link "$FILE"
 done
 
 case "$OSTYPE" in
-    'linux-gnu')
-        for FILE in .local .xinitrc .Xresources; do
-            ln -s "$HOME/dotfiles/$FILE" "$HOME/"
+    'linux-gnu'*)
+        for FILE in \
+        .local \
+        .xinitrc \
+        .Xresources \
+        ; do
+            link "$FILE"
         done
         ;;
-    # 'darwin'*)
-    # .chunkwmrc
-    # .skhdrc.chunkwm
-    # .skhdrc.yabai
-    # .yabairc
-    # widgets
-    # ;;
+    'darwin'*)
+        link .skhdrc.yabai .skhdrc
+        link .yabairc
+        # widgets
+        ;;
 esac
