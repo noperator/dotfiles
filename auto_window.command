@@ -58,9 +58,18 @@ DISPLAYS=$(get_displays)
 WINDOWS=$(get_windows)
 
 # Move windows.
-move_window Firefox 0 0
-move_window 'Google Chrome' 1 0
-move_window 'Burp Suite Professional' 1 0
-move_window 'Microsoft Outlook' 0 1
-move_window 'Microsoft Teams' 1 1
-move_window Slack 2 1
+if [[ $(echo "$DISPLAYS" | jq 'length') == 2 ]]; then
+    move_window Firefox 0 0
+    move_window 'Google Chrome' 1 0
+    move_window 'Burp Suite Professional' 1 0
+    move_window 'Microsoft Outlook' 0 1
+    move_window 'Microsoft Teams' 1 1
+    move_window Slack 2 1
+else
+    move_window Firefox 0 0
+    move_window 'Google Chrome' 1 0
+    move_window 'Burp Suite Professional' 1 0
+    move_window 'Microsoft Outlook' 2 0
+    move_window 'Microsoft Teams' 3 0
+    move_window Slack 4 0
+fi
