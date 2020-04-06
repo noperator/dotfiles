@@ -35,21 +35,4 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     }
     vpnconnect()    { vpncommand "connect \"$1\""; }
     vpndisconnect() { vpncommand 'disconnect all'; }
-    vpncheck() {
-        if [[ $(vpnstate "$1" | grep 'CONNECTED') ]]; then
-            if [[ -z "$2" ]]; then
-                VPNIP=$(vpnconfig "$1" | grep remote | awk '{print $2}')
-            else
-                VPNIP="$2"
-            fi
-            MYIP=$(curl -s https://api.ipify.org)
-            if [[ "$VPNIP" = "$MYIP" ]]; then
-                printf "\xe2\x9c\x93 %s" "${grn}VPN is working.${end}";
-            else
-                printf "\xe2\x9c\x97 %s%s%s" "${red}VPN NOT WORKING" '!' "${end}";
-            fi
-        else
-            printf '\xe2\x80\x93 VPN disconnected.'
-        fi
-    }
 fi
