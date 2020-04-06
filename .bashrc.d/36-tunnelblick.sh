@@ -2,7 +2,7 @@
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     VPN_DIR="$HOME/Library/Application Support/Tunnelblick/Configurations"
-    alias vpnlist="ls \"$VPN_DIR\" | sed -E 's/.tblk//g'"
+    vpnlist() { ls "$VPN_DIR" | sed -E 's/.tblk//g'; }
     vpncommand () {
         osascript \
         -e 'tell application "/Applications/Tunnelblick.app"' \
