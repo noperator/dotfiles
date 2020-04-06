@@ -21,7 +21,12 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
         fi
     }
     vpnconfig() {
-        CONFIG="$VPN_DIR/${1}.tblk/Contents/Resources/config.ovpn"
+        PROFILE="$1"
+        if [[ -z "$PROFILE" ]]; then
+            echo 'Please provide a VPN profile name (see vpnlist).'
+            return 1
+        fi
+        CONFIG="$VPN_DIR/$PROFILE.tblk/Contents/Resources/config.ovpn"
         if [[ -f "$CONFIG" ]]; then
             cat "$CONFIG"
         else
