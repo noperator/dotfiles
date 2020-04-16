@@ -87,3 +87,7 @@ nmap U yyp<c-v>$r-
 " Tab navigation like qutebrowser.
 nmap K :tabprevious<CR>
 nmap J :tabnext<CR>
+
+" Insert single newline without entering insert mode.
+nmap <S-Enter> O<Esc>j
+nmap <CR> o<Esc>k
