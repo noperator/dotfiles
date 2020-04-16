@@ -30,5 +30,8 @@ case "$OSTYPE" in
         link .skhdrc.yabai .skhdrc
         link .yabairc
         link widgets 'Library/Application Support/Übersicht/'
+        find terminal -type f | while read FILE; do
+            link "$FILE"
+        done
         ;;
 esac
