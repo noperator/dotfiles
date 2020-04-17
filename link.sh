@@ -19,6 +19,7 @@ done
 case "$OSTYPE" in
     'linux-gnu'*)
         for FILE in \
+        .asoundrc \
         .local \
         .xinitrc \
         .Xresources \
