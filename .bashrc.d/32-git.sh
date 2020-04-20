@@ -28,3 +28,4 @@ gc () {
 }
 alias gcv='git commit -v'
 alias gb='git branch -a'
+alias gfo='git fetch origin && git status'
