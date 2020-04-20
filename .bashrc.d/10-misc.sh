@@ -13,6 +13,7 @@ alias g='grep -iE --color'
 alias vg='g -v'
 alias cls='printf "\033c"'
 alias sudoedit="EDITOR=$EDITOR sudoedit"
+alias sus='sort | uniq -c | sort -n'
 gr() { g -r "$@" . | sed 's/:/ : /' | g "$@"; }
 sudo() { errcho "${red}[sudo] $@${end}"; "$(which sudo)" "$@"; }
 wl() { which "$@" && ls -l $(which "$@"); }
