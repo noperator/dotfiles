@@ -34,5 +34,8 @@ case "$OSTYPE" in
         find terminal -type f | while read FILE; do
             link "$FILE"
         done
+        for PROFILE in $(ls "$HOME/Library/Application Support/Firefox/Profiles/"); do
+            link user.js "Library/Application Support/Firefox/Profiles/$PROFILE"
+        done
         ;;
 esac
