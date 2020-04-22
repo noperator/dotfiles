@@ -53,6 +53,9 @@ style: """
 """
 
 update: (output, domEl) ->
+  if (output == "")
+    console.log('Empty output: ', output)
+    return
   spaces = JSON.parse(output)
   if ($(domEl).find('.spaces-container').attr('data-count') != spaces.length.toString())
     $(domEl).find('.spaces-container').attr('data-count', "#{spaces.length}")
