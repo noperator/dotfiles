@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DROPBOX="$HOME/Dropbox"
+alias cdb="cd $DROPBOX"
 alias cds="cd $HOME/.ssh"
 alias cdf="cd $HOME/dotfiles"
 alias cdg="cd $HOME/guides"
@@ -14,9 +16,7 @@ case "$OSTYPE" in
         alias cdw="cd $HOME/Library/Application\ Support/Übersicht/widgets"
         ;;
     'linux-gnu'*)
-        DROPBOX="$HOME/Dropbox"
         NOTES="$DROPBOX/Notes"
-        alias cdb="cd $DROPBOX"
         alias cdn="cd $DROPBOX/Notes"
         alias cdi3b="cd $HOME/.config/i3blocks"
         ;;
