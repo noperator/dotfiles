@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 touch /var/tmp/geo_time.txt /var/tmp/geo_data.txt
 

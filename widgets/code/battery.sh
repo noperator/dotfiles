@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 BATTERY=$(pmset -g batt)
 
