@@ -1,3 +1,11 @@
+## Install
+```
+git clone https://github.com/noperator/dotfiles.git && cd dotfiles
+./link.sh
+```
+
+## Utility list
+
 | Utility            | Agnostic | macOS     | Linux    |
 | ---                | :---:    | :---:     | :---:    |
 | Shell              | Bash     |           |          |
@@ -6,3 +14,6 @@
 | Terminal Emulator  |          | kitty     | urxvt    |
 | Text Editor        | vim      |           |          |
 | Window Manager     |          | yabai     | i3       |
+
+## See also
+- https://github.com/noperator/guides
