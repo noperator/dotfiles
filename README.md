@@ -1,6 +1,6 @@
 ## Install
 ```
-git clone https://github.com/noperator/dotfiles.git && cd dotfiles
+git -C "$HOME" clone https://github.com/noperator/dotfiles.git && cd "$HOME/dotfiles"
 ./link.sh
 ```
 
