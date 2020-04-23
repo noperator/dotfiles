@@ -4,6 +4,5 @@
 .bashrc.extra
 .local/share/
 .config/autostart/
-.config/qutebrowser/
 .config/Typora*
 .config/GIMP/

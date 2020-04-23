@@ -1,0 +1,11 @@
+" Requires that Tridactyl's native messenger is installed (:installnative).
+" Inspiration from:
+" - https://gist.github.com/BurntSushi/393546a65db38d57cedcfd72c6d89bf3
+
+" Make this file the single point of truth for Tridactyl's configuration.
+sanitize tridactyllocal tridactylsync
+
+" Trick myself into thinking that I'm using qutebrowser.
+bind J tabnext
+bind K tabprev
+bind O fillcmdline tabopen
