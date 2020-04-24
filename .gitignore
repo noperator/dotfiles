@@ -3,6 +3,4 @@
 .ssh/
 .bashrc.extra
 .local/share/
-.config/autostart/
-.config/Typora*
-.config/GIMP/
+.config/
