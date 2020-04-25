@@ -15,6 +15,7 @@ alias cls='printf "\033c"'
 alias sudoedit="EDITOR=$EDITOR sudoedit"
 alias sus='sort | uniq -c | sort -n'
 alias sba='source env/bin/activate'
+alias hd='hexdump -C'
 gr() { g -r "$@" . | sed 's/:/ : /' | g "$@"; }
 sudo() { errcho "${red}[sudo] $@${end}"; "$(which sudo)" "$@"; }
 wl() { which "$@" && ls -l $(which "$@"); }
