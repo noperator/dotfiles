@@ -27,8 +27,10 @@ highlight cursorline ctermbg=0 cterm=NONE
 
 " Ruler.
 set ruler  " Show line/column number.
-set colorcolumn=80
 highlight colorcolumn ctermbg=0
+set colorcolumn=80,120
+" highlight ErrorOverLength ctermbg=red   
+" match ErrorOverLength /\%121v.\+/
 
 " Tabulation.
 set tabstop=4  " Number of visual spaces per TAB.
