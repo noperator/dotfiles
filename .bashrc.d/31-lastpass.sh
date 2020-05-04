@@ -28,10 +28,18 @@ lpsa() {
 alias lps='lpass show -Gx'
 alias lpe='lpass edit'
 alias lpa='lpass add'
+
+# Duplicate a LastPass entry. lpass doesn't let you delete some attributes from
+# an existing entry, so you have to duplicate the entry while only carrying
+# forward the URL, username, and password attributes, and then manually delete
+# the original entry.
 lpc() {
-  lps "$1" | grep -E "^(Username|Password|URL):" | \
-    lpass add --non-interactive "$2"
-  lps "$2"
+    lps "$1" | grep -E "^(Username|Password|URL):" | lpass add --non-interactive "$2"
+    lps "$2"
 }
 
-pwg() { LC_ALL=C tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c 32 ; echo; }
+# Generate a random 32-character password.
+pwg() {
+    < /dev/urandom LC_ALL=C tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c 32
+    echo
+}
