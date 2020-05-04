@@ -9,3 +9,4 @@ sanitize tridactyllocal tridactylsync
 bind J tabnext
 bind K tabprev
 bind O fillcmdline tabopen
+bind yy clipboard yankcanon
