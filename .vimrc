@@ -19,6 +19,9 @@ autocmd FileType python     setl ts=4 sts=4 sw=4 fdm=indent
 nmap <F5> i<C-R>=substitute(system('date -u +"%FT%TZ // "'),'[\r\n]*$','','')<CR><Esc><CR>
 imap <F5> <C-R>=substitute(system('date -u +"%FT%TZ // "'),'[\r\n]*$','','')<CR>
 
+" Insert collapsible Markdown and place cursor at summary.
+nmap cm o<details><summary></summary><CR><p><CR><CR>```<CR>```<CR><CR></p><CR></details><CR><Esc>8k18li
+
 " Line numbering and highlighting.
 set number
 set relativenumber
