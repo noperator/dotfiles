@@ -29,5 +29,6 @@ gc () {
 alias gcv='git commit -v'
 alias gb='git branch -a'
 alias gfo='git fetch origin && git status'
+alias gmo='git merge origin'
 alias gau='git update-index --assume-unchanged'
 alias gnau='git update-index --no-assume-unchanged'
