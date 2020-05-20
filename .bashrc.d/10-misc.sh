@@ -16,6 +16,7 @@ alias sudoedit="EDITOR=$EDITOR sudoedit"
 alias sus='sort | uniq -c | sort -n'
 alias sba='source env/bin/activate'
 alias hd='hexdump -C'
+alias xlf='xmllint --format'
 gr() { g -r "$@" . | sed 's/:/ : /' | g "$@"; }
 sudo() { errcho "${red}[sudo] $@${end}"; "$(which sudo)" "$@"; }
 wl() { which "$@" && ls -l $(which "$@"); }
