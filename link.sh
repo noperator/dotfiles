@@ -35,7 +35,7 @@ case "$OSTYPE" in
             link "$FILE"
         done
         for PROFILE in $(ls "$HOME/Library/Application Support/Firefox/Profiles/"); do
-            link user.js "Library/Application Support/Firefox/Profiles/$PROFILE"
+            link firefox/user.js "Library/Application Support/Firefox/Profiles/$PROFILE"
         done
         ;;
 esac
