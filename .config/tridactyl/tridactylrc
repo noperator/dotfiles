@@ -10,3 +10,6 @@ bind J tabnext
 bind K tabprev
 bind O fillcmdline tabopen
 bind yy clipboard yankcanon
+
+" Temporarily disable on some sites.
+blacklistadd https://immersivelabs.online
