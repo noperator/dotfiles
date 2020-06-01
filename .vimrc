@@ -23,8 +23,8 @@ imap <F5> <C-R>=substitute(system('date -u +"%FT%TZ // "'),'[\r\n]*$','','')<CR>
 nmap cm o<details><summary></summary><CR><p><CR><CR>```<CR>```<CR><CR></p><CR></details><CR><Esc>8k18li
 
 " Insert hN-level fold and place cursor at header.
-nmap ch1 i#  {{{<CR><CR><CR><CR>}}}<Esc>4k2li
-nmap ch2 i##  {{{<CR><CR><CR><CR>}}}<Esc>4k2li
+nmap ch1 i#  {{{<CR><CR><CR><CR>}}}<Esc>4ki
+nmap ch2 i##  {{{<CR><CR><CR><CR>}}}<Esc>4kli
 nmap ch3 i###  {{{<CR><CR><CR><CR>}}}<Esc>4k2li
 
 " Line numbering and highlighting.
