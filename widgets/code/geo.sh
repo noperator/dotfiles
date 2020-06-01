@@ -6,7 +6,7 @@ OLD_TIME=$(cat /var/tmp/geo_time.txt)
 NOW=$(date +%s)
 
 if [[ $(cat /var/tmp/geo_data.txt) == '@globe@' ]] || [[ $((NOW - OLD_TIME)) -ge 120 ]]; then
-    IP=$(curl -s 'https://api.ipify.org?format=json' | /usr/local/bin/jq -r '.ip')
+    IP=$(dig -4 +short A myip.opendns.com @resolver1.opendns.com)
     OLD_IP=$(awk '{print $2}' /var/tmp/geo_data.txt)
     if [[ "$IP" != "$OLD_IP" ]]; then
         IPAPI=$(curl -s "https://ipapi.co/$IP/json/")
