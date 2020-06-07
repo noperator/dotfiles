@@ -83,6 +83,7 @@ set linebreak  " Don't line break in the middle of a word.
 " Spell.
 hi clear SpellBad
 hi SpellBad cterm=underline
+nmap S :set spell!<CR>
 
 " Backspace wasn't working; this fixed it.
 set backspace=indent,eol,start
