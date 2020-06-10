@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$(dirname $0)/ipv6.sh"
+source "$(dirname $0)/abbr_ipv6.sh"
 
 IFACE='en0'
 

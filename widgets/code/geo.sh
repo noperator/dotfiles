@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "$(dirname $0)/abbr_ipv6.sh"
+
 touch /var/tmp/geo_time.txt /var/tmp/geo_data.txt
 PATH="/usr/local/bin:$PATH"  # Locate jq binary.
 
@@ -17,9 +19,9 @@ if [[ $(sed -E 's|[/ ]||g' /var/tmp/geo_data.txt) == '@globe@' ]] || [[ $((NOW -
 
     # Fetch IPv4 data, while compressing and abbreviating the IP address.
     IPV6=$(curl -s 'ipv6.json.wtfismyip.com')
-    IP_V6=$(<<< "$IPV6" jq -r '.YourFuckingIPAddress')
-    IP_V6=$(python3 -c "from ipaddress import ip_address as ip; print(ip('$IP_V6').compressed)" |
-            sed -E 's/^(.{7}).*(.{7})$/\1*\2/')
+    IP_V6=$(abbr_ipv6 $(<<< "$IPV6" jq -r '.YourFuckingIPAddress'))
+    # IP_V6=$(python3 -c "from ipaddress import ip_address as ip; print(ip('$IP_V6').compressed)" |
+    #         sed -E 's/^(.{7}).*(.{7})$/\1*\2/')
     LOC_V6=$(<<< "$IPV6" jq -r '.YourFuckingLocation' | awk -F ',' '{print $1 $2}')
     ISP_V6=$(<<< "$IPV6" jq -r '.YourFuckingISP' | awk '{print $1}')
 
