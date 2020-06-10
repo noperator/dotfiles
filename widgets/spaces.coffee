@@ -32,13 +32,24 @@ render: (output) ->
 style: """
   position: relative
   margin-top: 7px
+  margin-left: 7px
+  max-width: 400 px
   font: 14px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
   color: #aaa
   font-weight: 700
+  // background-color: #2d2d2d
+  // background-color: #ff0000
+  --brown-bg:        rgb(45, 45, 45)
+  --brown-bg-trans: rgba(45, 45, 45, 0)
+  background: linear-gradient(to right,
+                              var(--brown-bg)       0%,
+                              var(--brown-bg)       50%,
+                              var(--brown-bg)       75%,
+                              var(--brown-bg-trans) 100%)
 
   ul
     list-style: none
-    margin: 0 0 0 1em
+    margin: 0
     padding: 0
 
   li
