@@ -1,19 +1,47 @@
 #!/bin/bash
 
 touch /var/tmp/geo_time.txt /var/tmp/geo_data.txt
+PATH="/usr/local/bin:$PATH"  # Locate jq binary.
 
 OLD_TIME=$(cat /var/tmp/geo_time.txt)
 NOW=$(date +%s)
 
-if [[ $(cat /var/tmp/geo_data.txt) == '@globe@' ]] || [[ $((NOW - OLD_TIME)) -ge 120 ]]; then
-    IP=$(dig -4 +short A myip.opendns.com @resolver1.opendns.com)
-    OLD_IP=$(awk '{print $2}' /var/tmp/geo_data.txt)
-    if [[ "$IP" != "$OLD_IP" ]]; then
-        IPAPI=$(curl -s "https://ipapi.co/$IP/json/")
-        GEO=$(echo "$IPAPI" | /usr/local/bin/jq -r '.city, .region_code' | tr '\n' '\ ')
-        ORG=$(echo "$IPAPI" | /usr/local/bin/jq -r '.org' | awk '{print $1}' | tr -d ',')
-        echo "@globe@ $IP $GEO $ORG" > /var/tmp/geo_data.txt
-    fi
+# Refresh every 2 min.
+if [[ $(sed -E 's|[/ ]||g' /var/tmp/geo_data.txt) == '@globe@' ]] || [[ $((NOW - OLD_TIME)) -ge 120 ]]; then
+
+    # Fetch IPv4 data.
+    IPV4=$(curl -s 'ipv4.json.wtfismyip.com')
+    IP_V4=$(<<< "$IPV4" jq -r '.YourFuckingIPAddress')
+    LOC_V4=$(<<< "$IPV4" jq -r '.YourFuckingLocation' | awk -F ',' '{print $1 $2}')
+    ISP_V4=$(<<< "$IPV4" jq -r '.YourFuckingISP' | awk '{print $1}')
+
+    # Fetch IPv4 data, while compressing and abbreviating the IP address.
+    IPV6=$(curl -s 'ipv6.json.wtfismyip.com')
+    IP_V6=$(<<< "$IPV6" jq -r '.YourFuckingIPAddress')
+    IP_V6=$(python3 -c "from ipaddress import ip_address as ip; print(ip('$IP_V6').compressed)" |
+            sed -E 's/^(.{7}).*(.{7})$/\1*\2/')
+    LOC_V6=$(<<< "$IPV6" jq -r '.YourFuckingLocation' | awk -F ',' '{print $1 $2}')
+    ISP_V6=$(<<< "$IPV6" jq -r '.YourFuckingISP' | awk '{print $1}')
+
+    # Group matching location and ISP for IPv4 and IPv6, when possible.
+    (
+        echo -n '@globe@ '
+        echo -n "$IP_V4 "
+        [[ "$LOC_V4" == "$LOC_V6" ]] || echo -n "$LOC_V4 "
+        [[ "$ISP_V4" == "$ISP_V6" ]] || echo -n "$ISP_V4 "
+
+        echo -n "/ $IP_V6 "
+        [[ "$LOC_V4" == "$LOC_V6" ]] || echo -n "$LOC_V6 "
+        [[ "$ISP_V4" == "$ISP_V6" ]] || echo -n "$ISP_V6 "
+
+        if [[ "$LOC_V4" == "$LOC_V6" ]]; then
+            echo -n "/ $LOC_V6 "
+            [[ "$ISP_V4" == "$ISP_V6" ]] && echo -n "$ISP_V6"
+        elif [[ "$ISP_V4" == "$ISP_V6" ]]; then
+            echo -n "/ $ISP_V6 "
+        fi
+    ) > /var/tmp/geo_data.txt
+
     date +%s > /var/tmp/geo_time.txt
 fi
 

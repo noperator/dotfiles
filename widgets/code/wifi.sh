@@ -1,26 +1,27 @@
 #!/bin/bash
 
-# echo -n "@$(basename "$0" | sed -E 's/.{3}$//')@ "
+source "$(dirname $0)/ipv6.sh"
+
+IFACE='en0'
+
+WIFI_STATUS="$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport --getinfo)"
+
 echo -n '@wifi@ '
-
-INFO="$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport --getinfo)"
-
-if [[ "$INFO" == 'AirPort: Off' ]]; then
-    echo "OFF"
-elif [[ "$(echo "$INFO" | awk '/state:/ {print $2}')" == 'init' ]]; then
-    echo "NONE"
+if [[ "$WIFI_STATUS" == 'AirPort: Off' ]]; then
+    echo 'OFF'
+elif [[ "$(<<< "$WIFI_STATUS" awk '/state:/ {print $2}')" == 'init' ]]; then
+    echo 'NONE'
 else
-    DBM=$(echo "$INFO" | awk '/agrCtlRSSI/ {print $NF}')
-    if [[ "$DBM" -le -100 ]]; then
+    SIGNAL=$(<<< "$WIFI_STATUS" awk '/agrCtlRSSI/ {print $NF}')
+    if [[ "$SIGNAL" -le -100 ]]; then
         QUALITY=0
-    elif [[ "$DBM" -ge -50 ]]; then
+    elif [[ "$SIGNAL" -ge -50 ]]; then
         QUALITY=100
     else
-        QUALITY=$(echo "2 * ($DBM + 100)" | bc -l)
+        QUALITY=$(echo "2 * ($SIGNAL + 100)" | bc -l)
     fi
-    SSID=$(echo "$INFO" | awk '/[^B]SSID/ {print $NF}')
-    IP=$(ifconfig en0 inet | awk '/inet/ {print $2}')
-    echo "$IP $SSID ${QUALITY}%"
+    SSID=$(<<< "$WIFI_STATUS" awk '/[^B]SSID/ {print $NF}')
+    IPV4=$(ifconfig "$IFACE" inet | awk '/inet/ {print $2}')
+    IPV6=$(abbr_ipv6 $(ifconfig "$IFACE" inet6 | awk '{if ($6 == "temporary" && ! match($2, "^f[cd]")) print $2}'))
+    echo "$IPV4 $IPV6 $SSID ${QUALITY}%"
 fi
-
-
