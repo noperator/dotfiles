@@ -20,7 +20,7 @@ else
     else
         QUALITY=$(echo "2 * ($SIGNAL + 100)" | bc -l)
     fi
-    SSID=$(<<< "$WIFI_STATUS" awk '/[^B]SSID/ {print $NF}')
+    SSID=$(<<< "$WIFI_STATUS" awk '/[^B]SSID/ {print substr($NF, 0, 6) "…"}')
     IPV4=$(ifconfig "$IFACE" inet | awk '/inet/ {print $2}')
     IPV6=$(abbr_ipv6 $(ifconfig "$IFACE" inet6 | awk '{if ($6 == "temporary" && ! match($2, "^f[cd]")) print $2}'))
     echo "$IPV4 $IPV6 $SSID ${QUALITY}%"
