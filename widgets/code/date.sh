@@ -1,3 +1,4 @@
 #!/bin/bash
 
-date "+%a %-Oe %b %H:%M"
+echo -n '@clock@ '
+date '+%a %-Oe %b %H%M'
