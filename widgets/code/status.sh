@@ -2,10 +2,10 @@
 
 DIRNAME=$(dirname "$0")
 
+# vpn \
 FIRST='true'
 for SCRIPT in \
 geo \
-vpn \
 gateway \
 wifi \
 battery \
