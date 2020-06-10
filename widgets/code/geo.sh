@@ -29,18 +29,17 @@ if [[ $(sed -E 's|[/ ]||g' /var/tmp/geo_data.txt) == '@globe@' ]] || [[ $((NOW -
     (
         echo -n '@globe@ '
         echo -n "$IP_V4 "
-        [[ "$LOC_V4" == "$LOC_V6" ]] || echo -n "$LOC_V4 "
-        [[ "$ISP_V4" == "$ISP_V6" ]] || echo -n "$ISP_V4 "
-
-        echo -n "/ $IP_V6 "
-        [[ "$LOC_V4" == "$LOC_V6" ]] || echo -n "$LOC_V6 "
-        [[ "$ISP_V4" == "$ISP_V6" ]] || echo -n "$ISP_V6 "
-
-        if [[ "$LOC_V4" == "$LOC_V6" ]]; then
-            echo -n "/ $LOC_V6 "
-            [[ "$ISP_V4" == "$ISP_V6" ]] && echo -n "$ISP_V6"
-        elif [[ "$ISP_V4" == "$ISP_V6" ]]; then
-            echo -n "/ $ISP_V6 "
+        if ! [[ -z "$IP_V6" ]]; then
+            if [[ "$LOC_V4" == "$LOC_V6" ]]; then
+                [[ "$ISP_V4" == "$ISP_V6" ]] || echo -n "$ISP_V4 / "
+            else
+                echo -n "$LOC_V4 "
+                [[ "$ISP_V4" == "$ISP_V6" ]] || echo -n "$ISP_V4 "
+                echo -n '/ '
+            fi
+            echo "$IP_V6 $LOC_V6 $ISP_V6 "
+        else
+            echo "$LOC_V4 $ISP_V4 "
         fi
     ) > /var/tmp/geo_data.txt
 
