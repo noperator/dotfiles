@@ -11,7 +11,7 @@ render: (output) ->
 style: """
   font-family: monaco
   font-size: 11px
-  color: #bebebe;
+  color: #bebebe
   right: 18px
   top: 8px
   height: 13

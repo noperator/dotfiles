@@ -37,8 +37,6 @@ style: """
   font: 14px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
   color: #aaa
   font-weight: 700
-  // background-color: #2d2d2d
-  // background-color: #ff0000
   --brown-bg:        rgb(45, 45, 45)
   --brown-bg-trans: rgba(45, 45, 45, 0)
   background: linear-gradient(to right,
