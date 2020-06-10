@@ -30,6 +30,7 @@ render: (output) ->
   """
 
 style: """
+  z-index: 1
   position: relative
   margin-top: 7px
   margin-left: 7px

@@ -9,6 +9,7 @@ render: (output) ->
   """
 
 style: """
+  z-index: -1
   font-family: monaco
   font-size: 11px
   color: #bebebe
