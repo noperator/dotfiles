@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# export KERNEL_RELEASE="$(uname -r)"  # $OSTYPE should suffice instead.
-# export TERMINAL='urxvt'  # Not sure why I needed this.
 export VISUAL='vim'
 export EDITOR="$VISUAL"
 export HISTCONTROL='ignoreboth'  # Shorthand for ignorespace and ignoredups.
