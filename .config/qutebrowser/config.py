@@ -92,7 +92,12 @@ c.tabs.position = 'top'
 c.url.searchengines = {'DEFAULT': 'https://www.google.com/search?q={}', 'yt': 'https://www.youtube.com/results?search_query={}', 'am': 'https://smile.amazon.com/s/ref=nb_sb_noss?field-keywords={}', 'gm': 'https://www.google.com/maps/search/{}'}
 
 # Bindings for normal mode
-config.bind('yY', 'yank')
-config.bind('yy', 'yank -s')
-config.bind('yT', 'yank title')
-config.bind('yt', 'yank title -s')
+yy = 'yank'
+config.bind('yY', yy)
+config.bind('yy', yy + ' -s')
+yt = 'yank title'
+config.bind('yT', yt)
+config.bind('yt', yt + ' -s')
+ym = 'yank inline [{title}]({url})'
+config.bind('yM', ym)
+config.bind('ym', ym + ' -s')
