@@ -94,3 +94,5 @@ c.url.searchengines = {'DEFAULT': 'https://www.google.com/search?q={}', 'yt': 'h
 # Bindings for normal mode
 config.bind('yY', 'yank')
 config.bind('yy', 'yank -s')
+config.bind('yT', 'yank title')
+config.bind('yt', 'yank title -s')
