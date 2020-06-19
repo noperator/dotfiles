@@ -4,17 +4,40 @@
 # if [[ $(awk -F = '/^ID/ {print $2}' /etc/os-release 2>/dev/null) == 'arch' ]] || \
 #    [[ "$OSTYPE" == 'darwin'* ]]; then
 
+# Print color-coded, abbreviated Git branch.
+git_branch() {
+    BRANCH=$(git branch 2> /dev/null |
+    awk '{if ($1 == "*") {printf substr($2, 0, 6);
+        if (length($2) > 6) print "…"}}')
+    if [[ "$BRANCH" ]]; then
+        if [[ $(git status | grep -E '^Your branch is up to date with') ]]; then
+            printf " ${grn}${BRANCH}${end}"
+        else
+            printf " ${red}${BRANCH}${end}"
+        fi
+    fi
+}
+
 BASS_CLEF=$(printf '\xf0\x9d\x84\xa2')
 ELLIPSIS=$(printf '\xe2\x80\xa6')
+
 if [[ $(tty | grep -E 'tty[^s]' ) ]]; then
-    PS1="${BYEL}\w${END} ${BCYN}\$${END} "
+
+    # Native terminal device, and likely no Unicode support.
+    PS1="${BYEL}\w${END}\$(git_branch) ${BCYN}\$${END} "
     PS2="${BCYN}>${END} "
 else
+
+    # Pseudo terminal device.
     PS2="${BCYN}$ELLIPSIS${END} "
     if [[ -v SSH_TTY ]]; then
-        PS1="${CYN}\u${END}${GRN}@${END}${PRP}\h${END}${GRN}:${END}${YEL}\W${END} ${RED}${BASS_CLEF}${END} "
+
+        # Remote server.
+        PS1="${CYN}\u${END}${GRN}@${END}${PRP}\h${END}${GRN}:${END}${YEL}\W${END}\$(git_branch) ${RED}${BASS_CLEF}${END} "
     else
-        PS1="${BYEL}\W${END} ${BCYN}${BASS_CLEF}${END} "
+
+        # Local machine.
+        PS1="${BYEL}\W${END}\$(git_branch) ${BCYN}${BASS_CLEF}${END} "
     fi
 fi
 
