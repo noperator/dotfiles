@@ -52,6 +52,12 @@ set foldmethod=marker
 nnoremap <space>  za    " Space opens/closes folds.
 nnoremap z<space> zczA  " Recursively open folds.
 
+" Markdown folding.
+set nocompatible
+if has("autocmd")
+  filetype plugin indent on
+endif
+
 " Searching.
 set incsearch  " Search as characters are entered.
 set ignorecase
