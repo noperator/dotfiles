@@ -37,6 +37,7 @@ highlight cursorline ctermbg=0 cterm=NONE
 set ruler  " Show line/column number.
 highlight colorcolumn ctermbg=0
 set colorcolumn=80,120
+nmap T :set textwidth=80<CR>
 " highlight ErrorOverLength ctermbg=red   
 " match ErrorOverLength /\%121v.\+/
 
