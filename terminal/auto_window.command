@@ -84,6 +84,7 @@ if [[ $(<<< "$DISPLAYS" jq 'length') == 2 ]]; then
     move_window 'Ghidra' 1 0
     move_window 'Firefox (Personal)' 2 0 "$(<<< "$FIREFOX_PROFILES" jq '.Personal | @tsv' -r)"
     move_window 'VirtualBox' 3 0
+    move_window 'VirtualBox VM' 3 0
     move_window 'Microsoft Outlook' 0 1
     move_window 'Microsoft Teams' 1 1
     move_window 'Slack' 2 1
@@ -95,6 +96,7 @@ else
     move_window 'Ghidra' 1 0
     move_window 'Firefox (Personal)' 2 0 "$(<<< "$FIREFOX_PROFILES" jq '.Personal | @tsv' -r)"
     move_window 'VirtualBox' 3 0
+    move_window 'VirtualBox VM' 3 0
     move_window 'Microsoft Outlook' 4 0
     move_window 'Microsoft Teams' 5 0
     move_window 'Slack' 6 0
