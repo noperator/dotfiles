@@ -112,3 +112,6 @@ nmap <CR> o<Esc>k
 
 " Reload config file.
 nmap R :source ~/.vimrc<CR>
+
+" Open in external editor.
+nmap <C-T> :silent !open -a Typora.app '%:p'<CR>
