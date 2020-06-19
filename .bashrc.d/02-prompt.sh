@@ -10,11 +10,12 @@ git_branch() {
     awk '{if ($1 == "*") {printf substr($2, 0, 6);
         if (length($2) > 6) print "…"}}')
     if [[ "$BRANCH" ]]; then
-        if [[ $(git status | grep -E '^Your branch is up to date with') ]]; then
-            printf " ${grn}${BRANCH}${end}"
-        else
-            printf " ${red}${BRANCH}${end}"
-        fi
+        echo -n " $BRANCH"
+        # if [[ $(git status | grep -E '^Your branch is up to date with') ]]; then
+        #     echo -e " ${grn}${BRANCH}${end}"
+        # else
+        #     echo -e " ${red}${BRANCH}${end}"
+        # fi
     fi
 }
 
