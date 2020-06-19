@@ -49,6 +49,7 @@ case "$OSTYPE" in
         alias fb="$HOME/.fehbg"
         alias wn="nohup play -n synth brownnoise pinknoise >/dev/null 2>&1 &"
         alias nn='pkill play'
+        alias tp='typora'
         ;;
 esac
 
