@@ -9,7 +9,9 @@ OLD_TIME=$(cat /var/tmp/geo_time.txt)
 NOW=$(date +%s)
 
 # Refresh every 2 min.
-if [[ $(sed -E 's|[/ ]||g' /var/tmp/geo_data.txt) == '@globe@' ]] || [[ $((NOW - OLD_TIME)) -ge 120 ]]; then
+if [[ $(sed -E 's|[/ ]||g' /var/tmp/geo_data.txt) == '@globe@' ]] ||
+   [[ $((NOW - OLD_TIME)) -ge 120 ]] &&
+   [[ ! $(pgrep -f 'curl.*json.wtfismyip.com') ]]; then
 
     # Fetch IPv4 data.
     IPV4=$(curl -s 'ipv4.json.wtfismyip.com')
@@ -27,20 +29,20 @@ if [[ $(sed -E 's|[/ ]||g' /var/tmp/geo_data.txt) == '@globe@' ]] || [[ $((NOW -
 
     # Group matching location and ISP for IPv4 and IPv6, when possible.
     (
-        echo -n '@globe@ '
-        echo -n "$IP_V4 "
-        if ! [[ -z "$IP_V6" ]]; then
-            if [[ "$LOC_V4" == "$LOC_V6" ]]; then
-                [[ "$ISP_V4" == "$ISP_V6" ]] || echo -n "$ISP_V4 / "
-            else
-                echo -n "$LOC_V4 "
-                [[ "$ISP_V4" == "$ISP_V6" ]] || echo -n "$ISP_V4 "
-                echo -n '/ '
-            fi
-            echo "$IP_V6 $LOC_V6 $ISP_V6 "
+    echo -n '@globe@ '
+    echo -n "$IP_V4 "
+    if ! [[ -z "$IP_V6" ]]; then
+        if [[ "$LOC_V4" == "$LOC_V6" ]]; then
+            [[ "$ISP_V4" == "$ISP_V6" ]] || echo -n "$ISP_V4 / "
         else
-            echo "$LOC_V4 $ISP_V4 "
+            echo -n "$LOC_V4 "
+            [[ "$ISP_V4" == "$ISP_V6" ]] || echo -n "$ISP_V4 "
+            echo -n '/ '
         fi
+        echo "$IP_V6 $LOC_V6 $ISP_V6 "
+    else
+        echo "$LOC_V4 $ISP_V4 "
+    fi
     ) > /var/tmp/geo_data.txt
 
     date +%s > /var/tmp/geo_time.txt
