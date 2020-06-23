@@ -1,27 +1,33 @@
 #!/bin/bash
 
-# Less efficient way to check if shell is local.
-# if [[ $(awk -F = '/^ID/ {print $2}' /etc/os-release 2>/dev/null) == 'arch' ]] || \
-#    [[ "$OSTYPE" == 'darwin'* ]]; then
+BASS_CLEF=$(printf '\xf0\x9d\x84\xa2')
+ELLIPSIS=$(printf '\xe2\x80\xa6')
 
 # Print color-coded, abbreviated Git branch.
 git_branch() {
     BRANCH=$(git branch 2> /dev/null |
-    awk '{if ($1 == "*") {printf substr($2, 0, 6);
-        if (length($2) > 6) print "…"}}')
+             awk -v "ellipsis=$ELLIPSIS" '{
+                 if ($1 == "*") {
+                     printf substr($2, 0, 6);
+                     if (length($2) > 6)
+                         print ellipsis
+                 }
+             }')
     if [[ "$BRANCH" ]]; then
+
+        # Setting colors according to a Stack Overflow post:
+        # https://stackoverflow.com/a/43462720
+        if [[ $(git status | grep -E '^Your branch is up to date with') ]]; then
+            echo -ne '\001\e[0;32m\002'  # Print up-to-date branch in green.
+        else
+            echo -ne '\001\e[0;31m\002'  # Print outdated branch in red.
+        fi
         echo -n " $BRANCH"
-        # if [[ $(git status | grep -E '^Your branch is up to date with') ]]; then
-        #     echo -e " ${grn}${BRANCH}${end}"
-        # else
-        #     echo -e " ${red}${BRANCH}${end}"
-        # fi
+        echo -ne '\001\e[m\002'
     fi
 }
 
-BASS_CLEF=$(printf '\xf0\x9d\x84\xa2')
-ELLIPSIS=$(printf '\xe2\x80\xa6')
-
+# Set Bash prompt according to terminal type and location.
 if [[ $(tty | grep -E 'tty[^s]' ) ]]; then
 
     # Native terminal device, and likely no Unicode support.
