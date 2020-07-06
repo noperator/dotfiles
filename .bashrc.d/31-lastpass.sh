@@ -43,3 +43,7 @@ pwg() {
     < /dev/urandom LC_ALL=C tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c 32
     echo
 }
+pwga() {
+    < /dev/urandom LC_ALL=C base64 | tr -d '/+=' | head -c 40
+    echo
+}
