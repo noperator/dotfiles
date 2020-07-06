@@ -43,8 +43,7 @@ style: """
   --brown-bg-trans: rgba(45, 45, 45, 0)
   background: linear-gradient(to right,
                               var(--brown-bg)       0%,
-                              var(--brown-bg)       90%,
-                              var(--brown-bg)       95%,
+                              var(--brown-bg)       85%,
                               var(--brown-bg-trans) 100%)
 
   ul
