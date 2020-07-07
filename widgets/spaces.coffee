@@ -46,7 +46,6 @@ style: """
     background: linear-gradient(to right,
                                 var(--brown-bg)       0%,
                                 var(--brown-bg-trans) 100%)
-    background: red
 
   ul
     display: inline-block
