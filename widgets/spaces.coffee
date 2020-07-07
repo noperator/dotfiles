@@ -26,36 +26,40 @@ render: (output) ->
       <ul>
         #{@generateIcons(spaces)}
       </ul>
+      <span id="fader"></span>
     </div>
   """
 
 style: """
   z-index: 1
-  position: relative
-  margin-top: 7px
-  margin-left: 7px
-  padding-right: 50px
-  display: inline-block
   font: 14px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
   color: #aaa
   font-weight: 700
-  --brown-bg:        rgb(45, 45, 45)
-  --brown-bg-trans: rgba(45, 45, 45, 0)
-  background: linear-gradient(to right,
-                              var(--brown-bg)       0%,
-                              var(--brown-bg)       85%,
-                              var(--brown-bg-trans) 100%)
+
+  #fader
+    position: absolute
+    top: 7px
+    width: 42px
+    height: 19px
+    --brown-bg:        rgb(45, 45, 45)
+    --brown-bg-trans: rgba(45, 45, 45, 0)
+    background: linear-gradient(to right,
+                                var(--brown-bg)       0%,
+                                var(--brown-bg-trans) 100%)
+    background: red
 
   ul
+    display: inline-block
+    background: #2d2d2d
     list-style: none
-    margin: 0
-    padding: 0
+    margin: 7px 0px 0px 7px
+    padding-left: 0px
 
   li
     display: inline-block
     text-align: center
-    width: 1em
-    margin: 0 0.5em
+    width: 14px
+    margin: 0px 7px
 
   li.visible
     color: #ededed
