@@ -6,6 +6,7 @@ alias cds="cd $HOME/.ssh"
 alias cdf="cd $HOME/dotfiles"
 alias cdg="cd $HOME/guides"
 alias cdl="cd $HOME/Downloads"
+alias cde="cd $HOME/Desktop"
 alias ltd="lt $HOME/Downloads | tail"
 alias cdt='cd /tmp'
 alias ltt="lt /tmp/"
