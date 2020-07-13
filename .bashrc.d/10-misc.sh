@@ -18,6 +18,20 @@ alias sba='source env/bin/activate'
 alias hd='hexdump -C'
 alias xlf='xmllint --format'
 alias vbe="vim $HOME/.bashrc.extra"
+mvss() {
+    DIR="$HOME/Desktop"
+    RENAME="$DIR/$1.png"
+    SCREENSHOT=$(find "$DIR" -name 'Screen Shot*.png' | sort -n | tail -n 1)
+    if [[ -f "$RENAME" ]]; then
+        echo "$RENAME already exists!"
+    else
+        ec "$SCREENSHOT"
+        mv "$SCREENSHOT" "$RENAME"
+        echo "Original: $SCREENSHOT"
+        echo "Renamed:  $RENAME"
+        no qlmanage -p "$RENAME"
+    fi
+}
 gr() { g -r "$@" . | sed 's/:/ : /' | g "$@"; }
 sudo() { errcho "${red}[sudo] $@${end}"; "$(which sudo)" "$@"; }
 wl() { which "$@" && ls -l $(which "$@"); }
