@@ -57,6 +57,7 @@ set nocompatible
 if has("autocmd")
   filetype plugin indent on
 endif
+let g:markdown_minlines = 1000
 
 " Searching.
 set incsearch  " Search as characters are entered.
