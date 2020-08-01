@@ -3,10 +3,18 @@
 DIRNAME=$(dirname "$0")
 
 # vpn \
+
+if [[ ! $(pgrep -afli 'appSharingToolbar') ]]; then
+    for SCRIPT in \
+    geo \
+    gateway \
+    wifi \
+    ; do \
+        "$DIRNAME/${SCRIPT}.sh" | tr '\n' ' '
+    done
+fi
+
 for SCRIPT in \
-geo \
-gateway \
-wifi \
 battery \
 date \
 ; do \
