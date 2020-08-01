@@ -98,7 +98,8 @@ set backspace=indent,eol,start
 
 " Alias commonly mistaken commands.
 cnoreabbrev <expr> Wq ((getcmdtype() is# ':' && getcmdline() is# 'Wq')?('wq'):('Wq'))
-cnoreabbrev <expr> W ((getcmdtype() is# ':' && getcmdline() is# 'W')?('w'):('W'))
+cnoreabbrev <expr> W  ((getcmdtype() is# ':' && getcmdline() is# 'W' )?('w') :('W') )
+cnoreabbrev <expr> w' ((getcmdtype() is# ':' && getcmdline() is# "w'")?('w') :("w'"))
 
 " Underline current line with hyphens.
 nmap U yyp<c-v>$r-
