@@ -1,7 +1,7 @@
-# open terminal
+# Open terminal.
 cmd - return : ~/.config/kitty/launch_instance.sh
 
-# organize windows
+# Organize windows.
 shift + cmd - return : ~/dotfiles/terminal/auto_window.command
 
 # Refresh all Übersicht widgets.
@@ -14,44 +14,44 @@ cmd - j : yabai -m window --focus south
 cmd - k : yabai -m window --focus north
 cmd - l : yabai -m window --focus east
 
-# swap window
+# Swap window.
 shift + alt - h : yabai -m window --swap west
 shift + alt - j : yabai -m window --swap south
 shift + alt - k : yabai -m window --swap north
 shift + alt - l : yabai -m window --swap east
 
-# move window
+# Move window.
 shift + cmd - h : yabai -m window --warp west
 shift + cmd - j : yabai -m window --warp south
 shift + cmd - k : yabai -m window --warp north
 shift + cmd - l : yabai -m window --warp east
 
-# balance size of windows
+# Balance size of windows.
 shift + alt - 0 : yabai -m space --balance
 
-# make floating window fill screen
+# Make floating window fill screen.
 # shift + alt - up     : yabai -m window --grid 1:1:0:0:1:1
 
-# make floating window fill left-half of screen
+# Make floating window fill left-half of screen.
 # shift + alt - left   : yabai -m window --grid 1:2:0:0:1:1
 
-# make floating window fill right-half of screen
+# Make floating window fill right-half of screen.
 # shift + alt - right  : yabai -m window --grid 1:2:1:0:1:1
 
-# create space and move window
+# Create space and move window.
 shift + cmd - n : yabai -m space --create && \
                   index="$(yabai -m query --spaces --display | jq 'map(select(."native-fullscreen" == 0))[-1].index')" && \
                   yabai -m window --space "${index}"
 
-# create space and follow focus
+# Create space and follow focus.
 cmd + alt - n : yabai -m space --create && \
                 index="$(yabai -m query --spaces --display | jq 'map(select(."native-fullscreen" == 0))[-1].index')" && \
                 yabai -m space --focus "${index}"
 
-# destroy space
+# Destroy space.
 cmd + alt - w : yabai -m space --destroy
 
-# fast focus space
+# Fast focus space.
 # cmd + alt - x : yabai -m space --focus recent
 # cmd + alt - z : yabai -m space --focus prev
 # cmd + alt - c : yabai -m space --focus next
@@ -66,7 +66,7 @@ cmd + alt - w : yabai -m space --destroy
 # cmd - 9 : yabai -m space --focus 9
 # cmd - 0 : yabai -m space --focus 10
 
-# send window to space
+# Send window to space.
 # shift + cmd - x : yabai -m window --space recent; yabai -m space --focus recent
 # shift + cmd - z : yabai -m window --space prev; yabai -m space --focus prev
 # shift + cmd - c : yabai -m window --space next; yabai -m space --focus next
@@ -81,7 +81,7 @@ shift + cmd - 8 : yabai -m window --space  8; # yabai -m space --focus 8
 shift + cmd - 9 : yabai -m window --space  9; # yabai -m space --focus 9
 shift + cmd - 0 : yabai -m window --space 10; # yabai -m space --focus 10
 
-# focus monitor
+# Focus monitor.
 ctrl + alt - x  : yabai -m display --focus recent
 ctrl + alt - z  : yabai -m display --focus prev
 ctrl + alt - c  : yabai -m display --focus next
@@ -89,7 +89,7 @@ ctrl + alt - 1  : yabai -m display --focus 1
 ctrl + alt - 2  : yabai -m display --focus 2
 ctrl + alt - 3  : yabai -m display --focus 3
 
-# send window to monitor and follow focus
+# Send window to monitor and follow focus.
 ctrl + cmd - x  : yabai -m window --display recent; yabai -m display --focus recent
 ctrl + cmd - z  : yabai -m window --display prev; yabai -m display --focus prev
 ctrl + cmd - c  : yabai -m window --display next; yabai -m display --focus next
@@ -97,72 +97,72 @@ ctrl + cmd - 1  : yabai -m window --display 1; yabai -m display --focus 1
 ctrl + cmd - 2  : yabai -m window --display 2; yabai -m display --focus 2
 ctrl + cmd - 3  : yabai -m window --display 3; yabai -m display --focus 3
 
-# move window
+# Move window.
 shift + ctrl - a : yabai -m window --move rel:-20:0
 shift + ctrl - s : yabai -m window --move rel:0:20
 shift + ctrl - w : yabai -m window --move rel:0:-20
 shift + ctrl - d : yabai -m window --move rel:20:0
 
-# increase window size
+# Increase window size.
 shift + alt - a : yabai -m window --resize left:-20:0
 shift + alt - s : yabai -m window --resize bottom:0:20
 shift + alt - w : yabai -m window --resize top:0:-20
 shift + alt - d : yabai -m window --resize right:20:0
 
-# decrease window size
+# Decrease window size.
 shift + cmd - a : yabai -m window --resize left:20:0
 shift + cmd - s : yabai -m window --resize bottom:0:-20
 shift + cmd - w : yabai -m window --resize top:0:20
 shift + cmd - d : yabai -m window --resize right:-20:0
 
-# set insertion point in focused container
+# Set insertion point in focused container.
 ctrl + alt - h : yabai -m window --insert west
 ctrl + alt - j : yabai -m window --insert south
 ctrl + alt - k : yabai -m window --insert north
 ctrl + alt - l : yabai -m window --insert east
 
-# rotate tree
+# Rotate tree.
 alt - r : yabai -m space --rotate 90
 
-# mirror tree y-axis
+# Mirror tree y-axis.
 alt - y : yabai -m space --mirror y-axis
 
-# mirror tree x-axis
+# Mirror tree x-axis.
 alt - x : yabai -m space --mirror x-axis
 
-# toggle space offset
+# Toggle space offset.
 alt - a : yabai -m space --toggle padding; yabai -m space --toggle gap
 
-# toggle window parent zoom
+# Toggle window parent zoom.
 alt - d : yabai -m window --toggle zoom-parent
 
-# toggle window fullscreen zoom
+# Toggle window fullscreen zoom.
 alt - f : yabai -m window --toggle zoom-fullscreen
 
-# toggle window native fullscreen
+# Toggle window native fullscreen.
 shift + alt - f : yabai -m window --toggle native-fullscreen
 
-# toggle window border
+# Toggle window border.
 shift + alt - b : yabai -m window --toggle border
 
-# toggle window split type
+# Toggle window split type.
 alt - e : yabai -m window --toggle split
 
-# float / unfloat window and center on screen
+# Float/unfloat window and center on screen.
 alt - t : yabai -m window --toggle float;\
           yabai -m window --grid 4:4:1:1:2:2
 
-# toggle sticky
+# Toggle sticky.
 alt - s : yabai -m window --toggle sticky
 
-# toggle sticky, float and resize to picture-in-picture size
+# Toggle sticky, float and resize to picture-in-picture size.
 alt - p : yabai -m window --toggle sticky;\
           yabai -m window --grid 5:5:4:0:1:1
 
-# change layout of space
+# Change layout of space.
 ctrl + alt - a : yabai -m space --layout bsp
 ctrl + alt - d : yabai -m space --layout float
 
-# send space to display
+# Send space to display.
 cmd + alt - 1: yabai -m space --display 1
 cmd + alt - 2: yabai -m space --display 2
