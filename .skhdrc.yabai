@@ -4,7 +4,11 @@ cmd - return : ~/.config/kitty/launch_instance.sh
 # organize windows
 shift + cmd - return : ~/dotfiles/terminal/auto_window.command
 
-# focus window
+# Refresh all Übersicht widgets.
+# https://github.com/felixhageloh/uebersicht#scripting-support
+shift + cmd - r: osascript -e 'tell application id "tracesOf.Uebersicht" to refresh'
+
+# Focus window.
 cmd - h : yabai -m window --focus west
 cmd - j : yabai -m window --focus south
 cmd - k : yabai -m window --focus north
