@@ -5,6 +5,7 @@ get_displays() { yabai -m query --displays; }
 get_windows()  { yabai -m query --windows;  }
 get_display_index() { <<< "$DISPLAY" jq '.index';      }
 get_space_index()   { <<< "$DISPLAY" jq ".spaces[$1]"; }
+notify() { osascript -e 'display notification "'"$1"'" with title "'"Auto Window"'"'; }
 
 # This function takes relative space/display arrangement indices, determines
 # the absolute index for those values, and moves windows accordingly.
@@ -27,7 +28,9 @@ move_window()
     if [[ -z "$WINDOW_IDS" ]]; then
         WINDOW_IDS=$(<<< "$WINDOWS" jq '.[] | select(.app=="'"$APP"'") | .id')
         if [[ -z "$WINDOW_IDS" ]]; then
-            echo "[-] Window not found for app $APP"
+            MESSAGE="Window not found for app $APP"
+            echo "[-] $MESSAGE"
+            # notify "$MESSAGE"
             return 1
         fi
     fi
@@ -41,7 +44,9 @@ move_window()
 
     # Create the space if it doesn't already exist.
     if [[ "$ABS_SPACE_INDEX" == 'null' ]]; then
-        echo "[*] Creating extra space on display $ABS_DISP_INDEX"
+        MESSAGE="Creating extra space on display $ABS_DISP_INDEX"
+        echo "[*] $MESSAGE"
+        notify "$MESSAGE"
         yabai -m display --focus "$ABS_DISP_INDEX"
         yabai -m space --create
 
@@ -52,7 +57,9 @@ move_window()
     fi
 
     # Finally, move windows.
-    echo "[+] Moving $APP to space $ABS_SPACE_INDEX on display $ABS_DISP_INDEX"
+    MESSAGE="$APP ⮕ space $ABS_SPACE_INDEX, display $ABS_DISP_INDEX"
+    echo "[+] $MESSAGE"
+    notify "$MESSAGE"
     for ID in $WINDOW_IDS; do
         yabai -m window "$ID" --space "$ABS_SPACE_INDEX"
     done
