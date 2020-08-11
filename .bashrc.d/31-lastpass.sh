@@ -26,6 +26,7 @@ lpsa() {
 }
 
 alias lps='lpass show -Gx'
+alias lpscp='lpass show -Gxc --password'
 alias lpe='lpass edit'
 alias lpa='lpass add'
 
