@@ -1,6 +1,9 @@
 # Open terminal.
 cmd - return : ~/.config/kitty/launch_instance.sh
 
+# Kill terminal.
+shift + alt - q : /usr/bin/pkill -9 -afi kitty
+
 # Organize windows.
 shift + cmd - return : ~/dotfiles/terminal/auto_window.command
 
