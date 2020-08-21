@@ -1,4 +1,4 @@
-# dotfiles
+# ❤️ `~/.*`
 
 Ensuring that Bash uses vi mode wherever I go.
 
