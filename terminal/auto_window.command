@@ -23,7 +23,7 @@ move_window()
     REL_SPACE_INDEX="$2"
     REL_DISP_INDEX="$3"
     WINDOW_IDS="$4"
-    
+
     # Get windows IDs associated with the application name, and bail if none exist.
     if [[ -z "$WINDOW_IDS" ]]; then
         WINDOW_IDS=$(<<< "$WINDOWS" jq '.[] | select(.app=="'"$APP"'") | .id')
@@ -83,31 +83,38 @@ FIREFOX_PROFILES=$(
            end)'
 )
 
-# Move windows.
-if [[ $(<<< "$DISPLAYS" jq 'length') == 2 ]]; then
-    move_window 'Firefox (Work)' 0 0 "$(<<< "$FIREFOX_PROFILES" jq '.Work | @tsv' -r)"
-    move_window 'Google Chrome' 1 0
-    move_window 'Burp Suite Professional' 1 0
-    move_window 'Ghidra' 1 0
-    move_window 'Firefox (Personal)' 2 0 "$(<<< "$FIREFOX_PROFILES" jq '.Personal | @tsv' -r)"
-    move_window 'VirtualBox' 3 0
-    move_window 'VirtualBox VM' 3 0
-    move_window 'VMware Fusion' 3 0
-    move_window 'Microsoft Outlook' 0 1
-    move_window 'Microsoft Teams' 1 1
-    move_window 'Slack' 2 1
-    move_window 'Discord' 3 1
-else
-    move_window 'Firefox (Work)' 0 0 "$(<<< "$FIREFOX_PROFILES" jq '.Work | @tsv' -r)"
-    move_window 'Google Chrome' 1 0
-    move_window 'Burp Suite Professional' 1 0
-    move_window 'Ghidra' 1 0
-    move_window 'Firefox (Personal)' 2 0 "$(<<< "$FIREFOX_PROFILES" jq '.Personal | @tsv' -r)"
-    move_window 'VirtualBox' 3 0
-    move_window 'VirtualBox VM' 3 0
-    move_window 'VMware Fusion' 3 0
-    move_window 'Microsoft Outlook' 4 0
-    move_window 'Microsoft Teams' 5 0
-    move_window 'Slack' 6 0
-    move_window 'Discord' 7 0
+# Get Teams meeting window ID. Uses the heuristic that of all windows having
+# "| Microsoft Teams" in the title, the meeting will have been created most
+# recently, and will therefore have the highest window ID.
+TEAMS_WINDOWS=$(<<< "$WINDOWS" jq '.[] | select(.title | index(" | Microsoft Teams")) | .id')
+if [[ $(<<< "$TEAMS_WINDOWS" wc -l | tr -d ' \n') -gt 1 ]]; then
+    TEAMS_MEETING=$(<<< "$TEAMS_WINDOWS" sort -n | tail -n 1)
 fi
+
+# Get Slack call window ID.
+SLACK_CALL=$(<<< "$WINDOWS" jq -r '.[] | select(.title | test("Slack \\| .* \\| [:0-9]+")) | .id')
+
+# Move windows.
+move_window 'Firefox (Work)'          0 0 "$(<<< "$FIREFOX_PROFILES" jq '.Work     | @tsv' -r)"
+move_window 'Google Chrome'           1 0
+move_window 'Burp Suite Professional' 1 0
+move_window 'Ghidra'                  1 0
+move_window 'Firefox (Personal)'      2 0 "$(<<< "$FIREFOX_PROFILES" jq '.Personal | @tsv' -r)"
+move_window 'VirtualBox'              3 0
+move_window 'VirtualBox VM'           3 0
+move_window 'VMware Fusion'           3 0
+
+# If a second display is attached, then change the space offset and display
+# accordingly.
+if [[ $(<<< "$DISPLAYS" jq 'length') == 2 ]]; then
+    DISPLAY_INDEX='1'
+    SPACE_INDEX_OFFSET='0'
+else
+    DISPLAY_INDEX='0'
+    SPACE_INDEX_OFFSET='4'
+fi
+move_window 'Microsoft Outlook'         $((SPACE_INDEX_OFFSET + 0)) "$DISPLAY_INDEX"
+move_window 'Microsoft Teams'           $((SPACE_INDEX_OFFSET + 1)) "$DISPLAY_INDEX"
+move_window 'Slack'                     $((SPACE_INDEX_OFFSET + 2)) "$DISPLAY_INDEX"
+move_window 'Microsoft Teams (Meeting)' $((SPACE_INDEX_OFFSET + 3)) "$DISPLAY_INDEX" "$TEAMS_MEETING"
+move_window 'Slack (Call)'              $((SPACE_INDEX_OFFSET + 3)) "$DISPLAY_INDEX" "$SLACK_CALL"
