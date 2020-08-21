@@ -3,9 +3,10 @@
 notify() { osascript -e 'display notification "'"$1"'" with title "'"Start Apps"'"'; }
 
 for APP in \
+'Übersicht' \
 'Microsoft Outlook' \
 'Microsoft Teams' \
-Slack \
+'Slack' \
 ; do
     if ! [[ $(pgrep -f "$APP.app") ]]; then
         notify "Starting $APP"
