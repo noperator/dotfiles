@@ -92,7 +92,7 @@ if [[ $(<<< "$TEAMS_WINDOWS" wc -l | tr -d ' \n') -gt 1 ]]; then
 fi
 
 # Get Slack call window ID.
-SLACK_CALL=$(<<< "$WINDOWS" jq -r '.[] | select(.title | test("Slack \\| .* \\| [:0-9]+")) | .id')
+SLACK_CALL=$(<<< "$WINDOWS" jq -r '.[] | select(.title | test("Slack \\| .* \\| [0-9]+:[0-9]+")) | .id')
 
 # Move windows.
 move_window 'Firefox (Work)'          0 0 "$(<<< "$FIREFOX_PROFILES" jq '.Work     | @tsv' -r)"
