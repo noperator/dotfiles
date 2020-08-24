@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$(dirname $0)/abbr_ipv6.sh"
+source "$(dirname $0)/abbr-ipv6.sh"
 
 touch /var/tmp/geo_time.txt /var/tmp/geo_data.txt
 PATH="/usr/local/bin:$PATH"  # Locate jq binary.
