@@ -1,16 +1,18 @@
 #!/bin/bash
 
+PATH="/usr/local/bin:$PATH"
 DIRNAME=$(dirname "$0")
 
 # Check if Slack or Teams are screen sharing.
 screen_sharing() {
-    if [[ $(/usr/local/bin/yabai -m query --windows |
+    if [[ $(yabai -m query --windows |
             jq -r '[.[] | select(.app      == "Slack" and
                                  .floating == 1       and
                                  .frame.w  == 400     and
-                                 .frame.h  == 56)] | length') -gt 0 ]] ||
-       pgrep -f '\-msteams-process-type=appSharingToolbar' &>/dev/null; then
-        echo '@exclamation-triangle@ @desktop@  '
+                                 .frame.h  == 56)] | length') -gt 0 ]]; then
+        echo '@exclamation-triangle@ @desktop@ Slack  '
+    elif pgrep -f '\-msteams-process-type=appSharingToolbar' &>/dev/null; then
+        echo '@exclamation-triangle@ @desktop@ Teams  '
     else
         false
     fi
@@ -27,7 +29,9 @@ if ! screen_sharing; then
     done
 fi
 
+# These items don't contain sensitive information.
 for SCRIPT in \
+airpods \
 battery \
 date \
 ; do \
