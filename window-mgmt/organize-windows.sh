@@ -28,9 +28,8 @@ move_window()
     if [[ -z "$WINDOW_IDS" ]]; then
         WINDOW_IDS=$(<<< "$WINDOWS" jq '.[] | select(.app=="'"$APP"'") | .id')
         if [[ -z "$WINDOW_IDS" ]]; then
-            MESSAGE="Window not found for app $APP"
+            MESSAGE="$APP"
             echo "[-] $MESSAGE"
-            # notify "$MESSAGE"
             return 1
         fi
     fi
@@ -118,3 +117,4 @@ move_window 'Microsoft Teams'           $((SPACE_INDEX_OFFSET + 1)) "$DISPLAY_IN
 move_window 'Slack'                     $((SPACE_INDEX_OFFSET + 2)) "$DISPLAY_INDEX"
 move_window 'Microsoft Teams (Meeting)' $((SPACE_INDEX_OFFSET + 3)) "$DISPLAY_INDEX" "$TEAMS_MEETING"
 move_window 'Slack (Call)'              $((SPACE_INDEX_OFFSET + 3)) "$DISPLAY_INDEX" "$SLACK_CALL"
+move_window 'zoom.us'                   $((SPACE_INDEX_OFFSET + 3)) "$DISPLAY_INDEX"
