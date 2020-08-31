@@ -1,15 +1,13 @@
 #!/bin/bash
 
 BATTERY=$(pmset -g batt)
-
-PERCENT=$(echo "$BATTERY" | grep -oE '\d*%' | tr -d '%')
-
-SOURCE=$(echo "$BATTERY" | grep -oE "'.*?'" | sed -E "s/'(.*) Power'/\1/")
+PERCENT=$(<<< "$BATTERY" grep -oE '\d*%' | tr -d '%')
+SOURCE=$(<<< "$BATTERY" tr -d "'" | awk '/Now drawing from/ {print $4}')
 
 if [[ "$SOURCE" == 'AC' ]]; then
     ICON='plug'
 else
-    if [[ "$PERCENT" -lt 10 ]]; then
+    if   [[ "$PERCENT" -lt 10 ]]; then
         LVL='empty'
     elif [[ "$PERCENT" -lt 35 ]]; then
         LVL='quarter'

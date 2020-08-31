@@ -17,7 +17,7 @@ echo '@headphones@'
 if [[ "$CONNECTED" == 'Yes' ]]; then
     for EAR in Left Right; do
         <<< "$BT_DEFAULTS" awk "/BatteryPercent$EAR/"' {sub(";", "%", $3); print $3}'
-    
+
         # PERCENT=$(<<< "$BT_DEFAULTS" awk "/BatteryPercent$EAR/"' {sub(";", "", $3); print $3}')
         # if   [[ "$PERCENT" -lt 10 ]]; then
         #     LVL='empty'
@@ -31,6 +31,6 @@ if [[ "$CONNECTED" == 'Yes' ]]; then
         #     LVL='full'
         # fi
         # echo "@battery-$LVL@ "
-    
+
     done
 fi
