@@ -3,35 +3,71 @@
 BASS_CLEF=$(printf '\xf0\x9d\x84\xa2')
 ELLIPSIS=$(printf '\xe2\x80\xa6')
 
-# Print color-coded, abbreviated Git branch.
-git_branch() {
-    BRANCH=$(git branch 2> /dev/null |
-             awk -v "ellipsis=$ELLIPSIS" '{
-                 if ($1 == "*") {
-                     printf substr($2, 0, 6);
-                     if (length($2) > 6)
-                         print ellipsis
-                 }
-             }')
-    if [[ "$BRANCH" ]]; then
+# Using PS1-compatible colors according to a Stack Overflow post:
+# - https://stackoverflow.com/a/43462720
+PROMPT_GRN=$(echo -ne '\001\e[0;32m\002')
+PROMPT_RED=$(echo -ne '\001\e[0;31m\002')
+PROMPT_END=$(echo -ne '\001\e[m\002')
 
-        # Setting colors according to a Stack Overflow post:
-        # https://stackoverflow.com/a/43462720
-        if [[ $(git status | grep -E '^Your branch is up to date with') ]]; then
-            echo -ne '\001\e[0;32m\002'  # Print up-to-date branch in green.
-        else
-            echo -ne '\001\e[0;31m\002'  # Print outdated branch in red.
-        fi
-        echo -n " $BRANCH"
-        echo -ne '\001\e[m\002'
+# Print color-coded, abbreviated Git status and branch.
+git_info() {
+
+    # Bail if this isn't a git repo.
+    if git status 2>&1 | grep '^fatal: not a git repo' &> /dev/null; then
+        false
+        return
+    else
+        echo -n ' '
     fi
+
+    # Use script utility to preserve colorized output throughout the pipeline,
+    # as documented on this Stack Overflow post:
+    # - https://stackoverflow.com/a/7646881
+    script -q /dev/null git status -sb |
+    awk -v "ellipsis=$ELLIPSIS" -v "grn=$PROMPT_GRN" -v "red=$PROMPT_RED" -v "end=$PROMPT_END" '{
+
+        # Translate Bash-specific \[ and \] to \001 and \002.
+        gsub(/.\[31m/, red);
+        gsub(/.\[32m/, grn);
+        gsub(/.\[m/,   end);
+        gsub(/\r/,     "");
+        if ($1 == "##") {
+
+            # Trim out unnecessary text, remote tracking branch, etc.
+            sub(/No commits yet on /, "");
+            sub(/\.{3}.*/, "", $2);
+
+            # Print branch name in red if missing commits.
+            if (index($0, "behind"))
+                sub(/32/, "31");
+
+            # Shorten commit status.
+            sub(/ ?ahead ?/, "+");
+            sub(/ ?behind ?/, "-");
+
+            # Abbreviate branch name.
+            max_branch_len = 6;
+            ctrl_char_len = length(grn) + length(end);
+            if ((length($2) - ctrl_char_len) > max_branch_len)
+                $2 = substr($2, 0, length(grn) + max_branch_len) ellipsis;
+            $2 = $2 end;
+
+            print;
+        }
+        else {
+            print $1"-";
+        }
+    }' |
+    sort -ru |
+    tr '\n' ' ' |
+    sed 's/^## //; s/- /-/g; s/[- ]*$//'
 }
 
 # Set Bash prompt according to terminal type and location.
-if [[ $(tty | grep -E 'tty[^s]' ) ]]; then
+if tty | grep -E 'tty[^s]' &> /dev/null; then
 
     # Native terminal device, and likely no Unicode support.
-    PS1="${BYEL}\w${END}\$(git_branch) ${BCYN}\$${END} "
+    PS1="${BYEL}\w${END}\$(git_info) ${BCYN}\$${END} "
     PS2="${BCYN}>${END} "
 else
 
@@ -40,11 +76,11 @@ else
     if [[ -v SSH_TTY ]]; then
 
         # Remote server.
-        PS1="${CYN}\u${END}${GRN}@${END}${PRP}\h${END}${GRN}:${END}${YEL}\W${END}\$(git_branch) ${RED}${BASS_CLEF}${END} "
+        PS1="${CYN}\u${END}${GRN}@${END}${PRP}\h${END}${GRN}:${END}${YEL}\W${END}\$(git_info) ${RED}${BASS_CLEF}${END} "
     else
 
         # Local machine.
-        PS1="${BYEL}\W${END}\$(git_branch) ${BCYN}${BASS_CLEF}${END} "
+        PS1="${BYEL}\W${END}\$(git_info) ${BCYN}${BASS_CLEF}${END} "
     fi
 fi
 
