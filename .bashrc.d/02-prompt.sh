@@ -23,7 +23,7 @@ git_info() {
     # Use script utility to preserve colorized output throughout the pipeline,
     # as documented on this Stack Overflow post:
     # - https://stackoverflow.com/a/7646881
-    script -q /dev/null git status -sb |
+    git -c color.ui=always status -sb |
     awk -v "ellipsis=$ELLIPSIS" -v "grn=$PROMPT_GRN" -v "red=$PROMPT_RED" -v "end=$PROMPT_END" '{
 
         # Translate Bash-specific \[ and \] to \001 and \002.
@@ -41,16 +41,17 @@ git_info() {
             if (index($0, "behind"))
                 sub(/32/, "31");
 
-            # Shorten commit status.
-            sub(/ ?ahead ?/, "+");
-            sub(/ ?behind ?/, "-");
-
             # Abbreviate branch name.
             max_branch_len = 6;
             ctrl_char_len = length(grn) + length(end);
             if ((length($2) - ctrl_char_len) > max_branch_len)
                 $2 = substr($2, 0, length(grn) + max_branch_len) ellipsis;
             $2 = $2 end;
+
+            # Shorten commit status.
+            gsub(/ \[|\]$/, "");
+            sub(/ahead /, grn"+");
+            sub(/(, )?behind /, red"-");
 
             print;
         }
