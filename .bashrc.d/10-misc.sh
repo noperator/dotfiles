@@ -41,17 +41,8 @@ mvss() {
 mvsr() {
     rename_screen_cap "$1" 'mov' 'Recording'
 }
-gr() { g -r "$@" . | sed 's/:/ : /' | g "$@"; }
 sudo() { errcho "${red}[sudo] $@${end}"; "$(which sudo)" "$@"; }
 wl() { which "$@" && ls -l $(which "$@"); }
-nowrap() {
-    [ -t 1 ] && tput rmam
-    "$@"; local ret="$?"
-    [ -t 1 ] && tput smam
-    return "$ret"
-}
-alias nowrap='nowrap '
-sgu() { echo "https://git.io/$(http --form POST https://git.io/create url=$1)"; }
 alias csc="cat $HOME/.ssh/config"
 skg () { ssh-keygen -t rsa -b 4096 -o -a 100 -q -N '' -f "$HOME/.ssh/$1"; }
 
