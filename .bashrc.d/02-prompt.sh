@@ -33,25 +33,50 @@ git_info() {
         gsub(/\r/,     "");
         if ($1 == "##") {
 
-            # Trim out unnecessary text, remote tracking branch, etc.
+            # Trim out unnecessary text.
             sub(/No commits yet on /, "");
-            sub(/\.\.\..*/, "", $2);  # mawk does not support curly braces.
 
-            # Print branch name in red if missing commits.
-            if (index($0, "behind"))
-                sub(/32/, "31");
+            # Break out local and remote branch names (if the latter exists).
+            # If local is missing commits from remote, indicate whether a
+            # fast-forward is possible. mawk unfortunately does not support
+            # curly braces as defined in POSIX RE. Assuming that the branch
+            # name does not contain a colon.
+            # - https://stackoverflow.com/a/3651867
+            if (sub(/\.\.\./, ":", $2)) {
+
+                # Extract branch names while stripping out color codes.
+                split($2, branches, ":");
+                sub(/:[^ ]*/, "", $2);
+                local  = substr(branches[1], 10, length(branches[1]) - 14);
+                remote = substr(branches[2], 10, length(branches[2]) - 14);
+
+                # Print local branch name in red if missing commits from
+                # remote. If fast-forward possible, print indicator in green.
+                # - https://stackoverflow.com/a/49272912
+                if (index($0, "behind")) {
+                    sub(/32/, "31");  # Change from green to red.
+                    if (system("git merge-base --is-ancestor " local " " remote) == 0) {
+                        $0 = $0 grn ">>" end;
+                    }
+                }
+            }
+            else {
+                sub(/:/, "", $2);
+                local = $2;
+            }
 
             # Abbreviate branch name.
             max_branch_len = 6;
             ctrl_char_len = length(grn) + length(end);
-            if ((length($2) - ctrl_char_len) > max_branch_len)
-                $2 = substr($2, 0, length(grn) + max_branch_len) ellipsis;
-            $2 = $2 end;
+            if ((length(local) - ctrl_char_len) > max_branch_len)
+                local = substr(local, 0, length(grn) + max_branch_len) ellipsis;
+            local = local end;
 
             # Shorten commit status.
-            gsub(/ \[|\]$/, "");
+            gsub(/ \[|\]/, "");
             sub(/ahead /, grn"+");
             sub(/(, )?behind /, red"-");
+            sub(/^## /, "");
 
             print;
         }
@@ -61,7 +86,7 @@ git_info() {
     }' |
     (read -r; printf '%s\n' "$REPLY"; sort -ru) |
     tr '\n' ' ' |
-    sed 's/^## //; s/- /-/g; s/[- ]*$//'
+    sed 's/- /-/g; s/[- ]*$//'
 }
 
 # Print abbreviated working directory.
