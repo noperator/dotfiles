@@ -4,8 +4,11 @@
 # Can alternatively use `tput rmam` and `tput smam` to disable and re-enable
 # line wrapping, respectively.
 gl() {
-    FOLLOW=''
-    [[ -z "$@" ]] && FOLLOW='--follow'
+    if [[ -z "$@" ]];then
+        FOLLOW=''
+    else
+        FOLLOW='--follow'
+    fi
 
     export COLUMNS
     git --no-pager log \
@@ -21,7 +24,7 @@ gl() {
 }
 
 # Post a commit while validating the message length.
-gc () {
+gc() {
     MESSAGE="$@"
     LENGTH=$(echo -n "$MESSAGE" | wc -c | tr -d ' ')
     if [[ "$LENGTH" -gt 50 ]]; then
