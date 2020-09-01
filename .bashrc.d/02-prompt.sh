@@ -63,11 +63,14 @@ git_info() {
     sed 's/^## //; s/- /-/g; s/[- ]*$//'
 }
 
+# Print abbreviated working directory.
+pwd_abbr() { <<< "$PWD" sed -E "s|$HOME|~|; s|(\.?[^/])[^/]*/|\1/|g"; }
+
 # Set Bash prompt according to terminal type and location.
 if tty | grep -E 'tty[^s]' &> /dev/null; then
 
     # Native terminal device, and likely no Unicode support.
-    PS1="${BYEL}\w${END}\$(git_info) ${BCYN}\$${END} "
+    PS1="${BYEL}\$(pwd_abbr)${END}\$(git_info) ${BCYN}\$${END} "
     PS2="${BCYN}>${END} "
 else
 
@@ -76,11 +79,11 @@ else
     if [[ -v SSH_TTY ]]; then
 
         # Remote server.
-        PS1="${CYN}\u${END}${GRN}@${END}${PRP}\h${END}${GRN}:${END}${YEL}\W${END}\$(git_info) ${RED}${BASS_CLEF}${END} "
+        PS1="${CYN}\u${END}${GRN}@${END}${PRP}\h${END}${GRN}:${END}${YEL}\$(pwd_abbr)${END}\$(git_info) ${RED}${BASS_CLEF}${END} "
     else
 
         # Local machine.
-        PS1="${BYEL}\W${END}\$(git_info) ${BCYN}${BASS_CLEF}${END} "
+        PS1="${BYEL}\$(pwd_abbr)${END}\$(git_info) ${BCYN}${BASS_CLEF}${END} "
     fi
 fi
 
