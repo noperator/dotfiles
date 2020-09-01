@@ -35,7 +35,7 @@ git_info() {
 
             # Trim out unnecessary text, remote tracking branch, etc.
             sub(/No commits yet on /, "");
-            sub(/\.{3}.*/, "", $2);
+            sub(/\.\.\..*/, "", $2);  # mawk does not support curly braces.
 
             # Print branch name in red if missing commits.
             if (index($0, "behind"))
@@ -59,7 +59,7 @@ git_info() {
             print $1"-";
         }
     }' |
-    sort -ru |
+    (read -r; printf '%s\n' "$REPLY"; sort -ru) |
     tr '\n' ' ' |
     sed 's/^## //; s/- /-/g; s/[- ]*$//'
 }
