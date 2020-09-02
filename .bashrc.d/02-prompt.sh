@@ -3,12 +3,6 @@
 BASS_CLEF=$(printf '\xf0\x9d\x84\xa2')
 ELLIPSIS=$(printf '\xe2\x80\xa6')
 
-# Using PS1-compatible colors according to a Stack Overflow post:
-# - https://stackoverflow.com/a/43462720
-PROMPT_GRN=$(echo -ne '\001\e[0;32m\002')
-PROMPT_RED=$(echo -ne '\001\e[0;31m\002')
-PROMPT_END=$(echo -ne '\001\e[m\002')
-
 # Print color-coded, abbreviated Git status and branch.
 git_info() {
 
@@ -17,20 +11,35 @@ git_info() {
         false
         return
     else
+        # echo -ne " ${RYEL}[${REND}"
         echo -n ' '
     fi
 
-    # Use script utility to preserve colorized output throughout the pipeline,
-    # as documented on this Stack Overflow post:
-    # - https://stackoverflow.com/a/7646881
+    # Force Git to preserve colorized output throughout the pipeline.
     git -c color.ui=always status -sb |
-    awk -v "ellipsis=$ELLIPSIS" -v "grn=$PROMPT_GRN" -v "red=$PROMPT_RED" -v "end=$PROMPT_END" '{
+    awk -v "ellipsis=$ELLIPSIS" '{
+
+        # readline accepts \x01 and \x02 as non-printable text delimiters for
+        # ANSI escape sequences (e.g., color codes).
+        # - https://superuser.com/a/301355
+        # - https://stackoverflow.com/a/43462720
+        # - https://git.savannah.gnu.org/cgit/readline.git/tree/display.c#n320
+        # - https://en.wikipedia.org/wiki/ANSI_escape_code
+        # 01: SOH (start of heading; i.e., start non-visible characters)
+        # 02: STX (start of text;    i.e., end   non-visible characters)
+        # 1B: ESC (escape)
+        red = "\x01\x1B[0;31m\x02";
+        grn = "\x01\x1B[0;32m\x02";
+        yel = "\x01\x1B[0;33m\x02";
+        end = "\x01\x1B[m\x02";
 
         # Translate Bash-specific \[ and \] to \001 and \002.
         gsub(/.\[31m/, red);
         gsub(/.\[32m/, grn);
         gsub(/.\[m/,   end);
         gsub(/\r/,     "");
+
+        # Match branch line.
         if ($1 == "##") {
 
             # Trim out unnecessary text.
@@ -81,12 +90,15 @@ git_info() {
             print;
         }
         else {
-            print $1"-";
+            print $1;
         }
     }' |
-    (read -r; printf '%s\n' "$REPLY"; sort -ru) |
+    (read -r
+     printf '%s\n' "$REPLY"
+     sort -r | uniq -c | awk -v "end=$REND" '{printf substr($2, 0, length($2) - 5) $1 end}') |
     tr '\n' ' ' |
     sed 's/- /-/g; s/[- ]*$//'
+    # echo -ne "${RYEL}]${REND}"
 }
 
 # Print abbreviated working directory.
