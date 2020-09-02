@@ -95,7 +95,7 @@ git_info() {
     }' |
     (read -r
      printf '%s\n' "$REPLY"
-     sort -r | uniq -c | awk -v "end=$REND" '{printf substr($2, 0, length($2) - 5) $1 end}') |
+     sort -r | uniq -c | awk -v "end=$REND" '{printf substr($2, 0, length($2) - 4) $1 end}') |
     tr '\n' ' ' |
     sed 's/- /-/g; s/[- ]*$//'
     # echo -ne "${RYEL}]${REND}"
