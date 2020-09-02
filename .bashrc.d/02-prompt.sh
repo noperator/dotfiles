@@ -47,13 +47,13 @@ git_info() {
             # - https://stackoverflow.com/a/3651867
             if (sub(/\.\.\./, ":", $2)) {
 
-                # Extract plain text branch names (i.e., without ANSI escape sequences).
-                split($2, branches, ":");
-                sub(/:[^ ]*/, "", $2);
-                local = branches[1];
-                remote = branches[2];
-                gsub(/\x01\x1B\[[0-9]*m\x02/, "", local);
-                gsub(/\x01\x1B\[[0-9]*m\x02/, "", remote);
+                # Extract plain text branch names.
+                branch_str = $2;
+                gsub(/\x01\x1B\[[0-9]*m\x02/, "", branch_str);  # Remove ANSI escape sequences.
+                split(branch_str, branch_arr, ":");
+                sub(/:[^ ]*/, "", $2);  # Remove remote branch.
+                local = branch_arr[1];
+                remote = branch_arr[2];
 
                 # Print local branch name in red if missing commits from
                 # remote. If fast-forward possible, print indicator in green.
