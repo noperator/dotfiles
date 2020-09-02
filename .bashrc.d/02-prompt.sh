@@ -100,7 +100,7 @@ pwd_abbr() { <<< "$PWD" sed -E "s|$HOME|~|; s|(\.?[^/])[^/]*/|\1/|g"; }
 PWD_ABBR="$YEL\$(pwd_abbr)$END"
 GIT_INFO="\$(git_info)"
 PS1="$PWD_ABBR$GIT_INFO"
-AUTHORITY="$CYN\u$END@$PRP\h$END:"
+AUTHORITY="$CYN\u$END@$MAG\h$END:"
 PS1_CLR="$CYN"
 PS1_SYM="$BASS_CLEF"
 PS2_CLR="$CYN"
