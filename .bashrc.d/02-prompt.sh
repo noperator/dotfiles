@@ -50,8 +50,10 @@ git_info() {
                 # Extract plain text branch names (i.e., without ANSI escape sequences).
                 split($2, branches, ":");
                 sub(/:[^ ]*/, "", $2);
-                local  = substr(branches[1], length(grn) + 1, length(branches[1]) - (length(grn) + length(end)));
-                remote = substr(branches[2], length(red) + 1, length(branches[2]) - (length(red) + length(end)));
+                local = branches[1];
+                remote = branches[2];
+                gsub(/\x01\x1B\[[0-9]*m\x02/, "", local);
+                gsub(/\x01\x1B\[[0-9]*m\x02/, "", remote);
 
                 # Print local branch name in red if missing commits from
                 # remote. If fast-forward possible, print indicator in green.
