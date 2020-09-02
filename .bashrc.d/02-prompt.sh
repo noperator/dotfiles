@@ -14,28 +14,24 @@ git_info() {
         echo -n ' '
     fi
 
-    # Force Git to preserve colorized output throughout the pipeline.
+    # Force Git to preserve colorized output throughout the pipeline. For some
+    # reason, Git doesn't surround its ANSI escape sequences with ASCII SOH/STX
+    # bytes (which readline uses as non-printable text delimiters); manually
+    # adding those delimiters with Perl so the terminal doesn't get screwed up.
+    # 0x01: SOH (start of heading; i.e., start non-visible characters)
+    # 0x02: STX (start of text;    i.e., end   non-visible characters)
+    # 0x1B: ESC (escape)
+    # - https://superuser.com/a/301355
+    # - https://stackoverflow.com/a/43462720
+    # - https://git.savannah.gnu.org/cgit/readline.git/tree/display.c#n320
+    # - https://en.wikipedia.org/wiki/ANSI_escape_code
     git -c color.ui=always status -sb |
+    perl -pe 's/([^\x01]?)(\x1B\[.*?m)([^\x02]?)/\1\x01\2\x02\3/g' |
     awk -v "ellipsis=$ELLIPSIS" '{
 
-        # readline accepts \x01 and \x02 as non-printable text delimiters for
-        # ANSI escape sequences (e.g., color codes).
-        # - https://superuser.com/a/301355
-        # - https://stackoverflow.com/a/43462720
-        # - https://git.savannah.gnu.org/cgit/readline.git/tree/display.c#n320
-        # - https://en.wikipedia.org/wiki/ANSI_escape_code
-        # 01: SOH (start of heading; i.e., start non-visible characters)
-        # 02: STX (start of text;    i.e., end   non-visible characters)
-        # 1B: ESC (escape)
-        red = "\x01\x1B[0;31m\x02";
-        grn = "\x01\x1B[0;32m\x02";
+        red = "\x01\x1B[31m\x02";
+        grn = "\x01\x1B[32m\x02";
         end = "\x01\x1B[m\x02";
-
-        # Translate Bash-specific \[ and \] to \001 and \002.
-        gsub(/.\[31m/, red);
-        gsub(/.\[32m/, grn);
-        gsub(/.\[m/,   end);
-        gsub(/\r/,     "");
 
         # Match branch line.
         if ($1 == "##") {
@@ -51,18 +47,18 @@ git_info() {
             # - https://stackoverflow.com/a/3651867
             if (sub(/\.\.\./, ":", $2)) {
 
-                # Extract branch names while stripping out color codes.
+                # Extract plain text branch names (i.e., without ANSI escape sequences).
                 split($2, branches, ":");
                 sub(/:[^ ]*/, "", $2);
-                local  = substr(branches[1], 10, length(branches[1]) - 14);
-                remote = substr(branches[2], 10, length(branches[2]) - 14);
+                local  = substr(branches[1], length(grn) + 1, length(branches[1]) - (length(grn) + length(end)));
+                remote = substr(branches[2], length(red) + 1, length(branches[2]) - (length(red) + length(end)));
 
                 # Print local branch name in red if missing commits from
                 # remote. If fast-forward possible, print indicator in green.
                 # - https://stackoverflow.com/a/49272912
                 if (index($0, "behind")) {
                     sub(/32/, "31");  # Change from green to red.
-                    if (system("git merge-base --is-ancestor " local " " remote) == 0) {
+                    if (system("git merge-base --is-ancestor '\''" local "'\'' '\''" remote "'\''") == 0) {
                         $0 = $0 grn ">>" end;
                     }
                 }
@@ -96,14 +92,11 @@ git_info() {
      sort -r | uniq -c | awk -v "yel=$RYEL" -v "end=$REND" '{printf $2 yel $1 end}') |
     tr '\n' ' ' |
     sed 's/ $//'
-
-      #sort -r | uniq -c | awk -v "end=$REND" '{printf substr($2, 0, length($2) - 4) $1 end}') |
 }
 
 # Print abbreviated working directory.
 pwd_abbr() { <<< "$PWD" sed -E "s|$HOME|~|; s|(\.?[^/])[^/]*/|\1/|g"; }
 
-# Set Bash prompt according to terminal type and location.
 PWD_ABBR="$YEL\$(pwd_abbr)$END"
 GIT_INFO="\$(git_info)"
 PS1="$PWD_ABBR$GIT_INFO"
@@ -113,7 +106,8 @@ PS1_SYM="$BASS_CLEF"
 PS2_CLR="$CYN"
 PS2_SYM="$ELLIPSIS"
 
-# Native terminal device, and likely no Unicode support.
+# Set Bash prompt according to terminal type and location. Native terminal
+# device (TTY) likely implies no Unicode support.
 if tty | grep -E 'tty[^s]' &> /dev/null; then
     PS1_SYM='$'
     PS2_SYM='>'
@@ -125,12 +119,6 @@ else
     if [[ -v SSH_TTY ]]; then
         PS1="$AUTHORITY$PS1"
         PS1_CLR="$RED"
-
-    # Local machine.
-    # else
-        # Embolden the prompt to help distinguish it from remote machines.
-        # PS1="\$(<<< \"$PS1\" sed 's/0;3/1;3/g')"
-        # PS2="\$(<<< \"$PS2\" sed 's/0;3/1;3/g')"
     fi
 fi
 

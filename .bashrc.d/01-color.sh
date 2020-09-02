@@ -11,7 +11,7 @@ CYN='\[\e[0;36m\]'
 WHT='\[\e[0;37m\]'
 END='\[\e[m\]'                          
 
-# Non-PS1
+# Non-PS1 ("raw")
 RBLK='\x01\x1B[0;30m\x02'
 RRED='\x01\x1B[0;31m\x02'
 RGRN='\x01\x1B[0;32m\x02'
