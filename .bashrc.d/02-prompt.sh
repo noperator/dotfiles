@@ -11,7 +11,6 @@ git_info() {
         false
         return
     else
-        # echo -ne " ${RYEL}[${REND}"
         echo -n ' '
     fi
 
@@ -28,9 +27,8 @@ git_info() {
         # 01: SOH (start of heading; i.e., start non-visible characters)
         # 02: STX (start of text;    i.e., end   non-visible characters)
         # 1B: ESC (escape)
-        red = "\x01\x1B[1;31m\x02";
-        grn = "\x01\x1B[1;32m\x02";
-        yel = "\x01\x1B[1;33m\x02";
+        red = "\x01\x1B[0;31m\x02";
+        grn = "\x01\x1B[0;32m\x02";
         end = "\x01\x1B[m\x02";
 
         # Translate Bash-specific \[ and \] to \001 and \002.
@@ -97,33 +95,37 @@ git_info() {
      printf '%s\n' "$REPLY"
      sort -r | uniq -c | awk -v "end=$REND" '{printf substr($2, 0, length($2) - 4) $1 end}') |
     tr '\n' ' '
-    # echo -ne "${RYEL}]${REND}"
 }
 
 # Print abbreviated working directory.
 pwd_abbr() { <<< "$PWD" sed -E "s|$HOME|~|; s|(\.?[^/])[^/]*/|\1/|g"; }
 
 # Set Bash prompt according to terminal type and location.
-PWD_ABBR="$BYEL\$(pwd_abbr)$END"
+PWD_ABBR="$YEL\$(pwd_abbr)$END"
 GIT_INFO="\$(git_info)"
+PS1="$PWD_ABBR$GIT_INFO"
 AUTHORITY="$CYN\u$END$GRN@$END$PRP\h$END$GRN:$END$YEL"
 if tty | grep -E 'tty[^s]' &> /dev/null; then
 
     # Native terminal device, and likely no Unicode support.
-    PS1="$PWD_ABBR$GIT_INFO $BCYN\$$END "
-    PS2="$BCYN>$END "
+    PS1="$PS1 $CYN\$$END "
+    PS2="$CYN>$END "
 else
 
     # Pseudo terminal device.
-    PS2="$BCYN$ELLIPSIS$END "
+    PS2="$CYN$ELLIPSIS$END "
     if [[ -v SSH_TTY ]]; then
 
-        # Remote server.
-        PS1="$AUTHORITY$PWD_ABBR$GIT_INFO $RED$BASS_CLEF$END "
+        # Remote server. Prepend authority string.
+        PS1="$AUTHORITY$PS1 $RED$BASS_CLEF$END "
     else
 
         # Local machine.
-        PS1="$PWD_ABBR$GIT_INFO $BCYN$BASS_CLEF$END "
+        PS1="$PS1 $CYN$BASS_CLEF$END "
+
+        # Embolden the prompt to help distinguish it from remote machines.
+        PS1="\$(<<< \"$PS1\" sed 's/0;3/1;3/g')"
+        PS2="\$(<<< \"$PS2\" sed 's/0;3/1;3/g')"
     fi
 fi
 
