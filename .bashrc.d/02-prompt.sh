@@ -28,9 +28,9 @@ git_info() {
         # 01: SOH (start of heading; i.e., start non-visible characters)
         # 02: STX (start of text;    i.e., end   non-visible characters)
         # 1B: ESC (escape)
-        red = "\x01\x1B[0;31m\x02";
-        grn = "\x01\x1B[0;32m\x02";
-        yel = "\x01\x1B[0;33m\x02";
+        red = "\x01\x1B[1;31m\x02";
+        grn = "\x01\x1B[1;32m\x02";
+        yel = "\x01\x1B[1;33m\x02";
         end = "\x01\x1B[m\x02";
 
         # Translate Bash-specific \[ and \] to \001 and \002.
@@ -96,8 +96,7 @@ git_info() {
     (read -r
      printf '%s\n' "$REPLY"
      sort -r | uniq -c | awk -v "end=$REND" '{printf substr($2, 0, length($2) - 4) $1 end}') |
-    tr '\n' ' ' |
-    sed 's/- /-/g; s/[- ]*$//'
+    tr '\n' ' '
     # echo -ne "${RYEL}]${REND}"
 }
 
@@ -105,23 +104,26 @@ git_info() {
 pwd_abbr() { <<< "$PWD" sed -E "s|$HOME|~|; s|(\.?[^/])[^/]*/|\1/|g"; }
 
 # Set Bash prompt according to terminal type and location.
+PWD_ABBR="$BYEL\$(pwd_abbr)$END"
+GIT_INFO="\$(git_info)"
+AUTHORITY="$CYN\u$END$GRN@$END$PRP\h$END$GRN:$END$YEL"
 if tty | grep -E 'tty[^s]' &> /dev/null; then
 
     # Native terminal device, and likely no Unicode support.
-    PS1="${BYEL}\$(pwd_abbr)${END}\$(git_info) ${BCYN}\$${END} "
-    PS2="${BCYN}>${END} "
+    PS1="$PWD_ABBR$GIT_INFO $BCYN\$$END "
+    PS2="$BCYN>$END "
 else
 
     # Pseudo terminal device.
-    PS2="${BCYN}$ELLIPSIS${END} "
+    PS2="$BCYN$ELLIPSIS$END "
     if [[ -v SSH_TTY ]]; then
 
         # Remote server.
-        PS1="${CYN}\u${END}${GRN}@${END}${PRP}\h${END}${GRN}:${END}${YEL}\$(pwd_abbr)${END}\$(git_info) ${RED}${BASS_CLEF}${END} "
+        PS1="$AUTHORITY$PWD_ABBR$GIT_INFO $RED$BASS_CLEF$END "
     else
 
         # Local machine.
-        PS1="${BYEL}\$(pwd_abbr)${END}\$(git_info) ${BCYN}${BASS_CLEF}${END} "
+        PS1="$PWD_ABBR$GIT_INFO $BCYN$BASS_CLEF$END "
     fi
 fi
 
