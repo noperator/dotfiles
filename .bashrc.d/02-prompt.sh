@@ -93,8 +93,11 @@ git_info() {
     }' |
     (read -r
      printf '%s\n' "$REPLY"
-     sort -r | uniq -c | awk -v "end=$REND" '{printf substr($2, 0, length($2) - 4) $1 end}') |
-    tr '\n' ' '
+     sort -r | uniq -c | awk -v "yel=$RYEL" -v "end=$REND" '{printf $2 yel $1 end}') |
+    tr '\n' ' ' |
+    sed 's/ $//'
+
+      #sort -r | uniq -c | awk -v "end=$REND" '{printf substr($2, 0, length($2) - 4) $1 end}') |
 }
 
 # Print abbreviated working directory.
@@ -104,29 +107,34 @@ pwd_abbr() { <<< "$PWD" sed -E "s|$HOME|~|; s|(\.?[^/])[^/]*/|\1/|g"; }
 PWD_ABBR="$YEL\$(pwd_abbr)$END"
 GIT_INFO="\$(git_info)"
 PS1="$PWD_ABBR$GIT_INFO"
-AUTHORITY="$CYN\u$END$GRN@$END$PRP\h$END$GRN:$END$YEL"
-if tty | grep -E 'tty[^s]' &> /dev/null; then
+AUTHORITY="$CYN\u$END@$PRP\h$END:"
+PS1_CLR="$CYN"
+PS1_SYM="$BASS_CLEF"
+PS2_CLR="$CYN"
+PS2_SYM="$ELLIPSIS"
 
-    # Native terminal device, and likely no Unicode support.
-    PS1="$PS1 $CYN\$$END "
-    PS2="$CYN>$END "
+# Native terminal device, and likely no Unicode support.
+if tty | grep -E 'tty[^s]' &> /dev/null; then
+    PS1_SYM='$'
+    PS2_SYM='>'
+
+# Pseudo terminal device.
 else
 
-    # Pseudo terminal device.
-    PS2="$CYN$ELLIPSIS$END "
+    # Remote server. Prepend authority string.
     if [[ -v SSH_TTY ]]; then
+        PS1="$AUTHORITY$PS1"
+        PS1_CLR="$RED"
 
-        # Remote server. Prepend authority string.
-        PS1="$AUTHORITY$PS1 $RED$BASS_CLEF$END "
-    else
-
-        # Local machine.
-        PS1="$PS1 $CYN$BASS_CLEF$END "
-
+    # Local machine.
+    # else
         # Embolden the prompt to help distinguish it from remote machines.
-        PS1="\$(<<< \"$PS1\" sed 's/0;3/1;3/g')"
-        PS2="\$(<<< \"$PS2\" sed 's/0;3/1;3/g')"
+        # PS1="\$(<<< \"$PS1\" sed 's/0;3/1;3/g')"
+        # PS2="\$(<<< \"$PS2\" sed 's/0;3/1;3/g')"
     fi
 fi
+
+PS1="$PS1 $PS1_CLR$PS1_SYM$END "
+PS2="$PS2_CLR$PS2_SYM$END "
 
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
