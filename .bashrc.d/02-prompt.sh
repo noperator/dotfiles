@@ -81,7 +81,7 @@ git_info() {
             sub(/ahead /, grn "+");
             sub(/(, )?behind /, red "-");
 
-            print branch_color local_branch ff_sym $3 end;
+            print branch_color local_branch ff_sym $1 end;
         }
         else {
             print $1;
