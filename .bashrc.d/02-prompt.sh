@@ -27,8 +27,15 @@ git_info() {
     # - https://en.wikipedia.org/wiki/ANSI_escape_code
     git -c color.ui=always status -sb |
     perl -pe 's/([^\x01]?)(\x1B\[.*?m)([^\x02]?)/\1\x01\2\x02\3/g' |
-    awk -v "ellipsis=$ELLIPSIS" -v "red=${CLR[RED]}" -v "grn=${CLR[GRN]}" -v "end=${CLR[END]}" '{
+    awk -v "ellipsis=$ELLIPSIS" -v "red=${CLR[RED]}" -v "grn=${CLR[GRN]}" -v "end=${CLR[END]}" '
 
+    # Remove ANSI escape sequences.
+    function strip_ansi(str) {
+        gsub(/\x01\x1B\[[;0-9]*m\x02/, "", str);
+        return str;
+    }
+
+    {
         branch_color = grn;
 
         # Match branch line.
@@ -46,8 +53,7 @@ git_info() {
             if (sub(/\.\.\./, ":", $2)) {
 
                 # Extract plain text branch names.
-                branch_str = $2;
-                gsub(/\x01\x1B\[[;0-9]*m\x02/, "", branch_str);  # Remove ANSI escape sequences.
+                branch_str = strip_ansi($2);
                 split(branch_str, branch_arr, ":");
                 sub(/:[^ ]*/, "", $2);  # Remove remote branch.
                 local_branch = branch_arr[1];
@@ -58,16 +64,15 @@ git_info() {
                 # - https://stackoverflow.com/a/49272912
                 if (index($0, "behind")) {
                     branch_color = red;
-                    check_ff_cmd = "git merge-base --is-ancestor '\''" local_branch "'\'' '\''" remote_branch "'\''";
-                    if (system(check_ff_cmd) == 0) {
-                        ff_sym = grn ">>";
+                    check_fastfwd = "git merge-base --is-ancestor '\''" local_branch "'\'' '\''" remote_branch "'\''";
+                    if (system(check_fastfwd) == 0) {
+                        fastfwd = grn ">>";
                     }
                 }
             }
             else {
                 sub(/:/, "", $2);
-                gsub(/\x01\x1B\[[;0-9]*m\x02/, "", $2);  # Remove ANSI escape sequences.
-                local_branch = $2;
+                local_branch = strip_ansi($2);
             }
 
             # Abbreviate branch name.
@@ -76,12 +81,13 @@ git_info() {
                 local_branch = substr(local_branch, 0, max_branch_len) ellipsis;
 
             # Shorten commit status (remainder of line after $2).
-            $1 = $2 = "";
+            $1 = $2 = "";  # Only commit status will remain in $0.
             gsub(/^ *\[|\] *$/, "");
             sub(/ahead /, grn "+");
             sub(/(, )?behind /, red "-");
+            commit_stat = $1;
 
-            print branch_color local_branch ff_sym $1 end;
+            print branch_color local_branch end ":" commit_stat fastfwd end;
         }
         else {
             print $1;
@@ -90,8 +96,8 @@ git_info() {
     (read -r
      printf '%s\n' "$REPLY"
      sort -r | uniq -c | awk -v "yel=${CLR[YEL]}" -v "end=${CLR[END]}" '{printf $2 yel $1 end}') |
-    tr '\n' ' ' |
-    sed -E 's/ +/ /g; s/ *$//'
+    tr '\n' ':' |
+    perl -pe "s/:$(<<< ${CLR[END]} sed 's/\[/\\[/'):/:/g; s/:*$//"
 }
 
 # Print abbreviated working directory.
