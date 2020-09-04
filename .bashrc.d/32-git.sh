@@ -11,11 +11,12 @@ gl() {
     fi
 
     export COLUMNS
-    git --no-pager log \
+    (git --no-pager log \
         --max-count=20 \
         --color=always \
         --date=short \
-        --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an <%ae>%Cgreen%d %Creset%s' $FOLLOW "$@" |
+        --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an <%ae>%Cgreen%d %Creset%s' $FOLLOW "$@"
+     echo) |
     while read LINE; do
         # Cut while ignoring ANSI-type escape sequences. Regex source:
         # - https://unix.stackexchange.com/a/46982
