@@ -1,5 +1,6 @@
 #!/bin/bash
 
+alias smile='<<< '🙂' pbcopy'
 alias de='date "+%s"'
 alias ec='exiftool -overwrite_original_in_place -all=""'
 alias errcho='>&2 echo'
