@@ -1,26 +1,24 @@
 #!/bin/bash
 
-# PS1
-BLK='\[\e[0;30m\]'
-RED='\[\e[0;31m\]'
-GRN='\[\e[0;32m\]'
-YEL='\[\e[0;33m\]'
-BLU='\[\e[0;34m\]'
-MAG='\[\e[0;35m\]'
-CYN='\[\e[0;36m\]'
-WHT='\[\e[0;37m\]'
-END='\[\e[m\]'                          
+declare -A CLR
+CLR[BLK]='\x01\x1B[0;30m\x02'
+CLR[RED]='\x01\x1B[0;31m\x02'
+CLR[GRN]='\x01\x1B[0;32m\x02'
+CLR[YEL]='\x01\x1B[0;33m\x02'
+CLR[BLU]='\x01\x1B[0;34m\x02'
+CLR[MAG]='\x01\x1B[0;35m\x02'
+CLR[CYN]='\x01\x1B[0;36m\x02'
+CLR[WHT]='\x01\x1B[0;37m\x02'
+CLR[END]='\x01\x1B[m\x02'
 
-# Non-PS1 ("raw")
-RBLK='\x01\x1B[0;30m\x02'
-RRED='\x01\x1B[0;31m\x02'
-RGRN='\x01\x1B[0;32m\x02'
-RYEL='\x01\x1B[0;33m\x02'
-RBLU='\x01\x1B[0;34m\x02'
-RMAG='\x01\x1B[0;35m\x02'
-RCYN='\x01\x1B[0;36m\x02'
-RWHT='\x01\x1B[0;37m\x02'
-REND='\x01\x1B[m\x02'                                 
+# Create separate array for prompt string colors.
+declare -A PS_CLR
+for COLOR in "${!CLR[@]}"; do
+    declare "PS_CLR[$COLOR]"=$(
+        echo -ne "${CLR[$COLOR]}" |
+        perl -pe 's/\x01/\\[/; s/\x1B/\\e/; s/\x02/\\]/'
+    )
+done
 
 # Print 256-color test pattern.
 # - https://askubuntu.com/a/821163
