@@ -41,6 +41,21 @@ move_window()
     ABS_DISP_INDEX=$(get_display_index)
     ABS_SPACE_INDEX=$(get_space_index "$REL_SPACE_INDEX")
 
+    # Bail if the window is already in the right location.
+    MOVE='false'
+    for WINDOW_ID in $WINDOW_IDS; do
+        LOC=$(<<< "$WINDOWS" jq -j '.[] | select(.id == '"$WINDOW_ID"') | .space, ":", .display, "\n"' | sort -u)
+        DEST="$ABS_SPACE_INDEX:$ABS_DISP_INDEX"
+        if [[ "$LOC" != "$DEST" ]]; then
+            MOVE='true'
+            echo "[*] $LOC ⮕ $DEST"
+        fi
+    done
+    if [[ "$MOVE" == 'false' ]]; then
+        echo "[+] $APP"
+        return
+    fi
+
     # Create the space if it doesn't already exist.
     if [[ "$ABS_SPACE_INDEX" == 'null' ]]; then
         MESSAGE="Creating extra space on display $ABS_DISP_INDEX"
