@@ -24,7 +24,8 @@ move_window()
     REL_DISP_INDEX="$3"
     WINDOW_IDS="$4"
 
-    # Get windows IDs associated with the application name, and bail if none exist.
+    # Get windows IDs associated with the application name, and bail if none
+    # exist.
     if [[ -z "$WINDOW_IDS" ]]; then
         WINDOW_IDS=$(<<< "$WINDOWS" jq '.[] | select(.app=="'"$APP"'") | .id')
         if [[ -z "$WINDOW_IDS" ]]; then
@@ -100,20 +101,26 @@ FIREFOX_PROFILES=$(
 # Get Teams meeting window ID. Uses the heuristic that of all windows having
 # "| Microsoft Teams" in the title, the meeting will have been created most
 # recently, and will therefore have the highest window ID.
-TEAMS_WINDOWS=$(<<< "$WINDOWS" jq '.[] | select(.title | index(" | Microsoft Teams")) | .id')
+TEAMS_WINDOWS=$(<<< "$WINDOWS" jq '.[] | select(.title | index(" | Microsoft Teams")) | .id' | sort -n)
+TEAMS_MAIN=$(<<< "$TEAMS_WINDOWS" head -n 1)
 if [[ $(<<< "$TEAMS_WINDOWS" wc -l | tr -d ' \n') -gt 1 ]]; then
-    TEAMS_MEETING=$(<<< "$TEAMS_WINDOWS" sort -n | tail -n 1)
+    TEAMS_MEETING=$(<<< "$TEAMS_WINDOWS" tail -n 1)
 fi
 
 # Get Slack call window ID.
 SLACK_CALL=$(<<< "$WINDOWS" jq -r '.[] | select(.title | test("Slack \\| .* \\| [0-9]+:[0-9]+")) | .id')
 
+# Display initial notififcation. Useful to ensure that the script is running
+# when there aren't any windows that need moving (i.e., when there aren't any
+# further notifications).
+notify "Moving windows..."
+
 # Move windows.
-move_window 'Firefox (Work)'          0 0 "$(<<< "$FIREFOX_PROFILES" jq '.Work     | @tsv' -r)"
+move_window 'Firefox (Work)'          0 0 "$(<<< "$FIREFOX_PROFILES" jq -r '.Work     | @tsv')"
 move_window 'Google Chrome'           1 0
 move_window 'Burp Suite Professional' 1 0
 move_window 'Ghidra'                  1 0
-move_window 'Firefox (Personal)'      2 0 "$(<<< "$FIREFOX_PROFILES" jq '.Personal | @tsv' -r)"
+move_window 'Firefox (Personal)'      2 0 "$(<<< "$FIREFOX_PROFILES" jq -r '.Personal | @tsv')"
 move_window 'VirtualBox'              3 0
 move_window 'VirtualBox VM'           3 0
 move_window 'VMware Fusion'           3 0
@@ -128,7 +135,7 @@ else
     SPACE_INDEX_OFFSET='4'
 fi
 move_window 'Microsoft Outlook'         $((SPACE_INDEX_OFFSET + 0)) "$DISPLAY_INDEX"
-move_window 'Microsoft Teams'           $((SPACE_INDEX_OFFSET + 1)) "$DISPLAY_INDEX"
+move_window 'Microsoft Teams (Main)'    $((SPACE_INDEX_OFFSET + 1)) "$DISPLAY_INDEX" "$TEAMS_MAIN"
 move_window 'Slack'                     $((SPACE_INDEX_OFFSET + 2)) "$DISPLAY_INDEX"
 move_window 'Microsoft Teams (Meeting)' $((SPACE_INDEX_OFFSET + 3)) "$DISPLAY_INDEX" "$TEAMS_MEETING"
 move_window 'Slack (Call)'              $((SPACE_INDEX_OFFSET + 3)) "$DISPLAY_INDEX" "$SLACK_CALL"
