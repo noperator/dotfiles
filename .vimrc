@@ -11,6 +11,16 @@
 "   - softtabstop = sts = number of spaces that <Tab> uses while editing
 "   - shiftwidth  = sw  = number of spaces to use for (auto)indent step
 
+" Configure vim-plug plugin manager.
+call plug#begin(stdpath('data') . '/plugged')
+Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
+Plug 'masukomi/vim-markdown-folding'
+call plug#end()
+
+" Prevent jittering on semshi error check.
+" - https://github.com/numirias/semshi/issues/56#issuecomment-552523529
+" autocmd FileType python set signcolumn=yes
+
 " File-specific indentation.
 autocmd FileType javascript setl ts=2 sts=2 sw=2
 autocmd FileType python     setl ts=4 sts=4 sw=4 fdm=indent
