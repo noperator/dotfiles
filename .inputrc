@@ -1,13 +1,15 @@
-# Readline in Vi mode.
+# Set readline to Vi mode.
 set editing-mode vi
 set keyseq-timeout 0.1
 
-# Note: vi-*-mode-string requires Bash version >= 4.4.
+# Enable mode strings. Note: vi-*-mode-string requires Bash >= v4.4.
+# - Insert mode:  Blinking bar   (5)
+# - Command mode: Blinking block (1)
+# - https://www.gnu.org/software/bash/manual/html_node/Readline-Init-File-Syntax.html#index-vi_002dcmd_002dmode_002dstring
+# - https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h4-Functions-using-CSI-_-ordered-by-the-final-character-lparen-s-rparen:CSI-Ps-SP-q.1D81
 set show-mode-in-prompt on
-# Block cursor for insert mode.
-set vi-ins-mode-string \1\e[2 q\2
-# Underscore cursor for command mode.
-set vi-cmd-mode-string \1\e[4 q\2
+set vi-ins-mode-string \1\e[5 q\2
+set vi-cmd-mode-string \1\e[1 q\2
 
 # Ctrl+L clears screen in both modes.
 set keymap vi-command
