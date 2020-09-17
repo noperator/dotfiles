@@ -7,3 +7,7 @@ for FILE in .bashrc.extra; do
         source "$HOME/$FILE"
     fi
 done
+
+# Load fzf config.
+# - https://github.com/junegunn/fzf
+# [ -f "$HOME/.fzf.bash" ] && source "$HOME/.fzf.bash"
