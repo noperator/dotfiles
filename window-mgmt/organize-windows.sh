@@ -113,7 +113,7 @@ SLACK_CALL=$(<<< "$WINDOWS" jq -r '.[] | select(.title | test("Slack \\| .* \\| 
 # Display initial notififcation. Useful to ensure that the script is running
 # when there aren't any windows that need moving (i.e., when there aren't any
 # further notifications).
-notify "Moving windows..."
+notify 'Organizing windows...'
 
 # Move windows.
 move_window 'Firefox (Work)'          0 0 "$(<<< "$FIREFOX_PROFILES" jq -r '.Work     | @tsv')"

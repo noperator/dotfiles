@@ -3,9 +3,7 @@
 DIRNAME=$(dirname "$0")
 notify() { osascript -e 'display notification "'"$1"'" with title "'"Start Apps"'"'; }
 
-##
-# Start apps.
-##
+notify 'Starting apps...'
 
 notify 'Starting Firefox'
 source "$DIRNAME/../.bashrc.d/"*"-browser.sh"
@@ -17,15 +15,8 @@ for APP in \
 'Microsoft Teams' \
 'Slack' \
 ; do
-    if ! [[ $(pgrep -f "$APP.app") ]]; then
+    if ! pgrep -f "$APP.app" &>/dev/null; then
         notify "Starting $APP"
         open -a "$APP"
     fi
 done
-
-##
-# Organize windows.
-##
-
-sleep 10
-"$DIRNAME/organize-windows.sh"
