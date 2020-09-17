@@ -32,6 +32,7 @@ fi
 # These items don't contain sensitive information.
 for SCRIPT in \
 airpods \
+trackpad \
 battery \
 date \
 ; do \
