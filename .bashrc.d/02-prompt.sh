@@ -7,7 +7,7 @@ ELLIPSIS=$(printf '\xe2\x80\xa6')
 git_info() {
 
     # Bail if this isn't a git repo.
-    if git status 2>&1 | grep '^fatal: not a git repo' &> /dev/null; then
+    if git status |& grep -i '^fatal: not a git repo' &> /dev/null; then
         false
         return
     else
