@@ -1,6 +1,33 @@
 #!/bin/bash
 
-link() { ln -s "$HOME/dotfiles/$1" "$HOME/$2"; }
+# $1 is always the filename as it exists in the dotfiles directory.
+# $2 can be:
+# 1. nothing, in which case the filename in $1 should be the target under $HOME
+# 2. an alternate name that the file should be renamed as under $HOME
+# 3. a directory under $HOME where the filename in $1 should be linked
+link() {
+    echo
+    SOURCE_DOTFILE="$HOME/dotfiles/$1"
+    SOURCE_FILENAME=$(basename "$1")
+    if [[ ! -z "$2" ]]; then
+        if [[ -d "$HOME/$2" ]]; then
+            echo "Link:   $SOURCE_DOTFILE -> \$HOME/$2/$SOURCE_FILENAME"
+            TARGET="$HOME/$2/$SOURCE_FILENAME"
+        else
+            echo "Link:   $SOURCE_DOTFILE -> \$HOME/$2"
+            TARGET="$HOME/$2"
+        fi
+    else
+        echo "Link:   $SOURCE_DOTFILE -> \$HOME/$SOURCE_FILENAME"
+        TARGET="$HOME/$SOURCE_FILENAME"
+    fi
+    if [[ -e "$TARGET" ]]; then
+        BACKUP="$TARGET.bu.$(date '+%s')"
+        echo "Backup: $TARGET -> $BACKUP"
+        mv "$TARGET" "$BACKUP"
+    fi
+    ln -s "$SOURCE_DOTFILE" "$TARGET"
+}
 
 for FILE in \
 .bash_profile \
@@ -31,11 +58,17 @@ case "$OSTYPE" in
         link .skhdrc.yabai .skhdrc
         link .yabairc
         link widgets 'Library/Application Support/Übersicht/'
-        find terminal -type f | while read FILE; do
-            link "$FILE"
-        done
         for PROFILE in $(ls "$HOME/Library/Application Support/Firefox/Profiles/"); do
             link firefox/user.js "Library/Application Support/Firefox/Profiles/$PROFILE"
         done
         ;;
 esac
+
+# Clean up backup files:
+# for DIR in \
+# "$HOME" \
+# "$HOME/Library/Application Support/Firefox/Profiles/"* \
+# "$HOME/Library/Application Support/Übersicht/" \
+# ; do
+#     find "$DIR" -maxdepth 1 -type l -iname '*.bu.*' -delete
+# done
