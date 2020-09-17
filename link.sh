@@ -1,15 +1,20 @@
 #!/bin/bash
 
-# $1 is always the filename as it exists in the dotfiles directory.
-# $2 can be:
-# 1. nothing, in which case the filename in $1 should be the target under $HOME
-# 2. an alternate name that the file should be renamed as under $HOME
-# 3. a directory under $HOME where the filename in $1 should be linked
 link() {
-    echo
     SOURCE_DOTFILE="$HOME/dotfiles/$1"
     SOURCE_FILENAME=$(basename "$1")
-    if [[ ! -z "$2" ]]; then
+
+    # $1 is always the filename as it exists in dotfiles. $2 can be:
+    # 1. Nothing, in which case the filename in $1 should be the target
+    #    under $HOME.
+    # 2. A directory under $HOME where the filename in $1 should be
+    #    linked.
+    # 3. An alternate name that the file should be renamed as under
+    #    $HOME.
+    if [[ -z "$2" ]]; then
+        echo "Link:   $SOURCE_DOTFILE -> \$HOME/$SOURCE_FILENAME"
+        TARGET="$HOME/$SOURCE_FILENAME"
+    else
         if [[ -d "$HOME/$2" ]]; then
             echo "Link:   $SOURCE_DOTFILE -> \$HOME/$2/$SOURCE_FILENAME"
             TARGET="$HOME/$2/$SOURCE_FILENAME"
@@ -17,15 +22,19 @@ link() {
             echo "Link:   $SOURCE_DOTFILE -> \$HOME/$2"
             TARGET="$HOME/$2"
         fi
-    else
-        echo "Link:   $SOURCE_DOTFILE -> \$HOME/$SOURCE_FILENAME"
-        TARGET="$HOME/$SOURCE_FILENAME"
     fi
-    if [[ -e "$TARGET" ]]; then
+
+    # Remove existing symlinks. Otherwise, backup existing files.
+    if [[ -L "$TARGET" ]]; then
+        echo "Remove: $TARGET"
+        rm "$TARGET"
+    elif [[ -e "$TARGET" ]]; then
         BACKUP="$TARGET.bu.$(date '+%s')"
         echo "Backup: $TARGET -> $BACKUP"
         mv "$TARGET" "$BACKUP"
     fi
+
+    # Finally, link the dotfile to its intended target.
     ln -s "$SOURCE_DOTFILE" "$TARGET"
 }
 
