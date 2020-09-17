@@ -7,6 +7,9 @@ shift + alt - q : /usr/bin/pkill -9 -afi kitty
 # Organize windows.
 shift + cmd - return : ~/dotfiles/window-mgmt/organize-windows.sh
 
+# Start applications.
+shift + cmd + ctrl - return : ~/dotfiles/window-mgmt/start-apps.sh
+
 # Refresh all Übersicht widgets.
 # https://github.com/felixhageloh/uebersicht#scripting-support
 shift + cmd - r: osascript -e 'tell application id "tracesOf.Uebersicht" to refresh'
