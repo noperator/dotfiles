@@ -12,14 +12,16 @@
 "   - shiftwidth  = sw  = number of spaces to use for (auto)indent step
 
 " Configure vim-plug plugin manager.
-call plug#begin(stdpath('data') . '/plugged')
-Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
-Plug 'masukomi/vim-markdown-folding'
-call plug#end()
+if has('nvim')
+    call plug#begin(stdpath('data') . '/plugged')  " Specify plugin directory.
+    Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
+    Plug 'masukomi/vim-markdown-folding'
+    call plug#end()  " Initialize plugin system.
+endif
 
 " Prevent jittering on semshi error check.
 " - https://github.com/numirias/semshi/issues/56#issuecomment-552523529
-" autocmd FileType python set signcolumn=yes
+autocmd FileType python set signcolumn=yes
 
 " File-specific indentation.
 autocmd FileType javascript setl ts=2 sts=2 sw=2
