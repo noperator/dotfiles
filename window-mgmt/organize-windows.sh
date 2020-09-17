@@ -117,6 +117,7 @@ notify "Moving windows..."
 
 # Move windows.
 move_window 'Firefox (Work)'          0 0 "$(<<< "$FIREFOX_PROFILES" jq -r '.Work     | @tsv')"
+move_window 'Preview'                 1 0
 move_window 'Google Chrome'           1 0
 move_window 'Burp Suite Professional' 1 0
 move_window 'Ghidra'                  1 0
