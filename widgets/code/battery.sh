@@ -4,8 +4,8 @@ BATTERY=$(pmset -g batt)
 PERCENT=$(<<< "$BATTERY" grep -oE '\d*%' | tr -d '%')
 SOURCE=$(<<< "$BATTERY" tr -d "'" | awk '/Now drawing from/ {print $4}')
 
-# Don't bother printing battery status if it's fully charged.
-[[ "$PERCENT" -eq '100' ]] && exit
+# Don't print battery status if laptop is plugged in and fully charged.
+[[ "$PERCENT" -eq '100' ]] && [[ "$SOURCE" == 'AC' ]] && exit
 
 if [[ "$SOURCE" == 'AC' ]]; then
     ICON='plug'
