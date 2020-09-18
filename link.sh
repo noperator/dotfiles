@@ -11,30 +11,32 @@ link() {
     #    linked.
     # 3. An alternate name that the file should be renamed as under
     #    $HOME.
+    LINK='[*] Link:   '
     if [[ -z "$2" ]]; then
-        echo "Link:   $SOURCE_DOTFILE -> \$HOME/$SOURCE_FILENAME"
+        LINK="$LINK$SOURCE_DOTFILE -> \$HOME/$SOURCE_FILENAME"
         TARGET="$HOME/$SOURCE_FILENAME"
     else
         if [[ -d "$HOME/$2" ]]; then
-            echo "Link:   $SOURCE_DOTFILE -> \$HOME/$2/$SOURCE_FILENAME"
+            LINK="$LINK$SOURCE_DOTFILE -> \$HOME/$2/$SOURCE_FILENAME"
             TARGET="$HOME/$2/$SOURCE_FILENAME"
         else
-            echo "Link:   $SOURCE_DOTFILE -> \$HOME/$2"
+            LINK="$LINK$SOURCE_DOTFILE -> \$HOME/$2"
             TARGET="$HOME/$2"
         fi
     fi
 
     # Remove existing symlinks. Otherwise, backup existing files.
     if [[ -L "$TARGET" ]]; then
-        echo "Remove: $TARGET"
+        echo "[-] Remove: $TARGET@"
         rm "$TARGET"
     elif [[ -e "$TARGET" ]]; then
         BACKUP="$TARGET.bu.$(date '+%s')"
-        echo "Backup: $TARGET -> $BACKUP"
+        echo "[+] Backup: $TARGET -> $BACKUP"
         mv "$TARGET" "$BACKUP"
     fi
 
     # Finally, link the dotfile to its intended target.
+    echo "$LINK"
     ln -s "$SOURCE_DOTFILE" "$TARGET"
 }
 
@@ -46,6 +48,7 @@ for FILE in \
 .hushlogin \
 .inputrc \
 .inputrc.tmux \
+.local \
 .tmux.conf \
 .vimrc \
 ; do
@@ -56,7 +59,6 @@ case "$OSTYPE" in
     'linux-gnu'*)
         for FILE in \
         .asoundrc \
-        .local \
         .xinitrc \
         .Xresources \
         ; do
@@ -73,7 +75,7 @@ case "$OSTYPE" in
         ;;
 esac
 
-# Clean up backup files:
+# Clean up backup files on macOS:
 # for DIR in \
 # "$HOME" \
 # "$HOME/Library/Application Support/Firefox/Profiles/"* \
