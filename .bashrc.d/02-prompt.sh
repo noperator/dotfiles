@@ -118,7 +118,8 @@ if ! tty | grep -E 'tty[^s]' &> /dev/null; then
     PS2_SYM="$ELLIPSIS"
 
     # Remote server. Prepend authority string.
-    if [[ -v SSH_TTY ]]; then
+    # - https://unix.stackexchange.com/a/12761
+    if who -m | awk '{if ($NF ~ /\(.*\)/) {exit 0} else {exit 1}}'; then
         PS1="$AUTHORITY$PS1"
         PS1_CLR="${PS_CLR[RED]}"
     fi
