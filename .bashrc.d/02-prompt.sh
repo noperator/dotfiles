@@ -121,9 +121,11 @@ if ! tty | grep -E 'tty[^s]' &> /dev/null; then
 
     # Remote server; prepend authority string.
     # Checking for either the presence of an SSH-related environment variable,
-    # or the hostname who utility output implying a non-local login.
+    # or the who utility output implying a non-local login. It seems that when
+    # an X server is running, `who -m` doesn't return any output, which we're
+    # handling in awk's END line below.
     # - https://unix.stackexchange.com/a/12761
-    if [[ -v SSH_TTY ]] || who -m | awk '{if ($NF ~ /\(.*\)/) {exit 0} else {exit 1}}'; then
+    if [[ -v SSH_TTY ]] || who -m | awk '{if ($NF ~ /\(.*\)/) {exit 0} else {exit 1}} END {if (NR == 0) {exit 1}}'; then
         PS1="$AUTHORITY$PS1"
         PS1_CLR="${PS_CLR[RED]}"
     fi
