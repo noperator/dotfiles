@@ -109,6 +109,8 @@ PS1="$PWD_ABBR$GIT_INFO"
 AUTHORITY="${PS_CLR[CYN]}\u${PS_CLR[END]}@${PS_CLR[MAG]}\h${PS_CLR[END]}:"
 PS1_CLR="${PS_CLR[CYN]}"
 PS2_CLR="${PS_CLR[CYN]}"
+PS1_SYM='$'
+PS2_SYM='>'
 
 # Check terminal type and location. We can get more creative with Unicode
 # characters on a pseudo terminal device. Native terminal device likely implies
