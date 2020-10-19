@@ -136,7 +136,7 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # restart i3blocks inplace
-bindsym $mod+Shift+t exec "$HOME/.config/i3blocks/update.sh"
+bindsym $mod+Shift+t exec "$HOME/.config/i3blocks/reload.sh"
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
@@ -206,7 +206,7 @@ new_window 1pixel
 bindsym $mod+shift+z exec i3lock -tfi $HOME/.config/bsod_1920x1080.png
 
 # Startup services.
-exec --no-startup-id redshift -l `cat /tmp/coord.txt | tr -d '\n'` &
+# exec --no-startup-id redshift -l `cat /tmp/coord.txt | tr -d '\n'` &
 exec --no-startup-id dropbox &
  
 # Move workspaces between screens.
@@ -232,4 +232,3 @@ bindsym Shift+$mod+bracketleft move workspace to output left
 
 # Caps lock.
 # bindsym --release Caps_Lock exec pkill -SIGRTMIN+11 i3blocks
-

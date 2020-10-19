@@ -4,3 +4,4 @@
 .bashrc.extra
 .local/share/
 # .config/
+.env

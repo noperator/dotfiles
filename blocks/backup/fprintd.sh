@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "$HOME/.config/i3blocks/colors.sh"
+source "$(dirname $0)/_colors.sh"
 
 echo '🔑'
 echo '🔑'

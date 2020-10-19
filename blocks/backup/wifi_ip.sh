@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "$HOME/.config/i3blocks/network.sh"
+source "$(dirname $0)/_network.sh"
 
 if [[ "$WIFI_CONNECTED" = 'true' ]]; then
   IPADDR=$(ip addr show "$WIFI_IF" | perl -n -e "/inet ([^\/]+).* scope global/ && print \$1 and exit")

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "$HOME/.config/i3blocks/colors.sh"
+source "$(dirname $0)/_colors.sh"
 
 BATT=$(acpi -b | awk '{s+=$4; i+=1} END {print int(s/i)}')
 
