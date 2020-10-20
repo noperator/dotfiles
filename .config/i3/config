@@ -195,7 +195,7 @@ bindsym XF86MonBrightnessDown exec xbacklight -dec 5;                exec pkill 
 bindsym XF86MonBrightnessUp   exec xbacklight -inc 5;                exec pkill -RTMIN+9 i3blocks
 
 # Background image.
-exec --no-startup-id feh --bg-fill $HOME/.config/kualoa.png
+exec --no-startup-id feh --bg-fill $HOME/dotfiles/backgrounds/kualoa.png
 
 # Window borders.
 # for_window [class=".*"] border pixel 0
@@ -203,7 +203,7 @@ exec --no-startup-id feh --bg-fill $HOME/.config/kualoa.png
 new_window 1pixel
 
 # Lock screen.
-bindsym $mod+shift+z exec i3lock -tfi $HOME/.config/bsod_1920x1080.png
+bindsym $mod+shift+z exec i3lock -tfi $HOME/dotfiles/backgrounds/bsod.png
 
 # Startup services.
 exec --no-startup-id redshift -l `cat /tmp/coord.txt | tr -d '\n'` &
@@ -232,4 +232,3 @@ bindsym Shift+$mod+bracketleft move workspace to output left
 
 # Caps lock.
 # bindsym --release Caps_Lock exec pkill -SIGRTMIN+11 i3blocks
-
