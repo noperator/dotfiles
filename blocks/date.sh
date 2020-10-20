@@ -1,14 +1,8 @@
 #!/bin/bash
 
-# case "$OSTYPE" in
-#     'linux-gnu'*)
-#         echo -n ' '
-#         ;;
-#     'darwin'*)
-#         echo -n '@clock@ '
-#         ;;
-# esac
+source "$(dirname $0)/_fa-icons.sh"
 
+print_fa_icon 'clock'
+date '+%a %d %b %H%M'
 # date '+%a %-Oe %b %H%M'
 # date '+%a %d %b %H:%M %Z '
-date '+%a %d %b %H%M'

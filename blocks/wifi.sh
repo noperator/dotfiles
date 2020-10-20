@@ -1,20 +1,13 @@
 #!/bin/bash
 
+source "$(dirname $0)/_fa-icons.sh"
 source "$(dirname $0)/_abbr-ipv6.sh"
 source "$(dirname $0)/_network.sh"
 source "$(dirname $0)/.env"
 
 # WIFI_STATUS="$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport --getinfo)"
 
-case "$OSTYPE" in
-    'linux-gnu'*)
-        echo -n ' '
-        ;;
-    'darwin'*)
-        echo -n '@wifi@ '
-        ;;
-esac
-
+print_fa_icon 'wifi'
 if [[ "$WIFI_ENABLED" == 'false' ]]; then
     echo 'OFF'
 elif [[ "$WIFI_CONNECTED" == 'false' ]]; then

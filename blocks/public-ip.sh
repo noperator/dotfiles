@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source "$(dirname $0)/_fa-icons.sh"
 source "$(dirname $0)/_abbr-ipv6.sh"
 source "$(dirname $0)/_network.sh"
 
@@ -48,13 +49,6 @@ if [[ -z $(sed -E 's|[/ ]*||g' /var/tmp/public-ip-data.txt) ]] ||
     ) > /var/tmp/public-ip-data.txt
 fi
 
-case "$OSTYPE" in
-    'linux-gnu'*)
-        echo -n '🌎 '
-        ;;
-    'darwin'*)
-        echo -n '@globe@ '
-        ;;
-esac
+print_fa_icon 'globe'
 [[ "$WIFI_CONNECTED" == 'false' ]] && (echo; exit)
 cat /var/tmp/public-ip-data.txt | sed 's/ $//'

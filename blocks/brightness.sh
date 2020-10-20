@@ -1,7 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-source "$(dirname $0)/_colors.sh"
+source "$(dirname $0)/_fa-icons.sh"
 
 BRIGHTNESS=$(xbacklight -get | sed 's/\..*//')
 
-echo "☀ $BRIGHTNESS%"
+print_fa_icon 'adjust'
+echo "$BRIGHTNESS%"

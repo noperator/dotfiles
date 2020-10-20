@@ -1,5 +1,6 @@
 command=$HOME/dotfiles/blocks/$BLOCK_NAME.sh
-separator_block_width=20
+# separator_block_width=20
+separator=false
 
 [public-ip]
 interval=120
@@ -91,4 +92,3 @@ interval=30
 # [swap]
 # command=$HOME/dotfiles/blocks/swap.sh
 # interval=30
-

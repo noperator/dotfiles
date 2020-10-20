@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 GREEN='#00FF00'
 BLACK='#222222'

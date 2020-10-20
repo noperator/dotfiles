@@ -1,4 +1,4 @@
-command: "$HOME/dotfiles/blocks/status.sh"
+command: "$HOME/dotfiles/blocks/uebersicht-status.sh"
 
 refreshFrequency: 10000
 

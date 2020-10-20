@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source "$(dirname $0)/_fa-icons.sh"
 source "$(dirname $0)/_abbr-ipv6.sh"
 source "$(dirname $0)/.env"
 
@@ -54,14 +55,7 @@ if ! [[ -z "$GATEWAY_V6" ]]; then
 fi
 
 # Print results.
-case "$OSTYPE" in
-    'linux-gnu'*)
-        echo -n '🠕  '
-        ;;
-    'darwin'*)
-        echo -n '@arrow-up@ '
-        ;;
-esac
+print_fa_icon 'arrow-up'
 echo -n "$GATEWAY_V4 "
 if ! [[ -z "$GATEWAY_V6" ]]; then
     [[ "$MAC_V4" == "$MAC_V6" ]] || echo -n "$VENDOR_V4 / "
