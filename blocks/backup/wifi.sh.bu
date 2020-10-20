@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+source "$(dirname $0)/_colors.sh"
+source "$(dirname $0)/_network.sh"
+
+# echo '📡'
+# echo '📡'
+echo ''
+echo ''
+if [[ "$WIFI_ENABLED" = 'true' ]]; then
+    echo
+else
+    echo "$BLACK"
+fi

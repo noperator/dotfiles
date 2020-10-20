@@ -68,9 +68,9 @@ case "$OSTYPE" in
     'darwin'*)
         link .skhdrc.yabai .skhdrc
         link .yabairc
-        link widgets 'Library/Application Support/Übersicht/'
+        link .config/uebersicht 'Library/Application Support/Übersicht/widgets'
         for PROFILE in $(ls "$HOME/Library/Application Support/Firefox/Profiles/"); do
-            link firefox/user.js "Library/Application Support/Firefox/Profiles/$PROFILE"
+            link .config/firefox/user.js "Library/Application Support/Firefox/Profiles/$PROFILE"
         done
         ;;
 esac
