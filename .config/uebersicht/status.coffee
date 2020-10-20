@@ -1,4 +1,4 @@
-command: "./code/status.sh"
+command: "$HOME/dotfiles/blocks/status.sh"
 
 refreshFrequency: 10000
 
@@ -9,13 +9,13 @@ render: (output) ->
   """
 
 style: """
+  position: absolute
   z-index: -1
-  font-family: monaco
-  font-size: 11px
   color: #bebebe
-  right: 18px
-  top: 8px
-  height: 13
+  font-family: Monaco
+  font-size: 10px
+  right: 10px
+  top: 10px
   """
 
 update: (output, domEl) ->

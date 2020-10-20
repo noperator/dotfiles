@@ -1,7 +1,9 @@
 #!/bin/bash
 
-WIFI_IFACE=$(find /sys/class/net -iname 'wl*' -printf '%f\n')
-ETH_IFACE=$(find /sys/class/net -iname 'en*' -printf '%f\n')
+if [[ "$OSTYPE" == 'linux-gnu'* ]]; then
+    WIFI_IFACE=$(find /sys/class/net -iname 'wl*' -printf '%f\n')
+    ETH_IFACE=$(find /sys/class/net -iname 'en*' -printf '%f\n')
+fi
 source "$(dirname $0)/.env"
 
 ETH_ENABLED='false'

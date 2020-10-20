@@ -21,14 +21,15 @@ get_neighbor() {  # <inet(6)> <IP-ADDR>
             ;;
         'darwin'*)
             if [[ "$1" == 'inet' ]]; then
-                NEIGH_CMD='arp'
+                # NEIGH_CMD='arp'
+                MAC=$(arp -an | awk -v "gw=$2" '$2 == "("gw")" {print $4}')
             else
-                NEIGH_CMD='ndp'
+                # NEIGH_CMD='ndp'
+                MAC=$(ndp -an | awk -v "gw=$2" '$1 == gw {print $2}')
             fi
-            MAC=$("$NEIGH_CMD" -an | awk -v "gw=$2" '$2 == "("gw")" {print $4}')
             ;;
     esac
-    <<< "$MAC" awk '{split(toupper($0), mac, ":"); for (i = 1; i <= 6; i++) printf "%02s", mac[i]; print ""}'
+    <<< "$MAC" awk '{split(toupper($0), mac, ":"); for (i = 1; i <= 6; i++) printf "%02s", mac[i]; print ""}' | tr ' ' '0'
 }
 
 # Note: Could instead use nmap's OUI list at /usr/local/share/nmap/nmap-mac-prefixes.
@@ -64,7 +65,7 @@ esac
 echo -n "$GATEWAY_V4 "
 if ! [[ -z "$GATEWAY_V6" ]]; then
     [[ "$MAC_V4" == "$MAC_V6" ]] || echo -n "$VENDOR_V4 / "
-    echo -n "$(abbr_ipv6 $(<<< $GATEWAY_V6 sed -E 's/%.*//' )) "
+    echo -n "$(abbr_ipv6 $(<<< $GATEWAY_V6 sed -E 's/%.*//')) "
     echo "$VENDOR_V6"
 else
     echo "$VENDOR_V4"

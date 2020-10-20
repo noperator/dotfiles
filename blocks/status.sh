@@ -11,7 +11,7 @@ screen_sharing() {
                                  .frame.w  == 400     and
                                  .frame.h  == 56)] | length') -gt 0 ]]; then
         echo '@exclamation-triangle@ @desktop@ Slack  '
-    elif pgrep -f '\-msteams-process-type=appSharingToolbar' &>/dev/null; then
+    elif pgrep -alf '\-msteams-process-type=appSharingToolbar' | grep -v 'pgrep' >> /var/tmp/teams-ps.txt 2>&1; then
         echo '@exclamation-triangle@ @desktop@ Teams  '
     else
         false
@@ -21,7 +21,7 @@ screen_sharing() {
 # Only display networking information if not screen sharing.
 if ! screen_sharing; then
     for SCRIPT in \
-    geo \
+    public-ip \
     gateway \
     wifi \
     ; do \
