@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 source "$(dirname $0)/_fa-icons.sh"
 source "$(dirname $0)/_abbr-ipv6.sh"

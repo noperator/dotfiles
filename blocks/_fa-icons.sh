@@ -1,9 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Font Awesome 5 Free
 # https://fontawesome.com/cheatsheet
 
-declare -A FA_ICON=()
+# declare -A FA_ICON=()
+declare -A FA_ICON
 
 FA_ICON[ADJUST]=''
 FA_ICON[ARROW_UP]=''
