@@ -10,9 +10,9 @@ export SSH_AUTH_SOCK="$HOME/.ssh/ssh-agent.$HOSTNAME.sock"
 OLD_PATH=$(echo "$PATH" | tr ':' '\n' | uniq | tr '\n' ':')
 CUSTOM_PATH=''
 for DIR in \
-"$HOME/dotfils/bin" \
+"$HOME/dotfiles/bin" \
 "$HOME/go/bin" \
-/usr/local/Cellar/python@3.8/3.8.1/bin \
+/usr/local/Cellar/python\@3.9/3.9.0/bin \
 /usr/local/opt/util-linux/sbin \
 /usr/local/opt/util-linux/bin \
 /usr/local/sbin \
