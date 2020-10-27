@@ -178,8 +178,8 @@ bar {
 # --------------------
 
 # Gaps.
-gaps inner 10
-gaps outer 5
+gaps inner 4
+gaps outer 0
 
 # Multimedia keys.
 bindsym XF86AudioMute         exec amixer -q set Master toggle;      exec pkill -RTMIN+10 i3blocks
@@ -190,7 +190,7 @@ bindsym XF86MonBrightnessDown exec xbacklight -dec 5;                exec pkill 
 bindsym XF86MonBrightnessUp   exec xbacklight -inc 5;                exec pkill -RTMIN+9 i3blocks
 
 # Background image.
-exec --no-startup-id feh --bg-fill $HOME/dotfiles/backgrounds/kualoa.png
+exec --no-startup-id feh --bg-fill $HOME/dotfiles/backgrounds/fringy-flower.png
 
 # Window borders.
 # for_window [class=".*"] border pixel 0
@@ -208,22 +208,6 @@ exec --no-startup-id dropbox &
 bindsym Shift+$mod+bracketright move workspace to output right
 bindsym Shift+$mod+bracketleft move workspace to output left
 
-# Autostart workspaces.
-# assign [class="^URxvt$"] term
-# exec --no-startup-id urxvt
-# exec --no-startup-id urxvt
-# assign [class="^qutebrowser$"] web
-# exec --no-startup-id qutebrowser
-# assign [class="^Slack$"] slack
-# exec --no-startup-id slack
-
-# exec --no-startup-id i3-msg 'workspace term; exec urxvt; workspace term'
-# exec --no-startup-id i3-msg 'workspace term; exec urxvt; workspace term'
-# exec --no-startup-id i3-msg 'workspace web; exec qutebrowser; workspace term'
-# exec --no-startup-id i3-msg 'workspace slack; exec slack; workspace term'
-
-# exec --no-startup-id "i3-msg 'workspace term; append_layout /home/clg/tree.json'"
-# exec --no-startup-id i3-msg 'workspace term; exec urxvt; exec urxvt; workspace web; exec qutebrowser; workspace slack; exec slack; workspace term'
-
-# Caps lock.
-# bindsym --release Caps_Lock exec pkill -SIGRTMIN+11 i3blocks
+# Balance windows.
+bindsym $mod+control+0 exec 'i3_balance_workspace'
+# bindsym $mod+Shift+b exec "i3_balance_workspace --scope focus"

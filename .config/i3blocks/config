@@ -1,17 +1,15 @@
 command=$HOME/dotfiles/blocks/$BLOCK_NAME.sh
 # separator_block_width=20
 separator=false
+interval=5
 
 [public-ip]
-interval=120
 signal=6
 
 [gateway]
-interval=5
 signal=13
 
 [wifi]
-interval=5
 signal=4
 
 [volume]
@@ -23,10 +21,8 @@ interval=once
 signal=9
 
 [battery]
-interval=30
 
 [date]
-interval=30
 
 # [fprintd]
 # command=$HOME/dotfiles/blocks/fprintd.sh
