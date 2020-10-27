@@ -28,5 +28,5 @@ fi
 if pgrep kitty &>/dev/null; then
     kitty @ --to unix:/tmp/kitty-sock launch --type os-window --cwd current
 else
-    kitty --listen-on unix:/tmp/kitty-sock --single-instance
+    kitty --listen-on unix:/tmp/kitty-sock --single-instance --directory "$HOME"
 fi
