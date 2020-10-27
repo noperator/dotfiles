@@ -10,7 +10,7 @@ render: (output) ->
 
 style: """
   position: absolute
-  z-index: -1
+  z-index: 2
   color: #bebebe
   font-family: Monaco
   font-size: 10px
