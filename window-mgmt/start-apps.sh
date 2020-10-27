@@ -5,12 +5,10 @@ notify() { osascript -e 'display notification "'"$1"'" with title "'"Start Apps"
 
 notify 'Starting apps...'
 
-notify 'Starting Firefox'
-source "$DIRNAME/../.bashrc.d/"*"-browser.sh"
-fpa
-
 for APP in \
 'Übersicht' \
+'Firefox' \
+'Chrome' \
 'Microsoft Outlook' \
 'Microsoft Teams' \
 'Slack' \

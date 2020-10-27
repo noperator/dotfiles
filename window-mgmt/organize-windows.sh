@@ -116,15 +116,18 @@ SLACK_CALL=$(<<< "$WINDOWS" jq -r '.[] | select(.title | test("Slack \\| .* \\| 
 notify 'Organizing windows...'
 
 # Move windows.
-move_window 'Firefox (Work)'          0 0 "$(<<< "$FIREFOX_PROFILES" jq -r '.Work     | @tsv')"
-move_window 'Preview'                 1 0
-move_window 'Google Chrome'           1 0
+# move_window 'Firefox (Work)'          0 0 "$(<<< "$FIREFOX_PROFILES" jq -r '.Work     | @tsv')"
+# move_window 'Firefox (Personal)'      2 0 "$(<<< "$FIREFOX_PROFILES" jq -r '.Personal | @tsv')"
+move_window 'Firefox'                 0 0
+move_window 'Chromium'                1 0
 move_window 'Burp Suite Professional' 1 0
 move_window 'Ghidra'                  1 0
-move_window 'Firefox (Personal)'      2 0 "$(<<< "$FIREFOX_PROFILES" jq -r '.Personal | @tsv')"
-move_window 'VirtualBox'              3 0
-move_window 'VirtualBox VM'           3 0
+move_window 'Preview'                 1 0
+move_window 'Skim'                    1 0
+move_window 'Google Chrome'           2 0
 move_window 'VMware Fusion'           3 0
+move_window 'VirtualBox VM'           3 0
+move_window 'VirtualBox'              3 0
 
 # If a second display is attached, then change the space offset and display
 # accordingly.
