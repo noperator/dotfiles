@@ -11,21 +11,10 @@
 "   - softtabstop = sts = number of spaces that <Tab> uses while editing
 "   - shiftwidth  = sw  = number of spaces to use for (auto)indent step
 
-" Configure vim-plug plugin manager.
-if has('nvim')
-    call plug#begin(stdpath('data') . '/plugged')  " Specify plugin directory.
-    Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
-    Plug 'masukomi/vim-markdown-folding'
-    call plug#end()  " Initialize plugin system.
-endif
-
-" Prevent jittering on semshi error check.
-" - https://github.com/numirias/semshi/issues/56#issuecomment-552523529
-autocmd FileType python set signcolumn=yes
-
 " File-specific indentation.
 autocmd FileType javascript setl ts=2 sts=2 sw=2
 autocmd FileType python     setl ts=4 sts=4 sw=4 fdm=indent
+autocmd FileType tex        setl ts=2 sts=0 sw=2
 
 " Insert timestamp.
 nmap <F5> i<C-R>=substitute(system('date -u +"%FT%TZ // "'),'[\r\n]*$','','')<CR><Esc><CR>
@@ -54,10 +43,14 @@ nmap T :set textwidth=79<CR>
 " match ErrorOverLength /\%121v.\+/
 
 " Tabulation.
-set tabstop=4  " Number of visual spaces per TAB.
-set expandtab  " Tabs are spaces.
-set autoindent
-set smartindent
+" - https://stackoverflow.com/a/1878983
+set tabstop=8      " Max width of actual tab character.
+set shiftwidth=4   " Size of indent.
+set softtabstop=0
+set expandtab      " Tab key inserts spaces instead of tab characters.
+set smarttab
+" set autoindent
+" set smartindent
 
 " Folding.
 set foldmethod=marker
