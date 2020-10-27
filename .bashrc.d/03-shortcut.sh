@@ -10,7 +10,8 @@ alias cde="cd $HOME/Desktop"
 alias ltd="lt $HOME/Downloads | tail"
 alias cdt='cd /tmp'
 alias ltt="lt /tmp/"
-alias cdbd="cd $HOME/.bashrc.d"
+alias cdbd="cd $HOME/dotfiles/.bashrc.d"
+alias cdbl="cd $HOME/dotfiles/blocks"
 
 case "$OSTYPE" in
     'darwin'*)

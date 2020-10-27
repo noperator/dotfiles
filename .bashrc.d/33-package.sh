@@ -18,7 +18,9 @@ case "$OSTYPE" in
             done | sort | uniq | sed 's/\[ALPM\] installed //'
         }
         alias aurs='auracle --sort=votes search'
-        alias auri='auracle info'
+        auri() {
+            auracle info "${1#aur/}"
+        }
         alias aurc='auracle clone'
         ;;
 esac

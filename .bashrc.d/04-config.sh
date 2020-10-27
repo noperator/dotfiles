@@ -5,6 +5,7 @@ alias vb="vim $HOME/.bashrc"
 alias vbh="vim $HOME/.bash_history"
 alias vsc="vim $HOME/.ssh/config"
 alias vv="vim $HOME/.vimrc"
+alias vk="vim $HOME/.config/kitty/kitty.conf"
 tbh() { tail -n $( if [[ -z "$1" ]]; then echo 10; else echo "$1"; fi ) "$HOME/.bash_history"; }
 gbh() { grep -iE --color "$@" "$HOME/.bash_history"; }
 gbr() { grep -iE --color "$@" "$HOME/.bashrc"; }
@@ -14,7 +15,6 @@ case "$OSTYPE" in
         alias vc="vim $HOME/.chunkwmrc"
         alias vy="vim $HOME/.yabairc"
         alias vs="vim $HOME/.skhdrc"
-        alias vk="vim $HOME/.config/kitty/kitty.conf"
         ;;
     'linux-gnu'*)
         alias van="vim $DROPBOX/Code/guides/arch_notes.txt"

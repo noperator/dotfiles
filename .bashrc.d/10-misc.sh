@@ -49,23 +49,23 @@ skg () { ssh-keygen -t rsa -b 4096 -o -a 100 -q -N '' -f "$HOME/.ssh/$1"; }
 
 case "$OSTYPE" in
     'darwin'*)
+        alias q='no qlmanage -p'
+        alias tp='open -a Typora'
         alias find='gfind'
         alias nwn='pkill brownnoise'
         alias pc='pbcopy'
-        alias q='no qlmanage -p'
         alias rc='launchctl stop homebrew.mxcl.chunkwm'
         alias ssh="TERM=linux $(which ssh)"
-        alias tp='open -a Typora'
         alias wn='osascript -e "set Volume 2"; (no play -n synth brownnoise &)'
         ;;
     'linux-gnu'*)
-        alias z="zathura"
+        q() { zathura "$1" & }
+        alias tp='typora'
         alias dbs="dropbox-cli status"
         alias kq='pkill -9 qutebrowser'
         alias fb="$HOME/.fehbg"
         alias wn="nohup play -n synth brownnoise pinknoise >/dev/null 2>&1 &"
         alias nn='pkill play'
-        alias tp='typora'
         ;;
 esac
 
