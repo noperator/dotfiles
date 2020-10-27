@@ -2,6 +2,7 @@
 
 source "$(dirname $0)/_fa-icons.sh"
 source "$(dirname $0)/_abbr-ipv6.sh"
+source "$(dirname $0)/_network.sh"
 source "$(dirname $0)/.env"
 
 get_gateway() {
@@ -56,6 +57,7 @@ fi
 
 # Print results.
 print_fa_icon 'arrow-up'
+[[ "$WIFI_CONNECTED" == 'false' ]] && echo && exit
 echo -n "$GATEWAY_V4 "
 if ! [[ -z "$GATEWAY_V6" ]]; then
     [[ "$MAC_V4" == "$MAC_V6" ]] || echo -n "$VENDOR_V4 / "

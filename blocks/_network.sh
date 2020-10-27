@@ -15,9 +15,9 @@ WIFI_CONNECTED='false'
 case "$OSTYPE" in
     'linux-gnu'*)
         # Note: /sys/class/net/*/flags = 0x1003 (on) and 0x1002 (off).
-        [[ `grep -E '0x1.03' "/sys/class/net/$ETH_IFACE/flags"` ]] && ETH_ENABLED='true'
-        [[ `grep -E '0x1.03' "/sys/class/net/$WIFI_IFACE/flags"` ]] && WIFI_ENABLED='true'
-        [[ "$WIFI_ENABLED" = 'true' ]] && [[ `iw dev "$WIFI_IFACE" link | grep 'Not-Associated'` = '' ]] && WIFI_CONNECTED='true'
+        # grep -E '0x1.03' "/sys/class/net/$ETH_IFACE/flags" &>/dev/null && ETH_ENABLED='true'
+        grep -E '0x1.03' "/sys/class/net/$WIFI_IFACE/flags" &>/dev/null && WIFI_ENABLED='true'
+        [[ "$WIFI_ENABLED" = 'true' ]] && ! iw dev "$WIFI_IFACE" link | grep 'Not connected.' &>/dev/null && WIFI_CONNECTED='true'
         # [[ "$WIFI_CONNECTED" = 'true' ]] || [[ "$ETH_ENABLED" = 'true' ]] && [[ `ip route | grep 'default'` ]] && ROUTE_EXISTS=true
         # [[ "$ROUTE_EXISTS" = 'true' ]] && [[ `pgrep -ai openvpn` ]] && [[ -e /run/openvpn/run.pid ]] && VPN_ENABLED=true
         ;;
@@ -28,8 +28,8 @@ case "$OSTYPE" in
         ;;
 esac
 
-# echo "Ethernet enabled: $ETH_ENABLED"
+# # echo "Ethernet enabled: $ETH_ENABLED"
 # echo "Wi-Fi enabled:    $WIFI_ENABLED"
 # echo "Wi-Fi connected:  $WIFI_CONNECTED"
-# echo "Route exists:     $ROUTE_EXISTS"
-# echo "VPN enabled:      $VPN_ENABLED"
+# # echo "Route exists:     $ROUTE_EXISTS"
+# # echo "VPN enabled:      $VPN_ENABLED"
