@@ -33,7 +33,7 @@ else
 fi
 
 # Don't print battery status if laptop is plugged in and fully charged.
-if ! [[ "$PERCENT" -eq '100' ]] && [[ "$SOURCE" == 'AC' ]]; then
+if [[ "$PERCENT" -eq '100' ]] && [[ "$SOURCE" == 'AC' ]]; then
     exit
 else
     print_fa_icon "$ICON"
