@@ -12,6 +12,9 @@ signal=13
 [wifi]
 signal=4
 
+[ethernet]
+signal=5
+
 [volume]
 interval=once
 signal=10

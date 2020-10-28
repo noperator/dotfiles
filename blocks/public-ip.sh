@@ -50,7 +50,7 @@ if [[ -z $(sed -E 's|[/ ]*||g' /var/tmp/public-ip-data.txt) ]] ||
 fi
 
 print_fa_icon 'globe'
-if [[ "$WIFI_CONNECTED" == 'false' ]]; then
+if [[ "$NET_CONNECTED" == 'false' ]]; then
     echo
     rm /var/tmp/public-ip-{time,data}.txt
 else
