@@ -4,7 +4,7 @@ refreshFrequency: 10000
 
 render: (output) ->
   """
-  <link rel="stylesheet" type="text/css" href="./assets/fontawesome-all.min.css">
+  <link rel="stylesheet" type="text/css" href="./assets/css/all.min.css">
   <div class="status"></div>
   """
 
