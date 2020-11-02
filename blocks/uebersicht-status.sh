@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# set -x
+
 PATH="/usr/local/bin:$PATH"
 DIRNAME=$(dirname "$0")
 
@@ -24,6 +26,7 @@ if ! screen_sharing; then
     public-ip \
     gateway \
     wifi \
+    ethernet \
     ; do \
         "$DIRNAME/${SCRIPT}.sh" | tr '\n' ' '
     done
@@ -38,3 +41,5 @@ date \
 ; do \
     "$DIRNAME/${SCRIPT}.sh" | tr '\n' ' '
 done
+
+# set +x

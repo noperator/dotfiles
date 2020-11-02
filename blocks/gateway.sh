@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
 source "$(dirname $0)/_fa-icons.sh"
-source "$(dirname $0)/_abbr-ipv6.sh"
 source "$(dirname $0)/_network.sh"
-source "$(dirname $0)/.env"
 
 print_fa_icon 'arrow-up'
 [[ "$NET_CONNECTED" == 'false' ]] && echo && exit

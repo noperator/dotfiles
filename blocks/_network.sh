@@ -12,6 +12,7 @@ get_default_route() {
             ip -f "$1"  route | awk '$1 == "default" {print $3, $5}' | head -n 1
             ;;
         'darwin'*)
+            netstat -rnf "$1" | awk '$1 == "default" {print $2, $4}' | head -n 1
             ;;
     esac
 }
@@ -25,6 +26,7 @@ get_iface_ipv4() {
             ip -4 addr show "$1" | perl -n -e "/inet ([^\/]+).* scope global/ && print \$1 and exit"
             ;;
         'darwin'*)
+            ifconfig "$1" inet | awk '$1 == "inet" {print $2}'
             ;;
     esac
 }
@@ -38,6 +40,7 @@ get_iface_ipv6() {
             ip -6 addr show "$1" | grep -B 1 'sec' | awk 'NR == 1 {sub(/\/.*/, "", $2); print $2}'
             ;;
         'darwin'*)
+            ifconfig "$1" inet6 | awk '{if ($6 == "temporary" && ! match($2, "^f[cd]")) print $2}'
             ;;
     esac
 }
@@ -62,7 +65,7 @@ get_neighbor() {
     # if [[ -z "$MAC" ]]; then
     #     echo
     # else
-    <<< "$MAC" awk '{split(toupper($0), mac, ":"); for (i = 1; i <= 6; i++) printf "%02s", mac[i]; print ""}' # | tr ' ' '0'
+    <<< "$MAC" awk '{split(toupper($0), mac, ":"); for (i = 1; i <= 6; i++) printf "%02s", mac[i]; print ""}' | tr ' ' '0'
     # fi
 }
 
@@ -73,26 +76,78 @@ get_vendor() {
     awk -v "oui=$1" -F '\t' '$1 ~ oui {sub(/ .*/, "", $3); print $3}' "$(dirname $0)/oui.txt"
 }
 
+# Determine if interface is enabled.
+# @param $1 Interface name. e.g., en0, wlp3s1, eth2, etc.
+# @return <BOOLEAN> true or false.
+iface_enabled() {
+    case "$OSTYPE" in
+        'linux-gnu'*)
+            ;;
+        'darwin'*)
+            ifconfig "$1" | awk '$2 ~ /flags=/ {if ($2 ~ /RUNNING/) {print "true"} else {print "false"}}'
+            ;;
+    esac
+}
+
+
+# Determine if Ethernet cable is plugged in.
+# @param $1 Ethernet interface name. e.g., en3, eth2, etc.
+# @return <BOOLEAN> true or false.
+ethernet_connected() {
+    case "$OSTYPE" in
+        'linux-gnu'*)
+            if grep -E '1' "/sys/class/net/$1/carrier" &>/dev/null; then
+                echo 'true'
+            else
+                echo 'false'
+            fi
+            ;;
+        'darwin'*)
+            ifconfig "$1" | awk '$1 == "status:" {if ($2 == "active") {print "true"} else {print "false"}}'
+            ;;
+    esac
+}
+
+# Determine if associated with Wi-Fi access point.
+# @param $1 Wi-Fi interface name. e.g., en0, wlp3s1, etc.
+# @return <BOOLEAN> true or false.
+wifi_connected() {
+    case "$OSTYPE" in
+        'linux-gnu'*)
+            ;;
+        'darwin'*)
+            ifconfig "$1" | awk '$1 == "status:" {if ($2 == "active") {print "true"} else {print "false"}}'
+            ;;
+    esac
+}
+
 # Set global variables about interface state, connectivity, etc.
-ETH_ENABLED='false'
-WIFI_ENABLED='false'
-WIFI_CONNECTED='false'
-NET_CONNECTED='false'
-case "$OSTYPE" in
-    'linux-gnu'*)
-        # Note: /sys/class/net/*/flags = 0x1003 (on) and 0x1002 (off).
-        grep -E '0x1.03' "/sys/class/net/$ETH_IFACE/flags" &>/dev/null && ETH_ENABLED='true'
-        grep -E '0x1.03' "/sys/class/net/$WIFI_IFACE/flags" &>/dev/null && WIFI_ENABLED='true'
-        [[ "$WIFI_ENABLED" = 'true' ]] && ! iw dev "$WIFI_IFACE" link | grep 'Not connected.' &>/dev/null && WIFI_CONNECTED='true'
-        grep -E '1' "/sys/class/net/$ETH_IFACE/carrier" &>/dev/null && ETH_CONNECTED='true'
-        ;;
-    'darwin'*)
-        WIFI_STATUS="$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport --getinfo)"
-        [[ "$WIFI_STATUS" != 'AirPort: Off' ]] && WIFI_ENABLED='true'
-        [[ "$WIFI_ENABLED" = 'true' ]] && [[ "$(<<< "$WIFI_STATUS" awk '/state:/ {print $2}')" != 'init' ]] && WIFI_CONNECTED='true'
-        ;;
-esac
-[[ "$WIFI_CONNECTED" == 'true' || "$ETH_CONNECTED" == 'true' ]] && NET_CONNECTED='true'
+ETH_ENABLED=$(iface_enabled "$ETH_IFACE")
+WIFI_ENABLED=$(iface_enabled "$WIFI_IFACE")
+ETH_CONNECTED=$(ethernet_connected "$ETH_IFACE")
+WIFI_CONNECTED=$(wifi_connected "$WIFI_IFACE")
+if [[ "$WIFI_CONNECTED" == 'true' || "$ETH_CONNECTED" == 'true' ]]; then
+    NET_CONNECTED='true'
+else
+    NET_CONNECTED='false'
+fi
+# ETH_ENABLED='false'
+# WIFI_ENABLED='false'
+# WIFI_CONNECTED='false'
+# NET_CONNECTED='false'
+# case "$OSTYPE" in
+#     'linux-gnu'*)
+#         # Note: /sys/class/net/*/flags = 0x1003 (on) and 0x1002 (off).
+#         grep -E '0x1.03' "/sys/class/net/$ETH_IFACE/flags" &>/dev/null && ETH_ENABLED='true'
+#         grep -E '0x1.03' "/sys/class/net/$WIFI_IFACE/flags" &>/dev/null && WIFI_ENABLED='true'
+#         [[ "$WIFI_ENABLED" = 'true' ]] && ! iw dev "$WIFI_IFACE" link | grep 'Not connected.' &>/dev/null && WIFI_CONNECTED='true'
+#         ;;
+#     'darwin'*)
+#         WIFI_STATUS="$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport --getinfo)"
+#         [[ "$WIFI_STATUS" != 'AirPort: Off' ]] && WIFI_ENABLED='true'
+#         [[ "$WIFI_ENABLED" = 'true' ]] && [[ "$(<<< "$WIFI_STATUS" awk '/state:/ {print $2}')" != 'init' ]] && WIFI_CONNECTED='true'
+#         ;;
+# esac
 
 if [[ "$DEBUG" == 'true' ]]; then
     echo "Ethernet enabled:   $ETH_ENABLED"

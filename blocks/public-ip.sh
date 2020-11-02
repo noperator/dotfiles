@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 source "$(dirname $0)/_fa-icons.sh"
-source "$(dirname $0)/_abbr-ipv6.sh"
 source "$(dirname $0)/_network.sh"
 
 touch /var/tmp/public-ip-{time,data}.txt
