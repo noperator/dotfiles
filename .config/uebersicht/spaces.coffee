@@ -38,9 +38,9 @@ style: """
 
   #fader
     position: absolute
-    top: 7px
+    top: 14px
     width: 42px
-    height: 19px
+    height: 18px
     --brown-bg:        rgb(45, 45, 45)
     --brown-bg-trans: rgba(45, 45, 45, 0)
     background: linear-gradient(to right,
@@ -51,7 +51,7 @@ style: """
     display: inline-block
     background: #2d2d2d
     list-style: none
-    margin: 7px 0px 0px 7px
+    margin: 11px 0px 0px 8px
     padding-left: 0px
 
   li
