@@ -44,7 +44,7 @@ nmap T :set textwidth=79<CR>
 
 " Tabulation.
 " - https://stackoverflow.com/a/1878983
-set tabstop=8      " Max width of actual tab character.
+set tabstop=4      " Max width of actual tab character.
 set shiftwidth=4   " Size of indent.
 set softtabstop=0
 set expandtab      " Tab key inserts spaces instead of tab characters.
