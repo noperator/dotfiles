@@ -9,14 +9,22 @@ case "$OSTYPE" in
         ;;
 esac
 
-alias ll='ls -lA'
-alias lt='ll -Frt'
-alias lh='ll -FrSh'
+if which exa &>/dev/null; then
+    alias ll='exa -la --icons'
+    alias lt='ll -s mod'
+    alias lh='ll -s size'
+    alias tree='lt -T'
+else
+    alias ll='ls -lA'
+    alias lt='ll -Frt'
+    alias lh='ll -FrSh'
+    tree() { "$(which tree)" -taD "$@" | ccat; }
+fi
+
 f() { find . -iname '*'"$@"'*'; }
 ff() { find "$@" ! -empty -type f -printf '%.19T+@%s@%p\n' 2>/dev/null | while read LINE; do printf '%q\n' "$LINE"; done | column -t -s '@' | cut -c -"$COLUMNS"; }
 ft() { ff "$@" | sort -n; }
 fs() { ff "$@" | sort -n -k 2; }
-tree() { "$(which tree)" -taD "$@" | ccat; }
 alias mount="$(which mount) | sed -E 's/ on |\(|\)/#/g' | column -t -s '#' | cut -c -\$COLUMNS"
 
 TERA=1099511627776
