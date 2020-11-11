@@ -9,7 +9,11 @@ alias l='clear'
 alias less='less -i'
 alias no='>/dev/null 2>&1'
 alias vd='vimdiff'
-alias vr='vim -R'
+vr() {
+    FILE='-'
+    ! [[ -z "$1" ]] && FILE="$1"
+    vim -R "$FILE"
+}
 alias g='grep -iE --color'
 alias vg='g -v'
 alias cls='printf "\033c"'
