@@ -25,7 +25,7 @@ git_info() {
     # - https://stackoverflow.com/a/43462720
     # - https://git.savannah.gnu.org/cgit/readline.git/tree/display.c#n320
     # - https://en.wikipedia.org/wiki/ANSI_escape_code
-    git -c color.ui=always status -sb |
+    git -c color.ui=always status -sb . |
     perl -pe 's/([^\x01]?)(\x1B\[.*?m)([^\x02]?)/\1\x01\2\x02\3/g' |
     awk -v "ellipsis=$ELLIPSIS" -v "red=${CLR[RED]}" -v "grn=${CLR[GRN]}" -v "end=${CLR[END]}" '
 
