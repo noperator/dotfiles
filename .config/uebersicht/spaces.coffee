@@ -33,7 +33,7 @@ render: (output) ->
 style: """
   z-index: 1
   font: 14px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
-  color: #aaa
+  color: #bebebe
   font-weight: 700
 
   #fader
@@ -49,7 +49,6 @@ style: """
 
   ul
     display: inline-block
-    background: #2d2d2d
     list-style: none
     margin: 11px 0px 0px 8px
     padding-left: 0px
@@ -61,8 +60,10 @@ style: """
     margin: 0px 7px
 
   li.visible
-    color: #ededed
-    border-bottom: 2px solid #ededed
+    border-bottom: 2px solid #bebebe
+
+  li.empty
+    color: #585858
 """
 
 update: (output, domEl) ->
@@ -75,5 +76,10 @@ update: (output, domEl) ->
     $(domEl).find('ul').html(@generateIcons(spaces))
   else
     $(domEl).find('li.visible').removeClass('visible')
-  for space in spaces when space['visible'] == 1
-    $(domEl).find("li#desktop#{space['index']}").addClass('visible')
+  for space in spaces
+    if space['visible']
+      $(domEl).find("li#desktop#{space['index']}").addClass('visible')
+    if space['windows'].length
+      $(domEl).find("li#desktop#{space['index']}").removeClass('empty')
+    else
+      $(domEl).find("li#desktop#{space['index']}").addClass('empty')
