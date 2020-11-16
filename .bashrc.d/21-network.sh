@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if which dog &>/dev/null; then
+    alias dig='dog'
+fi
+
 if [[ "$OSTYPE" == 'linux-gnu'* ]]; then
     # Socket statistics.
     alias snb="{ ss -Hantup4; ss -Hantup6; } | awk '{print \$1,\$2,\$5,\$6,\$7}' | sed -E 's/users:\(\(\"|,fd=.*//g ; s/\",pid=/\//g' | column -t | sort -k 5"

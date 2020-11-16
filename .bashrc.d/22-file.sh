@@ -10,7 +10,7 @@ case "$OSTYPE" in
 esac
 
 if which exa &>/dev/null; then
-    alias ll='exa -la --icons'
+    alias ll='exa -la'
     alias lt='ll -s mod'
     alias lh='ll -s size'
     alias tree='lt -T'
