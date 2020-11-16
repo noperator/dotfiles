@@ -172,3 +172,7 @@ ctrl + alt - d : yabai -m space --layout float
 # Send space to display.
 cmd + alt - 1: yabai -m space --display 1
 cmd + alt - 2: yabai -m space --display 2
+
+.blacklist [
+    "vmware fusion"
+]
