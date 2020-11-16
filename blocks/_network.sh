@@ -121,10 +121,26 @@ wifi_connected() {
     esac
 }
 
+# Determine if interface exists.
+# @param $1 Interface name. e.g., en0, wlp3s1, eth2, etc.
+# @return <BOOLEAN> true or false.
+iface_exists() {
+    if ifconfig "$1" &>/dev/null; then
+        echo 'true'
+    else
+        echo 'false'
+    fi
+}
+
 # Set global variables about interface state, connectivity, etc.
-ETH_ENABLED=$(iface_enabled "$ETH_IFACE")
+if [[ $(iface_exists "$ETH_IFACE") == 'true' ]]; then
+    ETH_ENABLED=$(iface_enabled "$ETH_IFACE")
+    ETH_CONNECTED=$(ethernet_connected "$ETH_IFACE")
+else
+    ETH_ENABLED='false'
+    ETH_CONNECTED='false'
+fi
 WIFI_ENABLED=$(iface_enabled "$WIFI_IFACE")
-ETH_CONNECTED=$(ethernet_connected "$ETH_IFACE")
 WIFI_CONNECTED=$(wifi_connected "$WIFI_IFACE")
 if [[ "$WIFI_CONNECTED" == 'true' || "$ETH_CONNECTED" == 'true' ]]; then
     NET_CONNECTED='true'
