@@ -24,8 +24,11 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 fi
 
 # If kitty is already running, open a new OS window under the same instance.
-# Otherwise, start kitty.
-if pgrep kitty &>/dev/null; then
+# Otherwise, start kitty. Note: on macOS, even when all kitty windows are
+# closed, the main kitty process is still running.
+if [[ "$OSTYPE" == 'linux-gnu'* ]] && pgrep kitty &>/dev/null; then
+    kitty @ --to unix:/tmp/kitty-sock launch --type os-window --cwd current
+elif [[ "$OSTYPE" == 'darwin'* ]] && [[ $(yabai -m query --windows | jq  '[.[] | select(.app == "kitty")] | length') -gt '0' ]]; then
     kitty @ --to unix:/tmp/kitty-sock launch --type os-window --cwd current
 else
     kitty --listen-on unix:/tmp/kitty-sock --single-instance --directory "$HOME"
