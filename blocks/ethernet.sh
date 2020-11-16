@@ -11,5 +11,5 @@ elif [[ "$ETH_CONNECTED" == 'false' ]]; then
 else
     IPV4=$(get_iface_ipv4 "$ETH_IFACE")
     IPV6=$(abbr_ipv6 $(get_iface_ipv6 "$ETH_IFACE"))
-    echo "$IPV4 $IPV6"
+    echo "$IPV4 $IPV6" | sed -E 's/ +$//'
 fi

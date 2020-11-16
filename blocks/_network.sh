@@ -73,7 +73,7 @@ get_neighbor() {
 # @param $1 OUI in all caps, no colon (e.g., A1B2C3).
 # @return <VENDOR>
 get_vendor() {
-    awk -v "oui=$1" -F '\t' '$1 ~ oui {sub(/ .*/, "", $3); print $3}' "$(dirname $0)/oui.txt"
+    awk -v "oui=$1" -F '\t' '$1 ~ oui {sub(/[, ].*/, "", $3); print $3}' "$(dirname $0)/oui.txt"
 }
 
 # Determine if interface is enabled.
