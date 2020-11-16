@@ -2,6 +2,12 @@
 
 Ensuring that Bash uses vi mode wherever I go.
 
+<div align="center">
+  <kbd>
+    <img src="https://i.imgur.com/M1XyoLX.png" width="600px" />
+  </kbd>
+</div>
+
 ## Description
 
 I use multiple workstations, virtual machines, remote servers, etc. and like for them all to have the same feel. I finally started this repo after I'd repeatedly:
