@@ -9,8 +9,9 @@ Ensuring that Bash uses vi mode wherever I go.
 ## Description
 
 I use multiple workstations, virtual machines, remote servers, etc. and like for them all to have the same feel. I finally started this repo after I'd repeatedly:
+- Use a new workstation and have no idea where any of my windows are
 - SSH into a VPS and hit the Escape key expecting Readline to put me in vi's normal mode, as on my laptop—but nothing would happen
-- Start editing a file with vim on a remote server, but none of my shortcuts would work, breaking my workflow
+- Edit a file with vim on a remote server, but none of my shortcuts would work, breaking my workflow
 
 ### Features
 
