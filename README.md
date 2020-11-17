@@ -3,9 +3,7 @@
 Ensuring that Bash uses vi mode wherever I go.
 
 <div align="center">
-  <kbd>
-    <img src="https://i.imgur.com/M1XyoLX.png" width="600px" />
-  </kbd>
+    <img src="https://i.imgur.com/YilN0MH.png" width="600px" />
 </div>
 
 ## Description
