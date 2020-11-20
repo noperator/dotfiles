@@ -175,4 +175,5 @@ cmd + alt - 2: yabai -m space --display 2
 
 .blacklist [
     "vmware fusion"
+    "gimp-2.10"
 ]
