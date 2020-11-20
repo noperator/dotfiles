@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 
 # Use yabai to query all spaces while filtering each space's list of windows
-# to ignore hidden Microsoft Teams Notifications.
+# to ignore hidden Microsoft Teams windows.
 
 # Find yabai.
 PATH="/usr/local/bin:$PATH"
 
-# Get window IDs of hidden Teams notification windows.
-TEAMS_NOTIFICATIONS=$(yabai -m query --windows | jq -r '[.[] | select(.title == "Microsoft Teams Notification") | .id] | unique | @csv')
+# Get window IDs of hidden Teams windows.
+TEAMS_WINDOWS=$(yabai -m query --windows |
+    jq '[.[] | select(.title | test("^Microsoft Teams (Notification|Call)")) | .id] | unique')
+[[ -z "$TEAMS_WINDOWS" ]] && TEAMS_WINDOWS='[]'
 
-# Get spaces while removing windows whose IDs match Teams notification
-# windows.
-yabai -m query --spaces | jq --arg teams_notifications "$TEAMS_NOTIFICATIONS" 'del(.[].windows[] | select(. | tostring | IN($teams_notifications)))'
+# Get spaces while removing windows whose IDs match Teams windows.
+yabai -m query --spaces |
+    jq --argjson teams_windows "$TEAMS_WINDOWS" 'del(.[].windows[] | select(. | IN($teams_windows[])))'
