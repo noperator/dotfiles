@@ -12,6 +12,7 @@ alias cdt='cd /tmp'
 alias ltt="lt /tmp/"
 alias cdbd="cd $HOME/dotfiles/.bashrc.d"
 alias cdbl="cd $HOME/dotfiles/blocks"
+alias cdco="cd $HOME/.config"
 
 case "$OSTYPE" in
     'darwin'*)
