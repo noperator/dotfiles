@@ -65,7 +65,7 @@ get_neighbor() {
     # if [[ -z "$MAC" ]]; then
     #     echo
     # else
-    <<< "$MAC" awk '{split(toupper($0), mac, ":"); for (i = 1; i <= 6; i++) printf "%02s", mac[i]; print ""}' | tr ' ' '0'
+    <<< "$MAC" sort -u | awk '{split(toupper($0), mac, ":"); for (i = 1; i <= 6; i++) printf "%02s", mac[i]; print ""}' | tr ' ' '0'
     # fi
 }
 
