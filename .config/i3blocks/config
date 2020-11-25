@@ -42,8 +42,8 @@ signal=9
 # interval=20
 # signal=2
 
-# [openvpn]
-# command=$HOME/dotfiles/blocks/openvpn.sh
+# [vpn]
+# command=$HOME/dotfiles/blocks/vpn.sh
 # interval=20
 # signal=3
 # separator=false
