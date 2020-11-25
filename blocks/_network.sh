@@ -62,11 +62,7 @@ get_neighbor() {
             fi
             ;;
     esac
-    # if [[ -z "$MAC" ]]; then
-    #     echo
-    # else
     <<< "$MAC" sort -u | awk '{split(toupper($0), mac, ":"); for (i = 1; i <= 6; i++) printf "%02s", mac[i]; print ""}' | tr ' ' '0'
-    # fi
 }
 
 # Get a vendor from a MAC address's OUI (first three octets).
@@ -130,6 +126,61 @@ iface_exists() {
     else
         echo 'false'
     fi
+}
+
+# Check if VPN connected.
+# @return <BOOLEAN> true or false.
+vpn_connected() {
+    case "$OSTYPE" in
+        'linux-gnu'*)
+            if pgrep openvpn &>/dev/null; then
+                echo 'true'
+            else
+                echo 'false'
+            fi
+            ;;
+        'darwin'*)
+            if osascript \
+                -e 'tell application "/Applications/Tunnelblick.app"' \
+                -e 'get state of configurations' \
+                -e 'end tell' |
+            grep 'CONNECTED' &>/dev/null; then
+                echo 'true'
+            else
+                echo 'false'
+            fi
+            ;;
+    esac
+}
+
+# Get interface of active VPN connection.
+# @return <VPN-IFACE>
+get_vpn_iface() {
+    case "$OSTYPE" in
+        'linux-gnu'*)
+            ;;
+        'darwin'*)
+            cat /Library/Application\ Support/Tunnelblick/Logs/*.openvpn.log |
+            sort -n |
+            awk '{if ($3 == "/sbin/ifconfig" && $NF == "up") {print $4}}' |
+            tail -n 1
+            ;;
+    esac
+}
+
+# Get name of active VPN connection.
+# @return <VPN-IFACE>
+get_vpn_name() {
+    case "$OSTYPE" in
+        'linux-gnu'*)
+            ;;
+        'darwin'*)
+            osascript \
+                -e 'tell application "/Applications/Tunnelblick.app"' \
+                -e 'get name of configuration 1 whose state = "CONNECTED"' \
+                -e 'end tell'
+            ;;
+    esac
 }
 
 # Set global variables about interface state, connectivity, etc.

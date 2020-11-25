@@ -24,6 +24,7 @@ screen_sharing() {
 if ! screen_sharing; then
     for SCRIPT in \
     public-ip \
+    vpn \
     gateway \
     wifi \
     ethernet \
