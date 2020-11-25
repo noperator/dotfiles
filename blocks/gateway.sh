@@ -27,10 +27,25 @@ fi
 
 # Print results.
 echo -n "$IP_V4 "
-if ! [[ -z "$IP_V6" ]]; then
+if [[ -n "$IP_V6" ]] && [[ "$IP_V6" != 'fe80::' ]]; then
     [[ "$MAC_V4" == "$MAC_V6" ]] || echo -n "$VENDOR_V4 / "
     echo -n "$IP_V6 "
     echo "$VENDOR_V6"
 else
     echo "$VENDOR_V4"
+fi
+
+if [[ "$DEBUG" == 'true' ]]; then
+    echo "IPv4 route:     $ROUTE_V4"
+    echo "IPv4 address:   $IP_V4"
+    echo "IPv4 interface: $IFACE_V4"
+    echo "IPv4 MAC:       $MAC_V4"
+    echo "IPv4 OUI:       $OUI_V4"
+    echo "IPv4 vendor:    $VENDOR_V4"
+    echo "IPv6 route:     $ROUTE_V6"
+    echo "IPv6 address:   $IP_V6"
+    echo "IPv6 interface: $IFACE_V6"
+    echo "IPv6 MAC:       $MAC_V6"
+    echo "IPv6 OUI:       $OUI_V6"
+    echo "IPv6 vendor:    $VENDOR_V6"
 fi
