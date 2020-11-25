@@ -125,7 +125,7 @@ if ! tty | grep -E 'tty[^s]' &> /dev/null; then
     # an X server is running, `who -m` doesn't return any output, which we're
     # handling in awk's END line below.
     # - https://unix.stackexchange.com/a/12761
-    if [[ -v SSH_TTY ]] || who -m | awk '{if ($NF ~ /\(.*\)/) {exit 0} else {exit 1}} END {if (NR == 0) {exit 1}}'; then
+    if [[ -v SSH_TTY ]] || who -m | awk '{if ($NF ~ /\([^:]*\)/) {exit 0} else {exit 1}} END {if (NR == 0) {exit 1}}'; then
         PS1="$AUTHORITY$PS1"
         PS1_CLR="${PS_CLR[RED]}"
     fi
