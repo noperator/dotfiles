@@ -49,4 +49,17 @@ git -C "$HOME" clone https://github.com/noperator/dotfiles.git && cd "$HOME/dotf
 
 ### Configure
 
-See my related [guides](https://github.com/noperator/guides) for manual tasks and configurations that aren't automatically covered by this dotfiles repo.
+Create a file at `blocks/.env` containing the names of the Wi-Fi and Ethernet interfaces that you'd like to be displayed in the status bar. For example, on macOS this might look like:
+
+```
+WIFI_IFACE='en0'
+ETH_IFACE='en4'
+```
+
+Note that the name of the VPN interface is determined automatically.
+
+## Back matter
+
+### See also
+
+My related [guides](https://github.com/noperator/guides) for manual tasks and configurations that aren't automatically covered by this dotfiles repo.
