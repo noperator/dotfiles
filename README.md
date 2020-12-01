@@ -27,15 +27,16 @@ I use multiple workstations, virtual machines, remote servers, etc. and like for
 
 ### Built with
 
-| Utility            | Agnostic | macOS     | Linux    |
-| ---                | :---:    | :---:     | :---:    |
-| Browser            | Chrome   |           |          |
-| Shell              | Bash     |           |          |
-| Spreadsheet Editor | SC-IM    |           |          |
-| Status Bar         |          | Übersicht | i3blocks |
-| Terminal Emulator  |          | kitty     | urxvt    |
-| Text Editor        | Vim      |           |          |
-| Window Manager     |          | yabai     | i3       |
+| Utility            | Agnostic | macOS       | Linux    |
+| ---                | :---:    | :---:       | :---:    |
+| Browser            | Chrome   |             |          |
+| Shell              | Bash     |             |          |
+| Spreadsheet Editor | SC-IM    |             |          |
+| Status Bar         |          | Übersicht   | i3blocks |
+| Terminal Emulator  |          | kitty       | urxvt    |
+| Text Editor        | Vim      |             |          |
+| VPN Client         |          | Tunnelblick | OpenVPN  |
+| Window Manager     |          | yabai       | i3       |
 
 ## Getting started
 
