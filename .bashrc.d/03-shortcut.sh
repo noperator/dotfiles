@@ -3,6 +3,7 @@
 DROPBOX="$HOME/Dropbox"
 alias cdb="cd $DROPBOX"
 alias cds="cd $HOME/.ssh"
+alias cdv="cd $HOME/.vim"
 alias cdf="cd $HOME/dotfiles"
 alias cdg="cd $HOME/guides"
 alias cdl="cd $HOME/Downloads"
