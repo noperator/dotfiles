@@ -9,10 +9,10 @@ source "$(dirname $0)/.env"
 get_default_route() {
     case "$OSTYPE" in
         'linux-gnu'*)
-            ip -f "$1"  route | awk '$1 == "default" {print $3, $5}' | head -n 1
+            ip -f "$1"  route | awk '$1 ~ "default|0/1" {print $3, $5}' | head -n 1
             ;;
         'darwin'*)
-            netstat -rnf "$1" | awk '$1 == "default" {print $2, $4}' | head -n 1
+            netstat -rnf "$1" | awk '$1 ~ "default|0/1" {print $2, $4}' | head -n 1
             ;;
     esac
 }
@@ -62,7 +62,11 @@ get_neighbor() {
             fi
             ;;
     esac
+    if [[ -z "$MAC" ]]; then
+        echo
+    else
     <<< "$MAC" sort -u | awk '{split(toupper($0), mac, ":"); for (i = 1; i <= 6; i++) printf "%02s", mac[i]; print ""}' | tr ' ' '0'
+    fi
 }
 
 # Get a vendor from a MAC address's OUI (first three octets).

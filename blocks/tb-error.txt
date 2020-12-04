@@ -1,0 +1,5 @@
+One or more possible problems with DNS were found: 
+
+     • DNS server address 192.168.1.1 is not a public IP address and is not being routed through the VPN.
+
+     • DNS server address fe80::ee08:6bff:fe62:b381%en0 is not a public DNS server known to Tunnelblick and is not being routed through the VPN.
