@@ -73,6 +73,14 @@ case "$OSTYPE" in
         ;;
 esac
 
+alias ltvt='lt "${TMPDIR}markdown"*'
+vt() {
+    TEMP="$(mktemp -t markdown).md"
+    touch "$TEMP"
+    tp "$TEMP"
+    vim "$TEMP"
+}
+
 i() {
     echo "NAME: $@"
     echo -n 'SIZE: '
