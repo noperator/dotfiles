@@ -29,7 +29,7 @@ rename_screen_cap() {
     TYPE="$3"
     DIR="$HOME/Desktop"
     RENAME="$DIR/$NAME.$EXT"
-    SCREENCAP=$(find "$DIR" -name "Screen $TYPE*.$EXT" | sort -n | tail -n 1)
+    SCREENCAP=$(find "$DIR" -maxdepth 1 -name "Screen $TYPE*.$EXT" | sort -n | tail -n 1)
     if [[ -f "$RENAME" ]]; then
         echo "$RENAME already exists!"
     else
