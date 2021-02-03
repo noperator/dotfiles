@@ -82,6 +82,7 @@ get_vendor() {
 iface_enabled() {
     case "$OSTYPE" in
         'linux-gnu'*)
+            < "/sys/class/net/$1/flags" awk '{if ($1 == "0x1003") {print "true"} else {print "false"}}'
             ;;
         'darwin'*)
             ifconfig "$1" | awk '$2 ~ /flags=/ {if ($2 ~ /RUNNING/) {print "true"} else {print "false"}}'
@@ -114,6 +115,7 @@ ethernet_connected() {
 wifi_connected() {
     case "$OSTYPE" in
         'linux-gnu'*)
+            < "/sys/class/net/$1/operstate" awk '{if ($1 == "up") {print "true"} else {print "false"}}'
             ;;
         'darwin'*)
             ifconfig "$1" | awk '$1 == "status:" {if ($2 == "active") {print "true"} else {print "false"}}'
