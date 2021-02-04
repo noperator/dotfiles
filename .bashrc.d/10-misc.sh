@@ -75,9 +75,16 @@ esac
 
 alias ltvt='lt "${TMPDIR}markdown"*'
 vt() {
-    TEMP="$(mktemp -t markdown).md"
+    case "$OSTYPE" in
+        'darwin'*)
+            TEMP="$(mktemp -t markdown).md"
+            ;;
+        'linux-gnu'*)
+            TEMP="$(mktemp -t markdown.XXXXXXXXXX.md)"
+            ;;
+    esac
     touch "$TEMP"
-    tp "$TEMP"
+    tp "$TEMP" &
     vim "$TEMP"
 }
 

@@ -5,6 +5,7 @@ export EDITOR="$VISUAL"
 export HISTCONTROL='ignoreboth'  # Shorthand for ignorespace and ignoredups.
 export DIALOGRC="$HOME/.dialogrc"
 export SSH_AUTH_SOCK="$HOME/.ssh/ssh-agent.$HOSTNAME.sock"
+export TMPDIR='/tmp/'
 
 # Prepend directories to PATH without the variable growing each time this file is sourced.
 OLD_PATH=$(echo "$PATH" | tr ':' '\n' | uniq | tr '\n' ':')
