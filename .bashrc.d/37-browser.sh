@@ -101,4 +101,6 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
             done
         done
     }
+else
+    alias chrome='google-chrome-stable --disable-gpu &'
 fi
