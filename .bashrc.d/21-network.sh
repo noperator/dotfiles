@@ -14,7 +14,7 @@ if [[ "$OSTYPE" == 'linux-gnu'* ]]; then
 
     nsa() { sudo $(which netctl) stop-all; }
     ns() { sudo $(which netctl) start "$@"; }
-    ncl() { netctl list | grep -n '' | column -t -s ':'; }
+    ncl() { netctl list | nl -s ' ' -w 2; }
     nsn() { nsa; ns "$(ncl | head -n $1 | tail -n 1 | awk '{print $NF}')"; }
     alias wm="sudo wifi-menu"
 
