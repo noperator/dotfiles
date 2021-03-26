@@ -12,14 +12,21 @@ if [[ "$OSTYPE" == 'linux-gnu'* ]]; then
     alias snl="snb | vg 'ESTAB|CLOSE-WAIT|LAST-ACK|TIME-WAIT|SYN-SENT|FIN-WAIT' | column -t | cut -c -$COLUMNS"
     alias snu="snb | grep '^udp' | column -t | cut -c -$COLUMNS"
 
+    # Network profiles.
     nsa() { sudo $(which netctl) stop-all; }
     ns() { sudo $(which netctl) start "$@"; }
     ncl() { netctl list | nl -s ' ' -w 2; }
     nsn() { nsa; ns "$(ncl | head -n $1 | tail -n 1 | awk '{print $NF}')"; }
     alias wm="sudo wifi-menu"
 
-    pgw() { ping `ip route | awk '$1 == "default" {print $3}'`; }
+    # Firewall.
+    alias ufw="sudo $(which ufw)"
+    alias us='ufw status numbered'
+    alias ua='ufw allow'
+    alias ud='ufw delete'
 
+    # Misc.
+    pgw() { ping `ip route | awk '$1 == "default" {print $3}'`; }
     bt() { echo "power $@" | bluetoothctl; (sleep 1; ri3b_bt;) & }
 fi
 
