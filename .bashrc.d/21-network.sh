@@ -6,11 +6,11 @@ fi
 
 if [[ "$OSTYPE" == 'linux-gnu'* ]]; then
     # Socket statistics.
-    alias snb="{ ss -Hantup4; ss -Hantup6; } | awk '{print \$1,\$2,\$5,\$6,\$7}' | sed -E 's/users:\(\(\"|,fd=.*//g ; s/\",pid=/\//g' | column -t | sort -k 5"
-    alias sn="snb | cut -c -$COLUMNS"
-    alias sne="snb | grep 'ESTAB' | column -t | cut -c -$COLUMNS"
-    alias snl="snb | vg 'ESTAB|CLOSE-WAIT|LAST-ACK|TIME-WAIT|SYN-SENT|FIN-WAIT' | column -t | cut -c -$COLUMNS"
-    alias snu="snb | grep '^udp' | column -t | cut -c -$COLUMNS"
+    alias snb="{ sudo ss -Hantup4; sudo ss -Hantup6; } | awk '{print \$1,\$2,\$5,\$6,\$7}' | sed -E 's/users:\(\(\"|,fd=.*//g ; s/\",pid=/\//g' | column -t | sort -k 5"
+    alias sn="snb | cut -c -\$COLUMNS"
+    alias sne="snb | grep 'ESTAB' | column -t | cut -c -\$COLUMNS"
+    alias snl="snb | vg 'ESTAB|CLOSE-WAIT|LAST-ACK|TIME-WAIT|SYN-SENT|FIN-WAIT' | column -t | cut -c -\$COLUMNS"
+    alias snu="snb | grep '^udp' | column -t | cut -c -\$COLUMNS"
 
     # Network profiles.
     nsa() { sudo $(which netctl) stop-all; }
