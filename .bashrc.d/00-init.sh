@@ -6,14 +6,19 @@ export HISTCONTROL='ignoreboth'  # Shorthand for ignorespace and ignoredups.
 export DIALOGRC="$HOME/.dialogrc"
 export SSH_AUTH_SOCK="$HOME/.ssh/ssh-agent.$HOSTNAME.sock"
 export TMPDIR='/tmp/'
+export NPM_PACKAGES="$HOME/.npm-packages"
 
 # Prepend directories to PATH without the variable growing each time this file is sourced.
 OLD_PATH=$(echo "$PATH" | tr ':' '\n' | uniq | tr '\n' ':')
 CUSTOM_PATH=''
 for DIR in \
 "$HOME/dotfiles/bin" \
+"$HOME/.local/bin" \
+"$NPM_PACKAGES/bin" \
 "$HOME/go/bin" \
+/usr/local/go/bin \
 /usr/local/Cellar/python\@3.9/3.9.0/bin \
+/snap/bin \
 /usr/local/opt/util-linux/sbin \
 /usr/local/opt/util-linux/bin \
 /usr/local/sbin \
