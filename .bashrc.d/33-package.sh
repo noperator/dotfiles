@@ -9,6 +9,8 @@ case "$OSTYPE" in
         alias bsr='brew services restart'
         ;;
     'linux-gnu'*)
+
+        # pacman
         alias pss='pacman -Ss'
         alias pi='sudo pacman -S'
         lip ()
@@ -17,10 +19,20 @@ case "$OSTYPE" in
                 grep "\[ALPM\] installed $PACKAGE" /var/log/pacman.log
             done | sort | uniq | sed 's/\[ALPM\] installed //'
         }
+
+        # Auracle
         alias aurs='auracle --sort=votes search'
         auri() {
             auracle info "${1#aur/}"
         }
         alias aurc='auracle clone'
+
+        # apt
+        alias apts='apt search'
+        alias apti='sudo apt install -y'
+        alias aptr='sudo apt remove -y'
+        alias aptu='sudo apt update'
+        alias aptg='sudo apt upgrade'
+
         ;;
 esac
