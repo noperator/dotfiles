@@ -1,0 +1,100 @@
+// vim:ts=4:sw=4:et
+{
+    // splitv split container with 3 children
+    "border": "pixel",
+    "floating": "auto_off",
+    "layout": "splitv",
+    "marks": [],
+    "percent": 0.501041666666667,
+    "type": "con",
+    "nodes": [
+        {
+            "border": "pixel",
+            "current_border_width": 1,
+            "floating": "auto_off",
+            "geometry": {
+               "height": 1048,
+               "width": 845,
+               "x": 0,
+               "y": 0
+            },
+            "marks": [],
+            "name": "Volume Control",
+            "percent": 0.533333333333333,
+            "swallows": [
+               {
+                    "class": "^Pavucontrol$"
+               // "instance": "^pavucontrol$",
+               // "title": "^Volume\\ Control$"
+               }
+            ],
+            "type": "con"
+        },
+        {
+            "border": "pixel",
+            "current_border_width": 1,
+            "floating": "auto_off",
+            "geometry": {
+               "height": 800,
+               "width": 1200,
+               "x": 0,
+               "y": 0
+            },
+            "marks": [],
+            "name": "NoiseTorch",
+            "percent": 0.314414414414414,
+            "swallows": [
+               {
+                    "title": "^NoiseTorch$"
+               }
+            ],
+            "type": "con"
+        },
+        {
+            "border": "pixel",
+            "current_border_width": 1,
+            "floating": "auto_off",
+            "geometry": {
+               "height": 1048,
+               "width": 424,
+               "x": 3622,
+               "y": 26
+            },
+            "marks": [],
+            "name": "Bluetooth Devices",
+            "percent": 0.152252252252252,
+            "swallows": [
+               {
+                    "class": "^Blueman\\-manager$"
+               // "instance": "^blueman\\-manager$",
+               // "title": "^Bluetooth\\ Devices$"
+               }
+            ],
+            "type": "con"
+        }
+    ]
+}
+
+{
+    "border": "pixel",
+    "current_border_width": 1,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 1048,
+       "width": 634,
+       "x": 643,
+       "y": 27
+    },
+    "marks": [],
+    "name": "OBS 26.1.2-250-ga609554b8-modified (linux) - Profile: Untitled - Scenes: Untitled",
+    "percent": 0.498958333333333,
+    "swallows": [
+       {
+            "class": "^obs$"
+       // "instance": "^obs$",
+       // "title": "^OBS\\ 26\\.1\\.2\\-250\\-ga609554b8\\-modified\\ \\(linux\\)\\ \\-\\ Profile\\:\\ Untitled\\ \\-\\ Scenes\\:\\ Untitled$"
+       }
+    ],
+    "type": "con"
+}
+
