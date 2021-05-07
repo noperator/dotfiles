@@ -29,7 +29,9 @@ case "$OSTYPE" in
 
         # apt
         alias apts='apt search'
+        alias aptsb='apts -t buster-backports'
         alias apti='sudo apt install -y'
+        alias aptib='apti -t buster-backports'
         alias aptr='sudo apt remove -y'
         alias aptu='sudo apt update'
         alias aptg='sudo apt upgrade'
