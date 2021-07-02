@@ -18,7 +18,7 @@ else
     alias ll='ls -lA'
     alias lt='ll -Frt'
     alias lh='ll -FrSh'
-    tree() { "$(which tree)" -taD "$@" | ccat; }
+    tree() { "$(which tree)" -taD "$@"; }
 fi
 
 f() { find . -iname '*'"$@"'*'; }
