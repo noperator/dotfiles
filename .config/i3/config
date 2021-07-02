@@ -217,11 +217,16 @@ bindsym $mod+control+0 exec 'i3_balance_workspace'
 # bindsym $mod+Shift+b exec "i3_balance_workspace --scope focus"
 
 # Assign windows to workspaces.
-assign [class="teams-for-linux"] $ws6
+assign [class="Google-chrome" instance=".*chrome-Work.*"] $ws1
+assign [class="Google-chrome" instance=".*chrome-Personal.*"] $ws3
+assign [class="Google-chrome" instance="teams.microsoft.com"] $ws6
 assign [class="(?i)slack"] $ws7
+for_window [class="NoiseTorch"] move to workspace $ws10
+assign [class="(?i)pavucontrol"] $ws10
+assign [class="(?i)blueman-manager"] $ws10
 
 # Assign layouts to workspaces.
-exec --no-startup-id "i3-msg 'workspace 10:a/v; append_layout ~/.config/i3/workspace-av.json'"
+# exec --no-startup-id "i3-msg 'workspace 10:a/v; append_layout ~/.config/i3/workspace-av.json'"
 
 # Keep window on screen across all workspaces.
 for_window [title="Share Your Screen"] sticky enable

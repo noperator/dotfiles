@@ -40,9 +40,10 @@ gco()  # Google Chrome open.
     CHROME_USER_DATA_DIR=''
     CHROME_PROFILE_DIR=''
     CHROME_PROXY_SERVER=''
+    CHROME_APP=''
     CHROME_URL=''
     local OPTIND
-    while getopts ":d:p:x:u:" opt; do
+    while getopts ":d:p:x:a:u:" opt; do
         case ${opt} in
             d )
                 CHROME_USER_DATA_DIR="$OPTARG"
@@ -52,6 +53,9 @@ gco()  # Google Chrome open.
                 ;;
             x )
                 CHROME_PROXY_SERVER="$OPTARG"
+                ;;
+            a )
+                CHROME_APP="$OPTARG"
                 ;;
             u )
                 CHROME_URL="$OPTARG"
@@ -71,6 +75,8 @@ gco()  # Google Chrome open.
     shift $((OPTIND -1))
 
     CHROME_ARGS=''
+
+    # User data directory and profile.
     if [[ -n "$CHROME_USER_DATA_DIR" ]]; then
         # CHROME_ARGS="$CHROME_ARGS --user-data-dir='$CHROME_USER_DATA_BASE/$CHROME_USER_DATA_DIR'"
         CHROME_ARGS="$CHROME_ARGS --user-data-dir='$CHROME_USER_DATA_DIR'"
@@ -78,10 +84,16 @@ gco()  # Google Chrome open.
     if [[ -n "$CHROME_PROFILE_DIR" ]]; then
         CHROME_ARGS="$CHROME_ARGS --profile-directory='$CHROME_PROFILE_DIR'"
     fi
+
+    # Proxy server.
     if [[ -n "$CHROME_PROXY_SERVER" ]]; then
         CHROME_ARGS="$CHROME_ARGS --proxy-server='$CHROME_PROXY_SERVER'"
     fi
-    if [[ -n "$CHROME_URL" ]]; then
+
+    # URL with optional app setting.
+    if [[ -n "$CHROME_APP" ]]; then
+        CHROME_ARGS="$CHROME_ARGS --app='$CHROME_APP'"
+    elif [[ -n "$CHROME_URL" ]]; then
         CHROME_ARGS="$CHROME_ARGS '$CHROME_URL'"
     fi
 

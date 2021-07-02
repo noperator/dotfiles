@@ -6,7 +6,7 @@ case "$OSTYPE" in
     'linux-gnu'*)
         av() {  # Audio/video
             pgrep pavucontrol     || pavucontrol &
-            pgrep obs-studio      || obs-studio --startvirtualcam &
+            # pgrep obs-studio      || obs-studio --startvirtualcam &
             pgrep noisetorch      || noisetorch &
             pgrep blueman-manager || blueman-manager &
         }
@@ -14,16 +14,29 @@ case "$OSTYPE" in
             for PROC in pavucontrol obs-studio noisetorch blueman-manager; do
                 $(which pkill) -9 -fi "$PROC"
             done
+            # i3-msg 'workspace 10:a/v; append_layout ~/.config/i3/workspace-av.json'
         }
+        teams() { gco -d "$HOME/.config/chrome-Teams" -a 'https://teams.microsoft.com'; }
         ch() {  # Chat
-            for PROC in teams-for-linux slack; do
-                pgrep "$PROC" || "$PROC" &
-            done
+            pgrep slack    || slack &
+            pgrep -f teams || teams &
         }
         kch() {
-            for PROC in teams-for-linux slack; do
+            for PROC in teams slack; do
                 $(which pkill) -9 -fi "$PROC"
             done
+        }
+        br() {
+            for PROFILE in Work Personal; do
+                gco -d "$HOME/.config/chrome-$PROFILE"
+            done
+        }
+
+        # Launch all apps.
+        work() {
+            av
+            ch
+            br
         }
         ;;
 esac
