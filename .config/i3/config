@@ -166,7 +166,7 @@ bar {
     status_command i3blocks
     tray_output none
     position top
-    font pango:source code pro, 9
+    font pango:Source Code Pro, Font Awesome 5 Free 9
     # font pango:Monaco, 9
     colors {
         background #2d2d2d
