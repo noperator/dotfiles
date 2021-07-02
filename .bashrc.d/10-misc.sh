@@ -23,6 +23,12 @@ alias sba='source env/bin/activate'
 alias hd='hexdump -C'
 alias xlf='xmllint --format'
 alias vbe="vim $HOME/.bashrc.extra"
+rtc() {  # Random Todoist color
+    COLOR_LIST="$DROPBOX/todoist-colors.lst"
+    SHIFTED_COLORS=$(awk '{if (NR == 1) {LINE=$0} else {print $0}} END {print LINE}' "$COLOR_LIST")
+    echo "$SHIFTED_COLORS" > "$COLOR_LIST"
+    head -n 1 "$COLOR_LIST"
+}
 rename_screen_cap() {
     NAME="$1"
     EXT="$2"
