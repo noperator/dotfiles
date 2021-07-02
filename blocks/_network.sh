@@ -127,7 +127,7 @@ wifi_connected() {
 # @param $1 Interface name. e.g., en0, wlp3s1, eth2, etc.
 # @return <BOOLEAN> true or false.
 iface_exists() {
-    if ifconfig "$1" &>/dev/null; then
+    if ip link show dev "$1" &>/dev/null; then
         echo 'true'
     else
         echo 'false'
