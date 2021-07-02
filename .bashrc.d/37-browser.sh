@@ -10,69 +10,87 @@
 # Also worth noting is that Firefox would _crash_ (on macOS) anytime I tried to
 # start a video call. Chrom* does fine, though.
 
-if [[ "$OSTYPE" == 'darwin'* ]]; then
 
-    ########
-    # Chrom(e|ium)
-    ####
+########
+# Chrom(e|ium)
+####
 
-    # Function to easily open Chrome while specifying a profile, proxy, and
-    # url.
-    gco()  # Google Chrome open.
-    {
-        CHROME_USER_DATA_DIR=''
-        CHROME_PROXY_SERVER=''
-        CHROME_URL=''
-        local OPTIND
-        while getopts ":u:d:p:" opt; do
-            case ${opt} in
-                d )
-                    CHROME_USER_DATA_DIR="$OPTARG"
-                    ;;
-                p )
-                    CHROME_PROXY_SERVER="$OPTARG"
-                    ;;
-                u )
-                    CHROME_URL="$OPTARG"
-                    ;;
-                \? )
-                    echo "Invalid option: $OPTARG" >&2
-                    false
-                    return
-                    ;;
-                : )
-                    echo "Invalid option: $OPTARG requires an argument" >&2
-                    false
-                    return
-                    ;;
-            esac
-        done
-        shift $((OPTIND -1))
-
-        CHROME_ARGS=''
-        if [[ -n "$CHROME_PROXY_SERVER" ]]; then
-            CHROME_ARGS="--proxy-server='$CHROME_PROXY_SERVER'"
-        fi
-        if [[ -n "$CHROME_USER_DATA_DIR" ]]; then
-            # Find data directory by looking for Profile Path at chrome://version
-            # - https://www.chromium.org/developers/creating-and-using-profiles
-            # - https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md
-            # CHROME_USER_DATA_BASE="$HOME/Library/Application Support/Google/Chrome"
-            CHROME_USER_DATA_BASE="$HOME/Library/Application Support/Chromium"
-            CHROME_ARGS="$CHROME_ARGS --user-data-dir='$CHROME_USER_DATA_BASE/$CHROME_USER_DATA_DIR'"
-        fi
-        if [[ -n "$CHROME_URL" ]]; then
-            CHROME_ARGS="$CHROME_ARGS '$CHROME_URL'"
-        fi
-
-        # /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome "$CHROME_ARGS" &
+# Find data directory by looking for Profile Path at chrome://version
+# - https://www.chromium.org/developers/creating-and-using-profiles
+# - https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md
+case "$OSTYPE" in
+    'linux-gnu'*)
+        # CHROME_USER_DATA_BASE="$HOME/.config/google-chrome"
+        CHROME_BIN='/usr/bin/google-chrome'
+        ;;
+    'darwin'*)
+        # CHROME_USER_DATA_BASE="$HOME/Library/Application Support/Google/Chrome"
         # CHROME_BIN='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+        # CHROME_USER_DATA_BASE="$HOME/Library/Application Support/Chromium"
         CHROME_BIN='/Applications/Chromium.app/Contents/MacOS/Chromium'
-        echo "[*] Starting $(basename $CHROME_BIN) with args: $CHROME_ARGS"
-        eval "$CHROME_BIN $CHROME_ARGS" &
-    }
+        ;;
+esac
+
+# Quickly open Chrome while specifying a user data directory, profile
+# directory, proxy, and url. Note that two separate profiles under the same
+# user data directory will open in the same, existing browser session. They
+# follow this hierarchy: USER-DATA-DIR/PROFILE-DIR
+gco()  # Google Chrome open.
+{
+    CHROME_USER_DATA_DIR=''
+    CHROME_PROFILE_DIR=''
+    CHROME_PROXY_SERVER=''
+    CHROME_URL=''
+    local OPTIND
+    while getopts ":d:p:x:u:" opt; do
+        case ${opt} in
+            d )
+                CHROME_USER_DATA_DIR="$OPTARG"
+                ;;
+            p )
+                CHROME_PROFILE_DIR="$OPTARG"
+                ;;
+            x )
+                CHROME_PROXY_SERVER="$OPTARG"
+                ;;
+            u )
+                CHROME_URL="$OPTARG"
+                ;;
+            \? )
+                echo "Invalid option: $OPTARG" >&2
+                false
+                return
+                ;;
+            : )
+                echo "Invalid option: $OPTARG requires an argument" >&2
+                false
+                return
+                ;;
+        esac
+    done
+    shift $((OPTIND -1))
+
+    CHROME_ARGS=''
+    if [[ -n "$CHROME_USER_DATA_DIR" ]]; then
+        # CHROME_ARGS="$CHROME_ARGS --user-data-dir='$CHROME_USER_DATA_BASE/$CHROME_USER_DATA_DIR'"
+        CHROME_ARGS="$CHROME_ARGS --user-data-dir='$CHROME_USER_DATA_DIR'"
+    fi
+    if [[ -n "$CHROME_PROFILE_DIR" ]]; then
+        CHROME_ARGS="$CHROME_ARGS --profile-directory='$CHROME_PROFILE_DIR'"
+    fi
+    if [[ -n "$CHROME_PROXY_SERVER" ]]; then
+        CHROME_ARGS="$CHROME_ARGS --proxy-server='$CHROME_PROXY_SERVER'"
+    fi
+    if [[ -n "$CHROME_URL" ]]; then
+        CHROME_ARGS="$CHROME_ARGS '$CHROME_URL'"
+    fi
+
+    echo "[*] Starting $(basename $CHROME_BIN) with args: $CHROME_ARGS"
+    eval "$CHROME_BIN $CHROME_ARGS" &
+}
 
 
+if [[ "$OSTYPE" == 'darwin'* ]]; then
     ########
     # Firefox
     ####
