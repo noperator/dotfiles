@@ -82,4 +82,6 @@ URxvt*intensityStyles:  false
 URxvt*fading:           30
 ! URxvt*transparent:      true
 URxvt*shading:          15
-URxvt.perl-ext-common:  font-size,config-reload
+
+! Perl extensions.
+URxvt.perl-ext-common:  font-size,config-reload,matcher
