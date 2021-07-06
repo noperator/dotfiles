@@ -52,7 +52,13 @@ get_iface_ipv6() {
 get_neighbor() {
     case "$OSTYPE" in
         'linux-gnu'*)
-            MAC=$(ip -f "$1" neigh | awk -v "gw=$2" '{if ($1 == gw && $NF == "REACHABLE") {print $5}}' | sort -u)
+            # Used to check the neighbor state, but that value switches between
+            # "reachable," "stale," and "delay" every few minutes which would
+            # cause the status bar to flicker with those value changes in a
+            # distracting way. For my purposes, I decided it's fine to ignore
+            # the state.
+            # MAC=$(ip -f "$1" neigh | awk -v "gw=$2" '{if ($1 == gw && $NF == "REACHABLE") {print $5}}' | sort -u)
+            MAC=$(ip -f "$1" neigh | awk -v "gw=$2" '{if ($1 == gw) {print $5}}' | sort -u)
             ;;
         'darwin'*)
             if [[ "$1" == 'inet' ]]; then
