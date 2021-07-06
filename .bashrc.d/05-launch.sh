@@ -16,7 +16,8 @@ case "$OSTYPE" in
             done
             # i3-msg 'workspace 10:a/v; append_layout ~/.config/i3/workspace-av.json'
         }
-        teams() { gco -d "$HOME/.config/chrome-Teams" -a 'https://teams.microsoft.com'; }
+        teams() { gco -d "$HOME/.config/chrome-Work" -a 'https://teams.microsoft.com'; }
+        outlook() { gco -d "$HOME/.config/chrome-Work" -a 'https://outlook.office.com'; }
         ch() {  # Chat
             pgrep slack    || slack &
             pgrep -f teams || teams &

@@ -93,7 +93,7 @@ set $ws1 "1:work"
 set $ws2 "2:edit"
 set $ws3 "3:personal"
 set $ws4 "4:share"
-set $ws5 "5"
+set $ws5 "5:outlook"
 set $ws6 "6:teams"
 set $ws7 "7:slack"
 set $ws8 "8"
@@ -219,8 +219,10 @@ bindsym $mod+control+0 exec 'i3_balance_workspace'
 # Assign windows to workspaces.
 assign [class="Google-chrome" instance=".*chrome-Work.*"] $ws1
 assign [class="Google-chrome" instance=".*chrome-Personal.*"] $ws3
+assign [class="Google-chrome" instance="outlook.office.com"] $ws5
 assign [class="Google-chrome" instance="teams.microsoft.com"] $ws6
 assign [class="(?i)slack"] $ws7
+# TODO: zoom ws8
 for_window [class="NoiseTorch"] move to workspace $ws10
 assign [class="(?i)pavucontrol"] $ws10
 assign [class="(?i)blueman-manager"] $ws10
