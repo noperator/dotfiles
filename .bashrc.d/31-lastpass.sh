@@ -40,11 +40,24 @@ lpc() {
 }
 
 # Generate a random 32-character password.
+rand_alnum() {
+    < /dev/urandom LC_ALL=C base64 | tr -d '/+=' | head -c "$1"
+}
 pwg() {
-    < /dev/urandom LC_ALL=C tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c 32
+    rand_alnum 4
+    < /dev/urandom LC_ALL=C tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c 24
+    rand_alnum 4
     echo
 }
 pwga() {
-    < /dev/urandom LC_ALL=C base64 | tr -d '/+=' | head -c 40
+    rand_alnum 40
     echo
+}
+# https://passlib.readthedocs.io/en/stable/lib/passlib.hash.sha256_crypt.html
+# $5$rounds=5000$GX7BopJZJxPc/KEK$le16UF8I2Anb.rOrn22AUPWvzUETDGefUmAV8AZkGcD 
+pwgh() {
+    ROUNDS="$RANDOM"
+    SALT="$(rand_alnum 16)"
+    CHECKSUM="$(rand_alnum 43)"
+    echo "\$5\$rounds=$ROUNDS\$$SALT\$$CHECKSUM"
 }
