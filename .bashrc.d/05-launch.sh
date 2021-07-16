@@ -5,12 +5,12 @@ case "$OSTYPE" in
         ;;
     'linux-gnu'*)
         av() {  # Audio/video
-            pgrep pavucontrol     || pavucontrol &
-            # pgrep obs-studio      || obs-studio --startvirtualcam &
-            pgrep noisetorch      || noisetorch &
+            pgrep pavucontrol || pavucontrol &
+            # pgrep obs-studio || obs-studio --startvirtualcam &
+            pgrep noisetorch || noisetorch &
             pgrep blueman-manager || blueman-manager &
         }
-        kav() {
+        kav() {  # Kill audio/video
             for PROC in pavucontrol obs-studio noisetorch blueman-manager; do
                 $(which pkill) -9 -fi "$PROC"
             done
@@ -18,26 +18,31 @@ case "$OSTYPE" in
         }
         teams() { gco -d "$HOME/.config/chrome-Work" -a 'https://teams.microsoft.com'; }
         outlook() { gco -d "$HOME/.config/chrome-Work" -a 'https://outlook.office.com'; }
+        slack() { gco -d "$HOME/.config/chrome-Work" -a 'https://app.slack.com/client'; }
+        # gcal() { gco -d "$HOME/.config/chrome-Home" -a 'https://calendar.google.com'; }
         ch() {  # Chat
-            pgrep slack    || slack &
-            pgrep -f teams || teams &
+            # pgrep slack || slack &
+            xdotool search --classname 'app.slack.com__client' || slack &
+            xdotool search --classname 'outlook.office.com' || outlook &
+            # xdotool search --classname 'calendar.google.com' || gcal &
         }
-        kch() {
+        kch() {  # Kill chat
             for PROC in teams slack; do
                 $(which pkill) -9 -fi "$PROC"
             done
         }
-        br() {
-            for PROFILE in Work Personal; do
-                gco -d "$HOME/.config/chrome-$PROFILE"
+        br() {  # Browsers
+            for PROFILE in Work Home; do
+                DATA_DIR="$HOME/.config/chrome-$PROFILE"
+                xdotool search --classname "google-chrome \($DATA_DIR\)" || gco -d "$DATA_DIR"
             done
         }
 
         # Launch all apps.
         work() {
+            br
             av
             ch
-            br
         }
         ;;
 esac
