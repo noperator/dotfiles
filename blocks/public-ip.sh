@@ -14,18 +14,18 @@ NOW=$(date +%s)
 # Refresh every 2 min.
 if [[ -z $(sed -E 's|[/ ]*||g' /var/tmp/public-ip-data.txt) ]] ||
    [[ $((NOW - LAST_RUN)) -ge 120 ]] &&
-   [[ ! $(pgrep -f 'curl.*json.wtfismyip.com') ]]; then
+   [[ ! $(pgrep -f 'curl.*json.myip.wtf') ]]; then
 
     date +%s > /var/tmp/public-ip-time.txt
 
     # Fetch IPv4 data.
-    IPV4_DATA=$(curl --connect-timeout 5 -s 'ipv4.json.wtfismyip.com')
+    IPV4_DATA=$(curl --connect-timeout 5 -s 'ipv4.json.myip.wtf')
     IP_V4=$(<<< "$IPV4_DATA" jq -r '.YourFuckingIPAddress')
     LOC_V4=$(<<< "$IPV4_DATA" jq -r '.YourFuckingLocation' | awk -F ',' '{print $1 $2}')
     ISP_V4=$(<<< "$IPV4_DATA" jq -r '.YourFuckingISP' | awk '{print $1}')
 
     # Fetch IPv4 data, while compressing and abbreviating the IP address.
-    IPV6_DATA=$(curl --connect-timeout 5 -s 'ipv6.json.wtfismyip.com')
+    IPV6_DATA=$(curl --connect-timeout 5 -s 'ipv6.json.myip.wtf')
     IP_V6=$(abbr_ipv6 $(<<< "$IPV6_DATA" jq -r '.YourFuckingIPAddress'))
     LOC_V6=$(<<< "$IPV6_DATA" jq -r '.YourFuckingLocation' | awk -F ',' '{print $1 $2}')
     ISP_V6=$(<<< "$IPV6_DATA" jq -r '.YourFuckingISP' | awk '{print $1}')
