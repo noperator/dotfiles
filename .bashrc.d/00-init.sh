@@ -7,6 +7,7 @@ export DIALOGRC="$HOME/.dialogrc"
 export SSH_AUTH_SOCK="$HOME/.ssh/ssh-agent.$HOSTNAME.sock"
 export TMPDIR='/tmp/'
 export NPM_PACKAGES="$HOME/.npm-packages"
+tabs -4  # Set tab interval.
 
 # Prepend directories to PATH without the variable growing each time this file is sourced.
 OLD_PATH=$(echo "$PATH" | tr ':' '\n' | uniq | tr '\n' ':')
