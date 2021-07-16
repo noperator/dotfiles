@@ -3,11 +3,11 @@
 # Inspiration for lpass account switching:
 # https://github.com/lastpass/lastpass-cli/issues/445#issuecomment-522701216
 
-export LPASS_HOME="$HOME/.lpass-personal"
+export LPASS_HOME="$HOME/.lpass-home"
 alias lpt='lpass status; echo LPASS_HOME=$LPASS_HOME'
 
 # Create folders for separate LastPass accounts.
-for ACCOUNT in personal work; do
+for ACCOUNT in home work; do
     DIR="$HOME/.lpass-$ACCOUNT"
     if ! [[ -d "$DIR" ]]; then
         mkdir "$DIR"
