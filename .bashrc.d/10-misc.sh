@@ -53,7 +53,7 @@ mvsr() {
     rename_screen_cap "$1" 'mov' 'Recording'
 }
 sudo() { errcho -e "${CLR[RED]}[sudo] $@${CLR[END]}"; "$(which sudo)" "$@"; }
-wl() { which "$@" && ls -l $(which "$@"); }
+# wl() { which "$@" && ls -l $(which "$@"); }
 alias csc="cat $HOME/.ssh/config"
 skg () { ssh-keygen -t rsa -b 4096 -o -a 100 -q -N '' -f "$HOME/.ssh/$1"; }
 

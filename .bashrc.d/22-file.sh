@@ -18,14 +18,47 @@ else
     alias ll='ls -lA'
     alias lt='ll -Frt'
     alias lh='ll -FrSh'
-    tree() { "$(which tree)" -taD "$@"; }
+    # tree() { "$(which tree)" -taD "$@"; }
 fi
 
 f() { find . -iname '*'"$@"'*'; }
-ff() { find "$@" ! -empty -type f -printf '%.19T+@%s@%p\n' 2>/dev/null | while read LINE; do printf '%q\n' "$LINE"; done | column -t -s '@' | cut -c -"$COLUMNS"; }
+ff() {
+    find "$@" ! -empty -type f -printf '%.19T+@%s@%p\n' 2>/dev/null |
+        while read LINE; do
+            printf '%q\n' "$LINE"
+        done |
+        column -t -s '@' |
+        cut -c -"$COLUMNS"
+}
 ft() { ff "$@" | sort -n; }
 fs() { ff "$@" | sort -n -k 2; }
 alias mount="$(which mount) | sed -E 's/ on |\(|\)/#/g' | column -t -s '#' | cut -c -\$COLUMNS"
+
+# Inspired by options like namei, chase, typex, and rreadlink, all documented
+# at https://stackoverflow.com/q/33255460.
+wl() {
+    case $(type -t "$1") in
+    'file')
+        FILE=$(which "$1")
+        TYPE=$(file "$FILE")
+        while [[ "$TYPE" == *'symbolic link'* ]]; do
+            echo "-> $FILE" >&2
+            LINK=$(readlink "$FILE")
+            if [[ "$LINK" != /* ]]; then
+                DIR=$(dirname "$FILE")
+                FILE="$DIR/$LINK"
+            else
+                FILE="$LINK"
+            fi
+            TYPE=$(file "$FILE")
+        done
+        echo "$FILE"
+        ;;
+    *)
+        type "$1"
+        ;;
+    esac
+}
 
 TERA=1099511627776
 GIGA=1073741824
