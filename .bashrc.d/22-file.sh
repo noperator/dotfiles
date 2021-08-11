@@ -21,17 +21,30 @@ else
     # tree() { "$(which tree)" -taD "$@"; }
 fi
 
-f() { find . -iname '*'"$@"'*'; }
-ff() {
-    find "$@" ! -empty -type f -printf '%.19T+@%s@%p\n' 2>/dev/null |
-        while read LINE; do
-            printf '%q\n' "$LINE"
-        done |
-        column -t -s '@' |
-        cut -c -"$COLUMNS"
-}
-ft() { ff "$@" | sort -n; }
-fs() { ff "$@" | sort -n -k 2; }
+if which fd &>/dev/null; then
+    f() { fd $@; }
+    ff() {
+        fd -c always "$@" -x stat -c %y@%s@{} {} |
+            sed -E 's/ /T/; s/\.[^@]*//' |
+            column -t -s '@' |
+            cut -c -"$COLUMNS"
+    }
+    ft() { ff "$@" | sort -n; }
+    fs() { ff "$@" | sort -n -k 2; }
+else
+    f() { find . -iname '*'"$@"'*'; }
+    ff() {
+        find "$@" ! -empty -type f -printf '%.19T+@%s@%p\n' 2>/dev/null |
+            while read LINE; do
+                printf '%q\n' "$LINE"
+            done |
+            column -t -s '@' |
+            cut -c -"$COLUMNS"
+    }
+    ft() { ff "$@" | sort -n; }
+    fs() { ff "$@" | sort -n -k 2; }
+fi
+
 alias mount="$(which mount) | sed -E 's/ on |\(|\)/#/g' | column -t -s '#' | cut -c -\$COLUMNS"
 
 # Inspired by options like namei, chase, typex, and rreadlink, all documented
