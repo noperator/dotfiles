@@ -237,3 +237,6 @@ assign [class="(?i)blueman-manager"] $ws10
 
 # Keep window on screen across all workspaces.
 for_window [title="Share Your Screen"] sticky enable
+
+# Toggle public IP block.
+bindsym $mod+Shift+p exec "$HOME/dotfiles/blocks/toggle-public-ip.sh"
