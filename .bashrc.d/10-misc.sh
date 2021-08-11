@@ -1,5 +1,6 @@
 #!/bin/bash
 
+alias vim='nvim'
 alias smile='<<< '🙂' pbcopy'
 alias de='date "+%s"'
 alias ec='exiftool -overwrite_original_in_place -all=""'
@@ -19,7 +20,7 @@ alias vg='g -v'
 alias cls='printf "\033c"'
 alias sudoedit="EDITOR=$EDITOR sudoedit"
 alias sus='sort | uniq -c | sort -n'
-alias sba='source env/bin/activate'
+alias sba='source venv/bin/activate'
 alias hd='hexdump -C'
 alias xlf='xmllint --format'
 alias vbe="vim $HOME/.bashrc.extra"
@@ -71,7 +72,7 @@ case "$OSTYPE" in
     'linux-gnu'*)
         q() { zathura "$1" & }
         alias tp='typora'
-        alias dbs="dropbox-cli status"
+        alias dbs="dropbox status"
         alias kq='pkill -9 qutebrowser'
         alias fb="$HOME/.fehbg"
         alias wn="nohup play -n synth brownnoise pinknoise >/dev/null 2>&1 &"

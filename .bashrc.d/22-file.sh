@@ -13,6 +13,7 @@ if which exa &>/dev/null; then
     alias ll='exa -la'
     alias lt='ll -s mod'
     alias lh='ll -s size'
+    alias lg='lt --git'
     alias tree='lt -T'
 else
     alias ll='ls -lA'

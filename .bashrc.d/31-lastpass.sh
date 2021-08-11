@@ -4,6 +4,7 @@
 # https://github.com/lastpass/lastpass-cli/issues/445#issuecomment-522701216
 
 export LPASS_HOME="$HOME/.lpass-home"
+# alias lpass=$(which lpass)
 alias lpt='lpass status; echo LPASS_HOME=$LPASS_HOME'
 
 # Create folders for separate LastPass accounts.

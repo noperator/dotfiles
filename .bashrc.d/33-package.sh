@@ -35,7 +35,8 @@ case "$OSTYPE" in
         alias aptr='sudo apt remove -y'
         alias aptu='sudo apt update'
         alias aptg='sudo apt upgrade'
-        alias aptl='apt list --installed'
+        alias aptli='apt list --installed'
+        alias aptlu='apt list --upgradable'
 
         ;;
 esac

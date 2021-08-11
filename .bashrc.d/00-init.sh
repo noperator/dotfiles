@@ -17,6 +17,7 @@ for DIR in \
 "$HOME/.local/bin" \
 "$NPM_PACKAGES/bin" \
 "$HOME/go/bin" \
+"$HOME/.cargo/bin" \
 /usr/local/go/bin \
 /usr/local/Cellar/python\@3.9/3.9.0/bin \
 /snap/bin \

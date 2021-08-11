@@ -45,4 +45,4 @@ arping() { "$(which arping)" -c 1 "$@" | g 'bytes from' || echo "No reply from $
 geo() { curl -s "https://ipapi.co/$@/json/"; }
 alias c='curl -skA "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0) Gecko/20100101 Firefox/68.0"'
 syn() { sudo nmap -oG - -Pn -sS -p "$2" "$1" | grep -oE 'Ports:.*'; }
-alias dg='dig @8.8.8.8 +short google.com'
+alias dg='dig @8.8.8.8 google.com'

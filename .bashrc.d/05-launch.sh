@@ -24,6 +24,7 @@ case "$OSTYPE" in
             # pgrep slack || slack &
             xdotool search --classname 'app.slack.com__client' || slack &
             xdotool search --classname 'outlook.office.com' || outlook &
+            xdotool search --classname 'teams.microsoft.com' || teams &
             # xdotool search --classname 'calendar.google.com' || gcal &
         }
         kch() {  # Kill chat
@@ -37,12 +38,17 @@ case "$OSTYPE" in
                 xdotool search --classname "google-chrome \($DATA_DIR\)" || gco -d "$DATA_DIR"
             done
         }
+        sec() {
+            pgrep opensnitch-ui || opensnitch-ui &
+        }
+
 
         # Launch all apps.
         work() {
             br
             av
             ch
+            sec
         }
         ;;
 esac
