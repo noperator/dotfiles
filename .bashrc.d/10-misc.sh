@@ -93,21 +93,3 @@ vt() {
     tp "$TEMP" &
     vim "$TEMP"
 }
-
-i() {
-    echo "NAME: $@"
-    echo -n 'SIZE: '
-    case "$OSTYPE" in
-        'darwin'*)
-        stat -f %z "$@" | tr '\n' ' '
-        ;;
-        'linux-gnu'*)
-        stat --printf='%s\n' "$@" | tr '\n' ' '
-        ;;
-    esac
-    echo "($(du -h $@ | awk '{print $1}'))"
-    echo -n 'TYPE: '
-    file -b "$@"
-    echo -n 'SHA1: '
-    sha1sum "$@" | awk '{print $1}'
-}

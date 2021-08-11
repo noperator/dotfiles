@@ -89,3 +89,21 @@ dud() {
     python2 -c "print str(round(${SIZE}.0/$DENOM,2)) + str(\"|$DENOM_S|$NAME\")"
   done | column -t -s '|'
 }
+
+i() {
+    echo "NAME: $@"
+    echo -n 'SIZE: '
+    case "$OSTYPE" in
+        'darwin'*)
+        stat -f %z "$@" | tr '\n' ' '
+        ;;
+        'linux-gnu'*)
+        stat --printf='%s\n' "$@" | tr '\n' ' '
+        ;;
+    esac
+    echo "($(du -h $@ | awk '{print $1}'))"
+    echo -n 'SHA1: '
+    sha1sum "$@" | awk '{print $1}'
+    echo -n 'TYPE: '
+    file -b "$@"
+}
