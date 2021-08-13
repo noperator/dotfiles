@@ -51,6 +51,8 @@ for FILE in \
 .local \
 .tmux.conf \
 .vimrc \
+nvim \
+.ipython \
 ; do
     link "$FILE"
 done
