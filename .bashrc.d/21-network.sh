@@ -20,7 +20,7 @@ if [[ "$OSTYPE" == 'linux-gnu'* ]]; then
     alias wm="sudo wifi-menu"
 
     # Firewall.
-    alias ufw="sudo $(which ufw)"
+    alias ufw="sudo $(which ufw 2>/dev/null)"
     alias us='ufw status numbered'
     alias ua='ufw allow'
     alias ud='ufw delete'
