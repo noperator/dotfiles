@@ -105,6 +105,7 @@ set backspace=indent,eol,start
 cnoreabbrev <expr> Wq ((getcmdtype() is# ':' && getcmdline() is# 'Wq')?('wq'):('Wq'))
 cnoreabbrev <expr> W  ((getcmdtype() is# ':' && getcmdline() is# 'W' )?('w') :('W') )
 cnoreabbrev <expr> w' ((getcmdtype() is# ':' && getcmdline() is# "w'")?('w') :("w'"))
+cnoreabbrev <expr> black ((getcmdtype() is# ':' && getcmdline() is# 'black')?('Black'):('black'))
 
 " Underline current line with hyphens.
 nmap U yyp<c-v>$r-
@@ -118,7 +119,24 @@ nmap <S-Enter> O<Esc>j
 nmap <CR> o<Esc>k
 
 " Reload config file.
-nmap R :source ~/.vimrc<CR>
+if has('nvim')
+  nmap R :source ~/.vimrc<CR>
+else
+  nmap R :source ~/.config/nvim/init.vim
+endif
 
 " Open in external editor.
-nmap <C-T> :silent !open -a Typora.app '%:p'<CR>
+" nmap <C-T> :silent !open -a Typora.app '%:p'<CR>
+nmap <C-T> :silent !typora '%:p' &<CR>
+
+" Put signs into the number column. Or, show persistent sign column with clear background.
+if has('nvim')
+  set signcolumn=number
+endif
+" highlight SyntasticErrorSign guifg=white guibg=red
+" highlight error guifg=white guibg=red
+" set signcolumn=yes
+" highlight clear SignColumn
+
+" Embed interactive IPython shell.
+" nmap ip oimport IPython; IPython.embed()<Esc>
