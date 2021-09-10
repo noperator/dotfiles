@@ -1,16 +1,15 @@
 #!/bin/bash
 
+# Link a file from the dotfiles directory to its intended location.
 link() {
     SOURCE_DOTFILE="$HOME/dotfiles/$1"
     SOURCE_FILENAME=$(basename "$1")
 
     # $1 is always the filename as it exists in dotfiles. $2 can be:
-    # 1. Nothing, in which case the filename in $1 should be the target
-    #    under $HOME.
-    # 2. A directory under $HOME where the filename in $1 should be
-    #    linked.
-    # 3. An alternate name that the file should be renamed as under
+    # 1. Nothing, in which case the filename in $1 should be the target under
     #    $HOME.
+    # 2. A directory under $HOME where the filename in $1 should be linked.
+    # 3. An alternate name that the file should be renamed as under $HOME.
     LINK='[*] Link:   '
     if [[ -z "$2" ]]; then
         LINK="$LINK$SOURCE_DOTFILE -> \$HOME/$SOURCE_FILENAME"
@@ -40,48 +39,40 @@ link() {
     ln -s "$SOURCE_DOTFILE" "$TARGET"
 }
 
+# OS-agnostic files.
 for FILE in \
-.bash_profile \
-.bashrc \
-.bashrc.d \
-.config \
-.hushlogin \
-.inputrc \
-.inputrc.tmux \
-.local \
-.tmux.conf \
-.vimrc \
-nvim \
-.ipython \
-; do
+    .bash_profile \
+    .bashrc \
+    .bashrc.d \
+    .config \
+    .hushlogin \
+    .inputrc \
+    .inputrc.tmux \
+    .local \
+    .tmux.conf \
+    .vimrc \
+    nvim \
+    .ipython; do
     link "$FILE"
 done
 
+# OS-specific files.
 case "$OSTYPE" in
-    'linux-gnu'*)
-        for FILE in \
+'linux-gnu'*)
+    for FILE in \
         .asoundrc \
         .xinitrc \
         .Xresources \
-        ; do
-            link "$FILE"
-        done
-        ;;
-    'darwin'*)
-        link .skhdrc.yabai .skhdrc
-        link .yabairc
-        link .config/uebersicht 'Library/Application Support/Übersicht/widgets'
-        for PROFILE in $(ls "$HOME/Library/Application Support/Firefox/Profiles/"); do
-            link .config/firefox/user.js "Library/Application Support/Firefox/Profiles/$PROFILE"
-        done
-        ;;
+        .XCompose; do
+        link "$FILE"
+    done
+    ;;
+'darwin'*)
+    link .skhdrc.yabai .skhdrc
+    link .yabairc
+    link .config/uebersicht 'Library/Application Support/Übersicht/widgets'
+    for PROFILE in $(ls "$HOME/Library/Application Support/Firefox/Profiles/"); do
+        link .config/firefox/user.js "Library/Application Support/Firefox/Profiles/$PROFILE"
+    done
+    ;;
 esac
-
-# Clean up backup files on macOS:
-# for DIR in \
-# "$HOME" \
-# "$HOME/Library/Application Support/Firefox/Profiles/"* \
-# "$HOME/Library/Application Support/Übersicht/" \
-# ; do
-#     find "$DIR" -maxdepth 1 -type l -iname '*.bu.*' -delete
-# done
