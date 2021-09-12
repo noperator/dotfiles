@@ -1,11 +1,11 @@
 #!/bin/bash
 
-alias vim='nvim'
+which nvim &>/dev/null && alias vim='nvim'
 alias smile='<<< '🙂' pbcopy'
 alias de='date "+%s"'
 alias ec='exiftool -overwrite_original_in_place -all=""'
 alias errcho='>&2 echo'
-alias et="TERM=linux $(which et 2> /dev/null)"
+alias et="TERM=linux $(which et 2>/dev/null)"
 alias l='clear'
 alias less='less -i'
 alias no='>/dev/null 2>&1'
@@ -24,10 +24,10 @@ alias sba='source venv/bin/activate'
 alias hd='hexdump -C'
 alias xlf='xmllint --format'
 alias vbe="vim $HOME/.bashrc.extra"
-rtc() {  # Random Todoist color
+rtc() { # Random Todoist color
     COLOR_LIST="$DROPBOX/todoist-colors.lst"
     SHIFTED_COLORS=$(awk '{if (NR == 1) {LINE=$0} else {print $0}} END {print LINE}' "$COLOR_LIST")
-    echo "$SHIFTED_COLORS" > "$COLOR_LIST"
+    echo "$SHIFTED_COLORS" >"$COLOR_LIST"
     head -n 1 "$COLOR_LIST"
 }
 rename_screen_cap() {
@@ -53,42 +53,45 @@ mvss() {
 mvsr() {
     rename_screen_cap "$1" 'mov' 'Recording'
 }
-sudo() { errcho -e "${CLR[RED]}[sudo] $@${CLR[END]}"; "$(which sudo)" "$@"; }
+sudo() {
+    errcho -e "${CLR[RED]}[sudo] $@${CLR[END]}"
+    "$(which sudo)" "$@"
+}
 # wl() { which "$@" && ls -l $(which "$@"); }
 alias csc="cat $HOME/.ssh/config"
-skg () { ssh-keygen -t rsa -b 4096 -o -a 100 -q -N '' -f "$HOME/.ssh/$1"; }
+skg() { ssh-keygen -t rsa -b 4096 -o -a 100 -q -N '' -f "$HOME/.ssh/$1"; }
 
 case "$OSTYPE" in
-    'darwin'*)
-        alias q='no qlmanage -p'
-        alias tp='open -a Typora'
-        alias find='gfind'
-        alias nwn='pkill brownnoise'
-        alias pc='pbcopy'
-        alias rc='launchctl stop homebrew.mxcl.chunkwm'
-        alias ssh="TERM=linux $(which ssh)"
-        alias wn='osascript -e "set Volume 2"; (no play -n synth brownnoise &)'
-        ;;
-    'linux-gnu'*)
-        q() { zathura "$1" & }
-        alias tp='typora'
-        alias dbs="dropbox status"
-        alias kq='pkill -9 qutebrowser'
-        alias fb="$HOME/.fehbg"
-        alias wn="nohup play -n synth brownnoise pinknoise >/dev/null 2>&1 &"
-        alias nn='pkill play'
-        ;;
+'darwin'*)
+    alias q='no qlmanage -p'
+    alias tp='open -a Typora'
+    alias find='gfind'
+    alias nwn='pkill brownnoise'
+    alias pc='pbcopy'
+    alias rc='launchctl stop homebrew.mxcl.chunkwm'
+    alias ssh="TERM=linux $(which ssh)"
+    alias wn='osascript -e "set Volume 2"; (no play -n synth brownnoise &)'
+    ;;
+'linux-gnu'*)
+    q() { zathura "$1" & }
+    alias tp='typora'
+    alias dbs="dropbox status"
+    alias kq='pkill -9 qutebrowser'
+    alias fb="$HOME/.fehbg"
+    alias wn="nohup play -n synth brownnoise pinknoise >/dev/null 2>&1 &"
+    alias nn='pkill play'
+    ;;
 esac
 
 alias ltvt='lt "${TMPDIR}markdown"*'
 vt() {
     case "$OSTYPE" in
-        'darwin'*)
-            TEMP="$(mktemp -t markdown).md"
-            ;;
-        'linux-gnu'*)
-            TEMP="$(mktemp -t markdown.XXXXXXXXXX.md)"
-            ;;
+    'darwin'*)
+        TEMP="$(mktemp -t markdown).md"
+        ;;
+    'linux-gnu'*)
+        TEMP="$(mktemp -t markdown.XXXXXXXXXX.md)"
+        ;;
     esac
     touch "$TEMP"
     tp "$TEMP" &
