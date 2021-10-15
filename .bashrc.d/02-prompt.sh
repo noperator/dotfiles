@@ -7,7 +7,7 @@ ELLIPSIS=$(printf '\xe2\x80\xa6')
 git_info() {
 
     # Bail if this isn't a git repo.
-    if git status |& grep -i '^fatal: not a git repo' &> /dev/null; then
+    if git status |& grep -i '^fatal: not a git repo' &>/dev/null; then
         false
         return
     else
@@ -26,8 +26,8 @@ git_info() {
     # - https://git.savannah.gnu.org/cgit/readline.git/tree/display.c#n320
     # - https://en.wikipedia.org/wiki/ANSI_escape_code
     git -c color.ui=always status -sb . |
-    perl -pe 's/([^\x01]?)(\x1B\[.*?m)([^\x02]?)/\1\x01\2\x02\3/g' |
-    awk -v "ellipsis=$ELLIPSIS" -v "red=${CLR[RED]}" -v "grn=${CLR[GRN]}" -v "end=${CLR[END]}" '
+        perl -pe 's/([^\x01]?)(\x1B\[.*?m)([^\x02]?)/\1\x01\2\x02\3/g' |
+        awk -v "ellipsis=$ELLIPSIS" -v "red=${CLR[RED]}" -v "grn=${CLR[GRN]}" -v "end=${CLR[END]}" '
 
     # Remove ANSI escape sequences.
     function strip_ansi(str) {
@@ -93,15 +93,17 @@ git_info() {
             print $1;
         }
     }' |
-    (read -r
-     printf '%s\n' "$REPLY"
-     sort -r | uniq -c | awk -v "yel=${CLR[YEL]}" -v "end=${CLR[END]}" '{printf $2 yel $1 end}') |
-    tr '\n' ':' |
-    perl -pe "s/:$(<<< ${CLR[END]} sed 's/\[/\\[/'):/:/g; s/:*$//"
+        (
+            read -r
+            printf '%s\n' "$REPLY"
+            sort -r | uniq -c | awk -v "yel=${CLR[YEL]}" -v "end=${CLR[END]}" '{printf $2 yel $1 end}'
+        ) |
+        tr '\n' ':' |
+        perl -pe "s/:$(sed <<<${CLR[END]} 's/\[/\\[/'):/:/g; s/:*$//"
 }
 
 # Print abbreviated working directory.
-pwd_abbr() { <<< "$PWD" sed -E "s|$HOME|~|; s|(\.?[^/])[^/]*/|\1/|g"; }
+pwd_abbr() { sed <<<"$PWD" -E "s|$HOME|~|; s|(\.?[^/])[^/]*/|\1/|g"; }
 
 PWD_ABBR="${PS_CLR[YEL]}\$(pwd_abbr)${PS_CLR[END]}"
 GIT_INFO="\$(git_info)"
@@ -115,7 +117,7 @@ PS2_SYM='>'
 # Check terminal type and location. We can get more creative with Unicode
 # characters on a pseudo terminal device. Native terminal device likely implies
 # no Unicode support.
-if ! tty | grep -E 'tty[^s]' &> /dev/null; then
+if ! tty | grep -E 'tty[^s]' &>/dev/null; then
     PS1_SYM="$BASS_CLEF"
     PS2_SYM="$ELLIPSIS"
 
@@ -131,7 +133,40 @@ if ! tty | grep -E 'tty[^s]' &> /dev/null; then
     fi
 fi
 
+# Show last command's wall time, and print it colorized according to the last
+# command's exit code.
+# - https://stackoverflow.com/a/1862762
+# - https://unix.stackexchange.com/a/227150
+timer_start() {
+    TIMER=${TIMER:-$SECONDS}
+}
+timer_stop() {
+    TIMER_SHOW=$(($SECONDS - $TIMER))
+    TIMER_MIN=$(($TIMER_SHOW / 60))
+    TIMER_SEC=$(($TIMER_SHOW % 60))
+    unset TIMER
+}
+trap 'timer_start' DEBUG
+exit_code_color() {
+    if [[ "$LAST_HISTCMD" == "$LAST_LAST_HISTCMD" ]]; then
+        echo -e "${CLR[GRN]}"
+    elif [[ "$LAST_EXIT_CODE" == 0 ]]; then
+        echo -e "${CLR[GRN]}"
+    else
+        echo -e "${CLR[RED]}"
+    fi
+}
+PS1="$PS1 \$(exit_code_color)\${TIMER_MIN}m\${TIMER_SEC}s${PS_CLR[END]}"
+
+# Finalize prompt variables.
 PS1="$PS1 $PS1_CLR$PS1_SYM${PS_CLR[END]} "
 PS2="$PS2_CLR$PS2_SYM${PS_CLR[END]} "
 
-PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+prompt_command() {
+    LAST_EXIT_CODE="$?"
+    LAST_LAST_HISTCMD="$LAST_HISTCMD"
+    LAST_HISTCMD=$(fc -l -1 | awk '{print $1}')
+    timer_stop
+    history -a
+}
+PROMPT_COMMAND='prompt_command'
