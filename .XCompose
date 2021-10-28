@@ -1,2 +1,3 @@
 include "%L"
-<Multi_key> <colon> <parenright>     : "🙂"
+<Multi_key> <colon> <parenright> : "🙂"
+<Multi_key> <p> <l> : "👈"
