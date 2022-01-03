@@ -86,14 +86,16 @@ esac
 alias ltvt='lt "${TMPDIR}markdown"*'
 vt() {
     case "$OSTYPE" in
-    'darwin'*)
-        TEMP="$(mktemp -t markdown).md"
+    'darwin'*)  # macOS does not honor TMPDIR or allow suffixes.
+        TEMP="$(mktemp ${TMPDIR}markdown.XXXXXXXXXX)"
+        rm "$TEMP"
+        TEMP_MD="$TEMP.md"
         ;;
     'linux-gnu'*)
         TEMP="$(mktemp -t markdown.XXXXXXXXXX.md)"
         ;;
     esac
-    touch "$TEMP"
-    tp "$TEMP" &
-    vim "$TEMP"
+    touch "$TEMP_MD"
+    tp "$TEMP_MD" &
+    vim "$TEMP_MD"
 }

@@ -19,8 +19,11 @@ for DIR in \
     "$NPM_PACKAGES/bin" \
     "$HOME/go/bin" \
     "$HOME/.cargo/bin" \
+    "$HOME/kitty/kitty/launcher" \
     /usr/local/go/bin \
     /usr/local/Cellar/python\@3.9/3.9.0/bin \
+    /usr/local/Cellar/python\@3.9/3.9.2_1/bin \
+    /usr/local/Cellar/python\@3.8/3.8.8_1/bin \
     /snap/bin \
     /usr/local/opt/util-linux/sbin \
     /usr/local/opt/util-linux/bin \
