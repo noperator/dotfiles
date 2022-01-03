@@ -78,7 +78,7 @@ update: (output, domEl) ->
   else
     $(domEl).find('li.visible').removeClass('visible')
   for space in spaces
-    if space['visible']
+    if space['is-visible']
       $(domEl).find("li#desktop#{space['index']}").addClass('visible')
     if space['windows'].length
       $(domEl).find("li#desktop#{space['index']}").removeClass('empty')
