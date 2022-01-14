@@ -64,7 +64,8 @@ get_neighbor() {
             if [[ "$1" == 'inet' ]]; then
                 MAC=$(arp -an | awk -v "gw=$2" '$2 == "("gw")" {print $4}')
             else
-                MAC=$(ndp -an | awk -v "gw=$2" '$1 == gw {print $2}')
+
+                MAC=$(ndp -an 2>/dev/null | awk -v "gw=$2" '$1 == gw {print $2}')
             fi
             ;;
     esac

@@ -55,7 +55,7 @@ fi
 
 print_fa_icon 'globe'
 if [[ "$NET_CONNECTED" == 'false' ]]; then
-    echo
+    echo 'NONE'
     rm /var/tmp/public-ip-{time,data}.txt
 else
     cat /var/tmp/public-ip-data.txt | sed 's/ $//'
