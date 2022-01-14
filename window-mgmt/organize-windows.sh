@@ -110,6 +110,21 @@ fi
 # Get Slack call window ID.
 SLACK_CALL=$(<<< "$WINDOWS" jq -r '.[] | select(.title | test("Slack \\| .* \\| [0-9]+:[0-9]+")) | .id')
 
+# Get Slack post window ID.
+SLACK_POST=$(<<< "$WINDOWS" jq -r '.[] | select(.title | test("Slack \\| [^\\|]+$")) | .id')
+
+# Get Chrome window IDs.
+SLACK_POST=$(<<< "$WINDOWS" jq -r '.[] | select(.title | test("Slack \\| [^\\|]+$")) | .id')
+CHROME_WINDOWS=$(<<< "$WINDOWS" jq -r '.[] | select(.app == "Google Chrome") | [.id, .pid] | @tsv')
+get_chrome_window() {
+    echo "$CHROME_WINDOWS" | while read WID WPID; do
+        PROFILE=$($(which ps) -p "$WPID" -o 'command=' | sed -E 's/.*user-data-dir=.*chrome-(Work|Home).*/\1/')
+        [[ "$PROFILE" == "$1" ]] && echo "$WID"
+    done
+}
+CHROME_WORK=$(get_chrome_window 'Work')
+CHROME_HOME=$(get_chrome_window 'Home')
+
 # Display initial notififcation. Useful to ensure that the script is running
 # when there aren't any windows that need moving (i.e., when there aren't any
 # further notifications).
@@ -119,12 +134,16 @@ notify 'Organizing windows...'
 # move_window 'Firefox (Work)'          0 0 "$(<<< "$FIREFOX_PROFILES" jq -r '.Work     | @tsv')"
 # move_window 'Firefox (Personal)'      2 0 "$(<<< "$FIREFOX_PROFILES" jq -r '.Personal | @tsv')"
 move_window 'Firefox'                 0 0
-move_window 'Chromium'                1 0
+# move_window 'Chromium'                1 0
 move_window 'Burp Suite Professional' 1 0
 move_window 'Ghidra'                  1 0
 move_window 'Preview'                 1 0
 move_window 'Skim'                    1 0
-move_window 'Google Chrome'           2 0
+move_window 'GIMP-2.10'               1 0
+move_window 'Microsoft PowerPoint'    1 0
+move_window 'Slack (Post)'            1 0 "$SLACK_POST"
+move_window 'Google Chrome (Work)'    0 0 "$CHROME_WORK"
+move_window 'Google Chrome (Home)'    2 0 "$CHROME_HOME"
 move_window 'VMware Fusion'           3 0
 move_window 'VirtualBox VM'           3 0
 move_window 'VirtualBox'              3 0

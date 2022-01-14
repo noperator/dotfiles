@@ -25,9 +25,9 @@ case "$OSTYPE" in
         ;;
     'darwin'*)
         # CHROME_USER_DATA_BASE="$HOME/Library/Application Support/Google/Chrome"
-        # CHROME_BIN='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+        CHROME_BIN='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
         # CHROME_USER_DATA_BASE="$HOME/Library/Application Support/Chromium"
-        CHROME_BIN='/Applications/Chromium.app/Contents/MacOS/Chromium'
+        # CHROME_BIN='/Applications/Chromium.app/Contents/MacOS/Chromium'
         ;;
 esac
 
