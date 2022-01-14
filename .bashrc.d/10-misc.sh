@@ -111,3 +111,19 @@ vt() {
     tp "$TEMP_MD" &
     vim "$TEMP_MD"
 }
+
+# Get random line from file.
+rand_line() {
+    NUM_LINES=$(wc -l $1 | awk '{print $1}')
+    LINE_NUM=$(shuf -i 1-$NUM_LINES -n 1)
+    sed "${LINE_NUM}q;d" "$1"
+}
+
+# Random adjective-noun.
+ran() {
+    WORDS_DIR="$HOME/.local/share/words"
+    for WORDS in adjectives.txt nouns.txt; do
+        echo -n $(rand_line "$WORDS_DIR/$WORDS")
+    done
+    echo
+}
