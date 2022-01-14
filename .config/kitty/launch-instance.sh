@@ -1,7 +1,8 @@
 #!/bin/bash
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
-    PATH="/Applications/Kitty.app/Contents/MacOS:$PATH"
+    # PATH="/Applications/Kitty.app/Contents/MacOS:$PATH"
+    PATH="$HOME/kitty/kitty/launcher:$PATH"
 
     # Adapted a few changes from @yanzhang0219's script to leverage yabai
     # signals to move the new kitty window to the focused display, rather than
