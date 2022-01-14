@@ -1,7 +1,8 @@
 **/.DS_Store
+*.bu
 *.swp
-.ssh/
 .bashrc.extra
-.local/share/
-.env
 .config/i3/*.log
+.env
+.local/share/
+.ssh/
