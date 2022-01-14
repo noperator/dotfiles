@@ -84,4 +84,5 @@ URxvt*fading:           30
 URxvt*shading:          15
 
 ! Perl extensions.
-URxvt.perl-ext-common:  font-size,config-reload,matcher
+! URxvt.perl-ext-common:  font-size,config-reload,matcher
+URxvt.perl-ext-common:  font-size,config-reload

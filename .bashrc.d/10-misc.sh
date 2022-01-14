@@ -1,7 +1,6 @@
 #!/bin/bash
 
 which nvim &>/dev/null && alias vim='nvim'
-alias smile='<<< '🙂' pbcopy'
 alias de='date "+%s"'
 alias ec='exiftool -overwrite_original_in_place -all=""'
 alias errcho='>&2 echo'
@@ -24,6 +23,17 @@ alias sba='source venv/bin/activate'
 alias hd='hexdump -C'
 alias xlf='xmllint --format'
 alias vbe="vim $HOME/.bashrc.extra"
+alias bc='bc -lq'
+alias cal3='ncal -b3'
+vcal() {
+    for MON in $@; do
+        cal -m "$MON" |
+            grep -viE "$MON|^ *$|^Su"
+    done |
+        tr '\n' '@' |
+        sed -E 's/ +@ +1 /  1 /g' |
+        tr '@' '\n'
+}
 rtc() { # Random Todoist color
     COLOR_LIST="$DROPBOX/todoist-colors.lst"
     SHIFTED_COLORS=$(awk '{if (NR == 1) {LINE=$0} else {print $0}} END {print LINE}' "$COLOR_LIST")
@@ -61,6 +71,7 @@ sudo() {
 alias csc="cat $HOME/.ssh/config"
 skg() { ssh-keygen -t rsa -b 4096 -o -a 100 -q -N '' -f "$HOME/.ssh/$1"; }
 
+alias ssh="TERM=xterm-256color $(which ssh)"
 case "$OSTYPE" in
 'darwin'*)
     q() { no qlmanage -p "$1"; }
@@ -69,7 +80,6 @@ case "$OSTYPE" in
     alias nwn='pkill brownnoise'
     alias pc='pbcopy'
     alias rc='launchctl stop homebrew.mxcl.chunkwm'
-    alias ssh="TERM=linux $(which ssh)"
     alias wn='osascript -e "set Volume 2"; (no play -n synth brownnoise &)'
     ;;
 'linux-gnu'*)
@@ -80,13 +90,15 @@ case "$OSTYPE" in
     alias fb="$HOME/.fehbg"
     alias wn="nohup play -n synth brownnoise pinknoise >/dev/null 2>&1 &"
     alias nn='pkill play'
+    alias pc='xclip'
+    alias susp='systemctl suspend'
     ;;
 esac
 
 alias ltvt='lt "${TMPDIR}markdown"*'
 vt() {
     case "$OSTYPE" in
-    'darwin'*)  # macOS does not honor TMPDIR or allow suffixes.
+    'darwin'*) # macOS does not honor TMPDIR or allow suffixes.
         TEMP="$(mktemp ${TMPDIR}markdown.XXXXXXXXXX)"
         rm "$TEMP"
         TEMP_MD="$TEMP.md"

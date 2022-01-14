@@ -48,9 +48,9 @@ else
 fi
 
 # Reduce ripgrep's level of "smart" searching. Two -u flags won’t respect
-# .gitignore (etc.) files and will search hidden files and directories.
+# .gitignore (etc.) files and will search hidden files and directories. Also, use smart case.
 if which rg &>/dev/null; then
-    rg() { $(which rg) -uu $@; }
+    rg() { $(which rg) -uu -S "$@"; }
 fi
 
 # Pretty-print filesystem information.
@@ -136,3 +136,6 @@ i() {
     echo -n 'TYPE: '
     file -b "$@"
 }
+
+alias bat='batcat'
+alias batp='bat --style=plain'
