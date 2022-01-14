@@ -144,6 +144,16 @@ timer_stop() {
     TIMER_SHOW=$(($SECONDS - $TIMER))
     TIMER_MIN=$(($TIMER_SHOW / 60))
     TIMER_SEC=$(($TIMER_SHOW % 60))
+    TIMER_PROMPT=''
+    if [[ "$TIMER_MIN" > 0 ]]; then
+        TIMER_PROMPT="${TIMER_PROMPT}${TIMER_MIN}m"
+    fi
+    if [[ "$TIMER_SEC" > 0 ]]; then
+        TIMER_PROMPT="${TIMER_PROMPT}${TIMER_SEC}s"
+    fi
+    if [[ -n "$TIMER_PROMPT" ]]; then
+        TIMER_PROMPT=" ${TIMER_PROMPT}"
+    fi
     unset TIMER
 }
 trap 'timer_start' DEBUG
@@ -156,7 +166,7 @@ exit_code_color() {
         echo -e "${CLR[RED]}"
     fi
 }
-PS1="$PS1 \$(exit_code_color)\${TIMER_MIN}m\${TIMER_SEC}s${PS_CLR[END]}"
+PS1="$PS1\$(exit_code_color)\${TIMER_PROMPT}${PS_CLR[END]}"
 
 # Finalize prompt variables.
 PS1="$PS1 $PS1_CLR$PS1_SYM${PS_CLR[END]} "
