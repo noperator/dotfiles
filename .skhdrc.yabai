@@ -178,4 +178,5 @@ cmd + alt - 2: yabai -m space --display 2
     "virtualbox vm"
     "vmware fusion"
     "slack"
+    "screen sharing"
 ]
