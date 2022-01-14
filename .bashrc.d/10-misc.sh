@@ -63,7 +63,7 @@ skg() { ssh-keygen -t rsa -b 4096 -o -a 100 -q -N '' -f "$HOME/.ssh/$1"; }
 
 case "$OSTYPE" in
 'darwin'*)
-    alias q='no qlmanage -p'
+    q() { no qlmanage -p "$1"; }
     alias tp='open -a Typora'
     alias find='gfind'
     alias nwn='pkill brownnoise'

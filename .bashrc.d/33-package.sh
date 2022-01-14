@@ -4,7 +4,7 @@ case "$OSTYPE" in
     'darwin'*)
         alias bs='brew search'
         alias bi='brew install'
-        alias bci='brew cask install'
+        alias bci='brew install --cask'
         alias bsl='brew services list'
         alias bsr='brew services restart'
         ;;

@@ -4,7 +4,7 @@ ssp() { echo "[*] Starting background SSH SOCKS proxy on 127.0.0.1:$1 through ho
 
 case "$OSTYPE" in
     'darwin'*)
-        alias burp='/Applications/Burp\ Suite\ Professional.app/Contents/MacOS/JavaApplicationStub &'
+        burp() { /Applications/Burp\ Suite\ Professional.app/Contents/MacOS/JavaApplicationStub; }
         ;;
     'linux-gnu'*)
         # TO-DO
