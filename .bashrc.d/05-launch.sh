@@ -19,6 +19,7 @@ case "$OSTYPE" in
     teams() { gco -d "$HOME/.config/chrome-Work" -a 'https://teams.microsoft.com'; }
     outlook() { gco -d "$HOME/.config/chrome-Work" -a 'https://outlook.office.com'; }
     slack() { gco -d "$HOME/.config/chrome-Work" -a 'https://app.slack.com/client'; }
+    todoist() { gco -d "$HOME/.config/chrome-Home" -a 'https://todoist.com'; }
     # gcal() { gco -d "$HOME/.config/chrome-Home" -a 'https://calendar.google.com'; }
     ch() { # Chat
         # pgrep slack || slack &
@@ -49,6 +50,7 @@ case "$OSTYPE" in
         av
         ch
         sec
+        xdotool search --classname 'todoist.com' || todoist &
     }
     ;;
 esac
