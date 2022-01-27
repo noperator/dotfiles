@@ -128,7 +128,10 @@ ran() {
     echo
 }
 
-# Emoji Finder.
+# Emoji Finder. CLI doesn't always handle compound emojis well (e.g., "cuba" or
+# "astronaut"), so if anything looks funky, just visit the Emoji Finder URL
+# printed before the results.
+# - https://eclecticlight.co/2018/03/15/compound-emoji-can-confuse/
 ef() {
     echo "https://emojifinder.com/$1"
     curl -s "https://emojifinder.com/*/ajax.php?action=search&query=$1" |
@@ -137,11 +140,4 @@ ef() {
             echo -e "$(sed <<<$CODE -E 's/&#x(.*);/\\U\1/')@$(tr <<<$NAME '[:upper:]' '[:lower:]')"
         done |
         column -t -s '@'
-    # while IFS=@ read CODES NAME; do
-    #     echo $(tr <<<$NAME '[:upper:]' '[:lower:]')
-    #     echo $CODES | tr ';' '\n' | while read CODE; do
-    #         echo -n "$CODE "
-    #         echo -e "$(sed <<<$CODE -E 's/&#x(.*)/\\U\1/')"
-    #     done
-    # done
 }
