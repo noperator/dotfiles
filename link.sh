@@ -48,11 +48,12 @@ for FILE in \
     .hushlogin \
     .inputrc \
     .inputrc.tmux \
+    .ipython \
+    .jq \
     .local \
     .tmux.conf \
     .vimrc \
-    nvim \
-    .ipython; do
+    nvim; do
     link "$FILE"
 done
 
