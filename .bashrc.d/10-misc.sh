@@ -35,7 +35,7 @@ vcal() {
         tr '@' '\n'
 }
 rtc() { # Random Todoist color
-    COLOR_LIST="$DROPBOX/todoist-colors.lst"
+    COLOR_LIST="$DROPBOX/todoist/todoist-colors.lst"
     SHIFTED_COLORS=$(awk '{if (NR == 1) {LINE=$0} else {print $0}} END {print LINE}' "$COLOR_LIST")
     echo "$SHIFTED_COLORS" >"$COLOR_LIST"
     head -n 1 "$COLOR_LIST"
@@ -88,14 +88,26 @@ case "$OSTYPE" in
     alias dbs="dropbox status"
     alias kq='pkill -9 qutebrowser'
     alias fb="$HOME/.fehbg"
-    alias wn="nohup play -n synth brownnoise pinknoise >/dev/null 2>&1 &"
+
+    # Freq (Hz)      Center  Width  Octave      Description
+    # ---------      ------  -----  ------      -----------
+    # 16   to    32  24      16     1st         Human threshold, the lowest pedal notes of a pipe organ.
+    # 32   to   512  272     480    2nd to 5th  Rhythm frequencies, where the lower and upper bass notes lie.
+    # 512  to  2048  1280    1536   6th to 7th  Defines human speech intelligibility, gives a horn-like or tinny quality to sound.
+    # 2048 to  8192  5120    6144   8th to 9th  Gives presence to speech, where labial and fricative sounds lie.
+    # 8192 to 16384  12288   8192   10th        Brilliance, the sounds of bells and the ringing of cymbals. In speech, the sound of the letter "S" (8000-11000 Hz).
+    #
+    # More examples here:
+    # - https://gist.github.com/rsvp/1209835/7fa91788f7e08d2f95b6a20deda3f528042d3e27
+    alias wn="nohup play -nq -c 2 synth brownnoise band 5120 6144 &>/dev/null &"
     alias nn='pkill play'
+
     alias pc='xclip'
     alias susp='systemctl suspend'
     ;;
 esac
 
-alias ltvt='lt "${TMPDIR}markdown"*'
+# alias ltvt='lt "${TMPDIR}markdown"*'
 vt() {
     case "$OSTYPE" in
     'darwin'*) # macOS does not honor TMPDIR or allow suffixes.
@@ -104,10 +116,15 @@ vt() {
         TEMP_MD="$TEMP.md"
         ;;
     'linux-gnu'*)
-        TEMP="$(mktemp -t markdown.XXXXXXXXXX.md)"
+        if [[ -d "$HOME/tmp" ]]; then
+            TEMP_MD="$(mktemp -p "$HOME/tmp" markdown.XXXXXXXXXX.md)"
+        else
+            TEMP_MD="$(mktemp -t markdown.XXXXXXXXXX.md)"
+        fi
         ;;
     esac
     touch "$TEMP_MD"
+    echo "$TEMP_MD"
     tp "$TEMP_MD" &
     vim "$TEMP_MD"
 }
