@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# Get user agents.
+gua() {
+    for BROWSER in chrome firefox; do
+        echo "== $BROWSER =="
+        curl -s "https://www.whatismybrowser.com/guides/the-latest-user-agent/$BROWSER" |
+            htmlq -tp h2,span.code |
+            grep -E '^(Latest|Mozilla)' |
+            sed -E 's/(Latest)/\n=> \1/'
+        echo
+    done
+}
+
 # I initially established entirely separate data directories for running two
 # parallel instances (i.e., Work and Personal) of Firefox. This worked fine for
 # a while, but perhaps after an update--not exactly sure what happened--the
@@ -10,7 +22,6 @@
 # Also worth noting is that Firefox would _crash_ (on macOS) anytime I tried to
 # start a video call. Chrom* does fine, though.
 
-
 ########
 # Chrom(e|ium)
 ####
@@ -19,24 +30,23 @@
 # - https://www.chromium.org/developers/creating-and-using-profiles
 # - https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md
 case "$OSTYPE" in
-    'linux-gnu'*)
-        # CHROME_USER_DATA_BASE="$HOME/.config/google-chrome"
-        CHROME_BIN='/usr/bin/google-chrome'
-        ;;
-    'darwin'*)
-        # CHROME_USER_DATA_BASE="$HOME/Library/Application Support/Google/Chrome"
-        CHROME_BIN='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
-        # CHROME_USER_DATA_BASE="$HOME/Library/Application Support/Chromium"
-        # CHROME_BIN='/Applications/Chromium.app/Contents/MacOS/Chromium'
-        ;;
+'linux-gnu'*)
+    # CHROME_USER_DATA_BASE="$HOME/.config/google-chrome"
+    CHROME_BIN='/usr/bin/google-chrome'
+    ;;
+'darwin'*)
+    # CHROME_USER_DATA_BASE="$HOME/Library/Application Support/Google/Chrome"
+    CHROME_BIN='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
+    # CHROME_USER_DATA_BASE="$HOME/Library/Application Support/Chromium"
+    # CHROME_BIN='/Applications/Chromium.app/Contents/MacOS/Chromium'
+    ;;
 esac
 
 # Quickly open Chrome while specifying a user data directory, profile
 # directory, proxy, and url. Note that two separate profiles under the same
 # user data directory will open in the same, existing browser session. They
 # follow this hierarchy: USER-DATA-DIR/PROFILE-DIR
-gco()  # Google Chrome open.
-{
+gco() { # Google Chrome open.
     CHROME_USER_DATA_DIR=''
     CHROME_PROFILE_DIR=''
     CHROME_PROXY_SERVER=''
@@ -45,34 +55,34 @@ gco()  # Google Chrome open.
     local OPTIND
     while getopts ":d:p:x:a:u:" opt; do
         case ${opt} in
-            d )
-                CHROME_USER_DATA_DIR="$OPTARG"
-                ;;
-            p )
-                CHROME_PROFILE_DIR="$OPTARG"
-                ;;
-            x )
-                CHROME_PROXY_SERVER="$OPTARG"
-                ;;
-            a )
-                CHROME_APP="$OPTARG"
-                ;;
-            u )
-                CHROME_URL="$OPTARG"
-                ;;
-            \? )
-                echo "Invalid option: $OPTARG" >&2
-                false
-                return
-                ;;
-            : )
-                echo "Invalid option: $OPTARG requires an argument" >&2
-                false
-                return
-                ;;
+        d)
+            CHROME_USER_DATA_DIR="$OPTARG"
+            ;;
+        p)
+            CHROME_PROFILE_DIR="$OPTARG"
+            ;;
+        x)
+            CHROME_PROXY_SERVER="$OPTARG"
+            ;;
+        a)
+            CHROME_APP="$OPTARG"
+            ;;
+        u)
+            CHROME_URL="$OPTARG"
+            ;;
+        \?)
+            echo "Invalid option: $OPTARG" >&2
+            false
+            return
+            ;;
+        :)
+            echo "Invalid option: $OPTARG requires an argument" >&2
+            false
+            return
+            ;;
         esac
     done
-    shift $((OPTIND -1))
+    shift $((OPTIND - 1))
 
     CHROME_ARGS=''
 
@@ -101,14 +111,12 @@ gco()  # Google Chrome open.
     eval "$CHROME_BIN $CHROME_ARGS" &
 }
 
-
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     ########
     # Firefox
     ####
 
-    fp()   # Firefox profile.
-    {
+    fp() { # Firefox profile.
         # Prevent error message, "A copy of Firefox is already open. Only one
         # copy of Firefox can be open at a time." More info:
         # - https://apple.stackexchange.com/a/238169
@@ -120,8 +128,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
         fi
     }
 
-    fpa()  # Firefox profile _all_.
-    {
+    fpa() { # Firefox profile _all_.
         # Open Work profile first so that links are automatically opened there
         # by default.
         for PROFILE in Work Personal; do
