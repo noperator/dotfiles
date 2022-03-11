@@ -1,10 +1,11 @@
 #!/bin/bash
 
+
 source "$(dirname $0)/_fa-icons.sh"
 
-VOLUME=$(amixer sget Master)
-STATUS=$(<<< "$VOLUME" awk '/dB/ {print $NF}' | tr -d '[]')
-PERCENT=$(<<< "$VOLUME" awk '/dB/ {print $4}' | tr -d '[]%')
+VOLUME=$(amixer sget Master | grep -E 'Playback.*%')
+STATUS=$(<<< "$VOLUME" awk '{print $NF}' | tr -d '[]')
+PERCENT=$(<<< "$VOLUME" grep Playback | grep -oE '[0-9]+%' | sort -u | head -n 1 | tr -d '%')
 
 if [[ "$STATUS" == 'off' ]]; then
     ICON='volume-mute'
