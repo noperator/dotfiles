@@ -1,8 +1,8 @@
 xrdb -load $HOME/.Xresources
+setxkbmap -option "compose:ralt"  # https://unix.stackexchange.com/q/364520
 xmodmap -e 'clear Lock'
 xmodmap -e 'keycode 66=Escape'
 # xmodmap -e 'keycode 108=Multi_key'  # https://en.wikipedia.org/wiki/Compose_key#Common_compose_combinations
-setxkbmap -option "compose:ralt"  # https://unix.stackexchange.com/q/364520
 
 # Apparently I'm not supposed to use dbus-launch, but without it, notifications
 # don't work properly on Debian 10.
