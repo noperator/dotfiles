@@ -52,5 +52,15 @@ case "$OSTYPE" in
         sec
         xdotool search --classname 'todoist.com' || todoist &
     }
+
+    # Launch some apps.
+    home() {
+        DATA_DIR="$HOME/.config/chrome-Home"
+        xdotool search --classname "google-chrome \($DATA_DIR)" || gco -d "$DATA_DIR"
+        av
+        xdotool search --classname 'app.slack.com__client' || slack &
+        sec
+        xdotool search --classname 'todoist.com' || todoist &
+    }
     ;;
 esac
