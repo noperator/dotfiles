@@ -38,6 +38,16 @@ for DIR in \
 done
 export PATH=$(echo "$CUSTOM_PATH:$OLD_PATH" | sed -E 's/^:|:$//g; s/:+/:/g')
 
+# Same for LD_LIBRARY_PATH.
+OLD_LD_LIBRARY_PATH=$(echo "$LD_LIBRARY_PATH" | tr ':' '\n' | uniq | tr '\n' ':')
+CUSTOM_LD_LIBRARY_PATH=''
+for DIR in \
+    '/usr/local/lib'; do
+    OLD_LD_LIBRARY_PATH=$(echo "$OLD_LD_LIBRARY_PATH" | sed -E "s%(^|:)$DIR(:|$)%\1\2%")
+    CUSTOM_LD_LIBRARY_PATH="$CUSTOM_LD_LIBRARY_PATH:$DIR"
+done
+export LD_LIBRARY_PATH=$(echo "$CUSTOM_LD_LIBRARY_PATH:$OLD_LD_LIBRARY_PATH" | sed -E 's/^:|:$//g; s/:+/:/g')
+
 if [[ -z "$TMUX" ]]; then
     export INPUTRC="$HOME/.inputrc"
 else
