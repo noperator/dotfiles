@@ -83,7 +83,13 @@ case "$OSTYPE" in
     alias wn='osascript -e "set Volume 2"; (no play -n synth brownnoise &)'
     ;;
 'linux-gnu'*)
-    q() { zathura "$1" & }
+    q() {
+        if file "$1" | grep -qi pdf; then
+            zathura "$1" &
+        else # Probably an image.
+            feh "$1" &
+        fi
+    }
     alias tp='typora'
     alias dbs="dropbox status"
     alias kq='pkill -9 qutebrowser'
@@ -100,7 +106,7 @@ case "$OSTYPE" in
     # More examples here:
     # - https://gist.github.com/rsvp/1209835/7fa91788f7e08d2f95b6a20deda3f528042d3e27
     alias wn="nohup play -nq -c 2 synth brownnoise band 5120 6144 &>/dev/null &"
-    alias nn='pkill play'
+    alias nn="$(which pkill) play"
 
     alias pc='xclip'
     alias susp='systemctl suspend'
@@ -157,4 +163,12 @@ ef() {
             echo -e "$(sed <<<$CODE -E 's/&#x(.*);/\\U\1/')@$(tr <<<$NAME '[:upper:]' '[:lower:]')"
         done |
         column -t -s '@'
+}
+
+# GIMP screenshot.
+gsc() {
+    gimp $(find "$HOME/screenshots/" -maxdepth 1 -type f |
+        grep -E '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}-[0-9]{2}-[0-9]{2}.[0-9]{9}\.png' |
+        sort -V |
+        tail -n 1)
 }
