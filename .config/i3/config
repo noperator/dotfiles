@@ -225,8 +225,9 @@ bindsym $mod+control+0 exec 'i3_balance_workspace'
 
 # Assign windows to workspaces.
 assign [class="Google-chrome" instance=".*chrome-Work.*"] $ws1
+for_window [class="Google-chrome" title="Work: Todoist" window_role="pop-up"] move to workspace $ws1
 assign [class="Google-chrome" instance=".*chrome-Home.*"] $ws3
-assign [class="Google-chrome" instance="todoist.com"] $ws3
+for_window [class="Google-chrome" title="Master Main: Todoist" window_role="pop-up"] move to workspace $ws3
 assign [class="Google-chrome" instance="outlook.office.com"] $ws5
 assign [class="thunderbird"] $ws5
 assign [class="Google-chrome" instance="calendar.google.com"] $ws5

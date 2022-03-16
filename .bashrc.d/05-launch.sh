@@ -19,7 +19,7 @@ case "$OSTYPE" in
     teams() { gco -d "$HOME/.config/chrome-Work" -a 'https://teams.microsoft.com'; }
     outlook() { gco -d "$HOME/.config/chrome-Work" -a 'https://outlook.office.com'; }
     slack() { gco -d "$HOME/.config/chrome-Work" -a 'https://app.slack.com/client'; }
-    todoist() { gco -d "$HOME/.config/chrome-Home" -a 'https://todoist.com'; }
+    todoist() { gco -d "$HOME/.config/chrome-Home" -a "https://todoist.com/app/$1"; }
     # gcal() { gco -d "$HOME/.config/chrome-Home" -a 'https://calendar.google.com'; }
     ch() { # Chat
         # pgrep slack || slack &
@@ -50,7 +50,8 @@ case "$OSTYPE" in
         av
         ch
         sec
-        xdotool search --classname 'todoist.com' || todoist &
+        xdotool search --classname 'todoist.com' || todoist "$TODOIST_WORK_FILTER" &
+        xdotool search --classname 'todoist.com' || todoist "$TODOIST_MASTER_MAIN_FILTER" &
     }
 
     # Launch some apps.
@@ -60,7 +61,8 @@ case "$OSTYPE" in
         av
         xdotool search --classname 'app.slack.com__client' || slack &
         sec
-        xdotool search --classname 'todoist.com' || todoist &
+        xdotool search --classname 'todoist.com' || todoist "$TODOIST_MASTER_MAIN_FILTER" &
     }
     ;;
+
 esac
