@@ -42,11 +42,11 @@ lpc() {
 
 # Generate a random 32-character password.
 rand_alnum() {
-    < /dev/urandom LC_ALL=C base64 | tr -d '/+=' | head -c "$1"
+    LC_ALL=C base64 </dev/urandom | tr -d '/+=' | head -c "$1"
 }
 pwg() {
     rand_alnum 4
-    < /dev/urandom LC_ALL=C tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c 24
+    LC_ALL=C tr </dev/urandom -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c 24
     rand_alnum 4
     echo
 }
@@ -55,10 +55,21 @@ pwga() {
     echo
 }
 # https://passlib.readthedocs.io/en/stable/lib/passlib.hash.sha256_crypt.html
-# $5$rounds=5000$GX7BopJZJxPc/KEK$le16UF8I2Anb.rOrn22AUPWvzUETDGefUmAV8AZkGcD 
+# $5$rounds=5000$GX7BopJZJxPc/KEK$le16UF8I2Anb.rOrn22AUPWvzUETDGefUmAV8AZkGcD
 pwgh() {
     ROUNDS="$RANDOM"
     SALT="$(rand_alnum 16)"
     CHECKSUM="$(rand_alnum 43)"
     echo "\$5\$rounds=$ROUNDS\$$SALT\$$CHECKSUM"
+}
+
+# Share a LastPass folder with a user.
+slp() {
+    LP_USER="$2"
+    LP_SHARE="$1"
+    lpass share useradd "$LP_SHARE" "$LP_USER"
+    sleep 1
+    lpass share usermod --hidden=false "$LP_SHARE" "$LP_USER"
+    sleep 1
+    lpass share userls "$LP_SHARE"
 }
