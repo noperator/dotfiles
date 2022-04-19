@@ -244,6 +244,7 @@ assign [class="(?i)obs"] $ws10
 
 # Assign layouts to workspaces.
 # exec --no-startup-id "i3-msg 'workspace 10:a/v; append_layout ~/.config/i3/workspace-av.json'"
+exec --no-startup-id "i3-msg 'workspace 3:home; append_layout ~/.config/i3/workspace-home.json'"
 exec --no-startup-id "i3-msg 'workspace 5:mail; append_layout ~/.config/i3/workspace-mail.json'"
 
 # Keep window on screen across all workspaces.
