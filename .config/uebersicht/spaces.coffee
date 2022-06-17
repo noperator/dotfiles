@@ -1,5 +1,4 @@
 command: "./query-spaces.sh"
-# command: "/usr/local/bin/yabai -m query --spaces"
 
 refreshFrequency: 1000
 
@@ -57,8 +56,8 @@ style: """
   li
     display: inline-block
     text-align: center
-    width: 14px
-    margin: 0px 7px
+    width: 12px
+    margin: 0px 6px
 
   li.visible
     border-bottom: 2px solid #bebebe

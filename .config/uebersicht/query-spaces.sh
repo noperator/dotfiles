@@ -4,7 +4,7 @@
 # to ignore windows having certain characteristics.
 
 # Find yabai.
-PATH="/usr/local/bin:$PATH"
+PATH="/opt/homebrew/bin:$PATH"
 
 # Get window IDs of hidden Teams windows and minimized windows.
 TEAMS_WINDOWS=$(yabai -m query --windows |
