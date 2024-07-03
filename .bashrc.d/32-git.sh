@@ -54,3 +54,7 @@ gmo() {
 alias gnau='git update-index --no-assume-unchanged'
 alias gs='git status'
 alias gss='git status -s'
+
+trt() {
+    wget 'https://gist.githubusercontent.com/noperator/4eba8fae61a23dc6cb1fa8fbb9122d45/raw/eab7566e53b33240ff6bf7c3241c86a4048ed374/README.md'
+}

@@ -17,6 +17,7 @@ alias cdbd="cd $HOME/dotfiles/.bashrc.d"
 alias cdbl="cd $HOME/dotfiles/blocks"
 alias cdco="cd $HOME/.config"
 alias cdsc="cd $HOME/screenshots"
+alias cdvt='cd /var/tmp'
 alias mb='mv'
 
 case "$OSTYPE" in

@@ -24,9 +24,9 @@ fi
 
 # Search for files and optionally sort output by modification time or size.
 if which fd &>/dev/null; then
-    f() { fd -HI $@; }
+    f() { fd -HIL $@; }
     ff() {
-        fd -HI -c always "$@" -x stat -c %y@%s@{} {} |
+        fd -HIL -c always "$@" -x stat -c %y@%s@{} {} |
             sed -E 's/ /T/; s/\.[^@]*//' |
             column -t -s '@' |
             cut -c -"$COLUMNS"
@@ -54,7 +54,7 @@ if which rg &>/dev/null; then
 fi
 
 # Pretty-print filesystem information.
-alias mount="$(which mount) | sed -E 's/ on |\(|\)/#/g' | column -t -s '#' | cut -c -\$COLUMNS"
+alias mnt="$(which mount) | sed -E 's/ on |\(|\)/#/g' | column -t -s '#' | cut -c -\$COLUMNS"
 
 # Inspired by options like namei, chase, typex, and rreadlink, all documented
 # at https://stackoverflow.com/q/33255460.
@@ -137,5 +137,6 @@ i() {
     file -b "$@"
 }
 
-alias bat='batcat'
+# alias bat='batcat'
 alias batp='bat --style=plain'
+alias lf='ls -tr | tail -n 1'

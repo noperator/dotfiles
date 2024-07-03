@@ -10,6 +10,13 @@ export NPM_PACKAGES="$HOME/.npm-packages"
 export TIMEFORMAT='%3lR' # Only show elapsed time.
 tabs -4                  # Set tab interval.
 
+# Homebrew stuff.
+export HOMEBREW_PREFIX="/opt/homebrew"
+export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
+export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX"
+# export MANPATH="$HOMEBREW_PREFIX/share/man${MANPATH+:$MANPATH}:";
+# export INFOPATH="$HOMEBREW_PREFIX/share/info:${INFOPATH:-}";
+
 # Prepend directories to PATH without the variable growing each time this file is sourced.
 OLD_PATH=$(echo "$PATH" | tr ':' '\n' | uniq | tr '\n' ':')
 CUSTOM_PATH=''
@@ -24,9 +31,11 @@ for DIR in \
     /usr/local/Cellar/python\@3.9/3.9.0/bin \
     /usr/local/Cellar/python\@3.9/3.9.2_1/bin \
     /usr/local/Cellar/python\@3.8/3.8.8_1/bin \
+    "$HOMEBREW_PREFIX/bin" \
+    "$HOMEBREW_PREFIX/sbin" \
+    "$HOMEBREW_PREFIX/opt/util-linux/bin" \
+    "$HOMEBREW_PREFIX/opt/util-linux/sbin" \
     /snap/bin \
-    /usr/local/opt/util-linux/sbin \
-    /usr/local/opt/util-linux/bin \
     /usr/local/sbin \
     /usr/local/bin \
     /usr/sbin \

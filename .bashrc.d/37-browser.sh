@@ -2,7 +2,7 @@
 
 # Get user agents.
 gua() {
-    for BROWSER in chrome firefox; do
+    for BROWSER in chrome firefox edge; do
         echo "== $BROWSER =="
         curl -s "https://www.whatismybrowser.com/guides/the-latest-user-agent/$BROWSER" |
             htmlq -tp h2,span.code |
@@ -141,3 +141,20 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 else
     alias chrome='google-chrome-stable --disable-gpu &'
 fi
+
+# https://www.chromium.org/developers/design-documents/network-stack/netlog/
+# curl -s 'https://chromium.googlesource.com/chromium/src/+/refs/heads/main/net/log/net_log_source_type_list.h?format=TEXT' | base64 -D | grep 'SOURCE_TYPE(' | nl -v 0
+# curl -s 'https://chromium.googlesource.com/chromium/src/+/refs/heads/main/net/log/net_log_event_type_list.h?format=TEXT' | base64 -D | grep 'EVENT_TYPE(' | nl -v 0
+hc() {
+    # --log-net-log=net.log \
+    chromium \
+        --disable-gpu \
+        --dump-dom \
+        --headless \
+        --ignore-certificate-errors \
+        --incognito \
+        --user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36' \
+        --user-data-dir=$(mktemp -d) \
+        --window-size=1920,1080 \
+        "$1" 2>/dev/null
+}

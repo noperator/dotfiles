@@ -45,13 +45,23 @@ rand_alnum() {
     LC_ALL=C base64 </dev/urandom | tr -d '/+=' | head -c "$1"
 }
 pwg() {
+    if [[ -z "$1" ]]; then
+        LEN=40
+    else
+        LEN="$1"
+    fi
     rand_alnum 4
-    LC_ALL=C tr </dev/urandom -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c 24
+    LC_ALL=C tr </dev/urandom -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c $(($LEN - 8))
     rand_alnum 4
     echo
 }
 pwga() {
-    rand_alnum 40
+    if [[ -z "$1" ]]; then
+        LEN=40
+    else
+        LEN="$1"
+    fi
+    rand_alnum "$LEN"
     echo
 }
 # https://passlib.readthedocs.io/en/stable/lib/passlib.hash.sha256_crypt.html
@@ -72,4 +82,14 @@ slp() {
     lpass share usermod --hidden=false "$LP_SHARE" "$LP_USER"
     sleep 1
     lpass share userls "$LP_SHARE"
+}
+
+# Like `lps`, but for 1Password. Search titles and URLs for a case-insensitive
+# search term.
+ops() {
+    op item list --format=json |
+        gojq --arg search "$1" '("(?i)" + $search) as $searchRegex | map(select(
+            ((if .urls then (.urls | map(.href)) else [] end) + [.title]) |
+            map(test($searchRegex)) | index(true)))' |
+        op item get -
 }

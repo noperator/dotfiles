@@ -7,6 +7,7 @@ case "$OSTYPE" in
     alias bci='brew install --cask'
     alias bsl='brew services list'
     alias bsr='brew services restart'
+    # alias pi='sudo port install'
     ;;
 'linux-gnu'*)
 

@@ -25,6 +25,8 @@ git_info() {
     # - https://stackoverflow.com/a/43462720
     # - https://git.savannah.gnu.org/cgit/readline.git/tree/display.c#n320
     # - https://en.wikipedia.org/wiki/ANSI_escape_code
+    #
+    # Note: On macOS, install `gawk` for this to work.
     git -c color.ui=always status -sb . |
         perl -pe 's/([^\x01]?)(\x1B\[.*?m)([^\x02]?)/\1\x01\2\x02\3/g' |
         awk -v "ellipsis=$ELLIPSIS" -v "red=${CLR[RED]}" -v "grn=${CLR[GRN]}" -v "end=${CLR[END]}" '
@@ -168,11 +170,33 @@ exit_code_color() {
 }
 PS1="$PS1\$(exit_code_color)\${TIMER_PROMPT}${PS_CLR[END]}"
 
+# Override Python virtual environment prompt indicator.
+# - https://stackoverflow.com/a/20026992
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+venv_info() {
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        echo -ne "${CLR[BMA]}(${CLR[END]}"
+        echo -ne "${CLR[BCY]}${VIRTUAL_ENV##*/}${CLR[END]}"
+
+        echo -ne "${CLR[BMA]})${CLR[END]}"
+        echo -n ' '
+    fi
+}
+export PS1="\$(venv_info)$PS1"
+
 # Finalize prompt variables.
-PS1="$PS1 $PS1_CLR$PS1_SYM${PS_CLR[END]} "
+PS1="$PS1\n$PS1_CLR$PS1_SYM${PS_CLR[END]} "
+# PS1="$PS1 $PS1_CLR$PS1_SYM${PS_CLR[END]}\n"
 PS2="$PS2_CLR$PS2_SYM${PS_CLR[END]} "
 
 prompt_command() {
+    # Set Alacritty title to current working directory, which is picked up when
+    # `window.dynamic_title: true` in Alacritty config. This isn't really
+    # prompt-related, but this is the best place to put it so the terminal
+    # title is always kept up to date.
+    # - https://github.com/alacritty/alacritty/issues/3588#issuecomment-613189338
+    echo -ne "\e]2;$PWD\007"
+
     LAST_EXIT_CODE="$?"
     LAST_LAST_HISTCMD="$LAST_HISTCMD"
     LAST_HISTCMD=$(fc -l -1 | awk '{print $1}')
