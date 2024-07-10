@@ -1,97 +1,83 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-alias yabai=/usr/local/bin/yabai
-get_displays() { yabai -m query --displays; }
-get_windows()  { yabai -m query --windows;  }
-get_display_index() { <<< "$DISPLAY" jq '.index';      }
-get_space_index()   { <<< "$DISPLAY" jq ".spaces[$1]"; }
-notify() { osascript -e 'display notification "'"$1"'" with title "'"Auto Window"'"'; }
+source "$(dirname $0)/_functions.sh"
 
-# This function takes relative space/display arrangement indices, determines
-# the absolute index for those values, and moves windows accordingly.
-# For example:
-# - "move_window Firefox 0 0"     = Move Firefox       to the first  space on the first  display
-# - "move_window Slack   2 1"     = Move Slack         to the third  space on the second display
-# - "move_window Firefox 1 1 144" = Move window ID 144 to the second space on the second display
-# $1: Application name
-# $2: Relative space index
-# $3: Relative display index
-# $4: Specific window IDs to move (optional)
-move_window()
-{
-    APP="$1"
-    REL_SPACE_INDEX="$2"
-    REL_DISP_INDEX="$3"
-    WINDOW_IDS="$4"
+# ----------------------------------------------
+# Create/destroy spaces as needed, depending on connected displays.
 
-    # Get windows IDs associated with the application name, and bail if none
-    # exist.
-    if [[ -z "$WINDOW_IDS" ]]; then
-        WINDOW_IDS=$(<<< "$WINDOWS" jq '.[] | select(.app=="'"$APP"'") | .id')
-        if [[ -z "$WINDOW_IDS" ]]; then
-            MESSAGE="$APP"
-            echo "[-] $MESSAGE"
-            return 1
-        fi
-    fi
+LAYOUTS=$(
+    jo -a \
+        $(
+            jo -a \
+                $(
+                    jo display=1 spaces=8
+                )
+        ) \
+        $(
+            jo -a \
+                $(
+                    jo display=1 spaces=4
+                ) \
+                $(
+                    # jo display=2 spaces=4
+                    jo display=2 spaces=5
+                )
+        ) \
+        $(
+            jo -a \
+                $(
+                    jo display=1 spaces=3
+                ) \
+                $(
+                    jo display=2 spaces=1
+                ) \
+                $(
+                    jo display=3 spaces=4
+                )
+        )
+)
 
-    # Cache the JSON blob for the specified display.
-    DISPLAY=$(<<< "$DISPLAYS" jq ".[$REL_DISP_INDEX]")
+notify '(3/5) Balancing spaces…'
+export DISPLAYS=$(get_displays)
+diff-layout "$LAYOUTS"
 
-    # Resolve absolute display and space indices.
-    ABS_DISP_INDEX=$(get_display_index)
-    ABS_SPACE_INDEX=$(get_space_index "$REL_SPACE_INDEX")
+# ----------------------------------------------
+# Move some tricky floating windows around.
 
-    # Bail if the window is already in the right location.
-    MOVE='false'
-    for WINDOW_ID in $WINDOW_IDS; do
-        LOC=$(<<< "$WINDOWS" jq -j '.[] | select(.id == '"$WINDOW_ID"') | .space, ":", .display, "\n"' | sort -u)
-        DEST="$ABS_SPACE_INDEX:$ABS_DISP_INDEX"
-        if [[ "$LOC" != "$DEST" ]]; then
-            MOVE='true'
-            echo "[*] $LOC ⮕ $DEST"
-        fi
-    done
-    if [[ "$MOVE" == 'false' ]]; then
-        echo "[+] $APP"
-        return
-    fi
+# TODO: Only run the line below if Outlook is already running. (Otherwise, it
+# _starts_ Outlook.)
+# move-window 'Microsoft Outlook' 'Reminder' 1 20
 
-    # Create the space if it doesn't already exist.
-    if [[ "$ABS_SPACE_INDEX" == 'null' ]]; then
-        MESSAGE="Creating extra space on display $ABS_DISP_INDEX"
-        echo "[*] $MESSAGE"
-        notify "$MESSAGE"
-        yabai -m display --focus "$ABS_DISP_INDEX"
-        yabai -m space --create
+# ----------------------------------------------
+# Make sure some apps are actually showing/visible.
 
-        # Refresh cached JSON blobs to reflect newly created space.
-        DISPLAYS=$(get_displays)
-        DISPLAY=$(<<< "$DISPLAYS" jq ".[$REL_DISP_INDEX]")
-        ABS_SPACE_INDEX=$(get_space_index "$REL_SPACE_INDEX")
-    fi
+notify '(4/5) Showing windows…'
+VIS=$(get-visible-spaces)
+for APP in \
+    "Slack" \
+    "Microsoft Outlook" \
+    "Google Chrome" \
+    "Microsoft Teams"; do
+    show-app "$APP"
+done
+sleep .4
+focus-spaces "$VIS"
 
-    # Finally, move windows.
-    MESSAGE="$APP ⮕ space $ABS_SPACE_INDEX, display $ABS_DISP_INDEX"
-    echo "[+] $MESSAGE"
-    notify "$MESSAGE"
-    for ID in $WINDOW_IDS; do
-        yabai -m window "$ID" --space "$ABS_SPACE_INDEX"
-    done
-}
+# ----------------------------------------------
+# Move windows to correct spaces.
 
-# Cache displays and windows blobs.
-DISPLAYS=$(get_displays)
-WINDOWS=$(get_windows)
+# Cache displays and windows blobs again, in case changed above.
+export DISPLAYS=$(get_displays)
+export WINDOWS=$(get_windows)
 
 # Get Firefox window IDs grouped by profile.
 FIREFOX_PROFILES=$(
-    <<< "$WINDOWS" jq '.[] | select(.app == "Firefox") | .id, " ", .pid, "\n"' -j |
-    while read WID PID; do
-        PROFILE=$(ps -p "$PID" | grep 'firefox' | sed -E 's/.*-P ([^ ]+).*/\1/')
-        jq -n --arg 'profile' "$PROFILE" --arg 'wid' "$WID" '{"profile": ($profile), "id": $wid}'
-    done |
-    jq -s 'reduce .[] as $window ({};
+    jq <<<"$WINDOWS" '.[] | select(.app == "Firefox") | .id, " ", .pid, "\n"' -j |
+        while read WID PID; do
+            PROFILE=$(ps -p "$PID" | grep 'firefox' | sed -E 's/.*-P ([^ ]+).*/\1/')
+            jq -n --arg 'profile' "$PROFILE" --arg 'wid' "$WID" '{"profile": ($profile), "id": $wid}'
+        done |
+        jq -s 'reduce .[] as $window ({};
            if has($window.profile)
            then .[($window.profile)] += [$window.id]
            else . + {($window.profile): [$window.id]}
@@ -101,21 +87,25 @@ FIREFOX_PROFILES=$(
 # Get Teams meeting window ID. Uses the heuristic that of all windows having
 # "| Microsoft Teams" in the title, the meeting will have been created most
 # recently, and will therefore have the highest window ID.
-TEAMS_WINDOWS=$(<<< "$WINDOWS" jq '.[] | select(.title | index(" | Microsoft Teams")) | .id' | sort -n)
-TEAMS_MAIN=$(<<< "$TEAMS_WINDOWS" head -n 1)
-if [[ $(<<< "$TEAMS_WINDOWS" wc -l | tr -d ' \n') -gt 1 ]]; then
-    TEAMS_MEETING=$(<<< "$TEAMS_WINDOWS" tail -n 1)
+# TEAMS_WINDOWS=$(jq <<<"$WINDOWS" '.[] | select(.app == "Microsoft Teams" and (.title | index("Shared content") | not) and (.title | index("Notification") | not)) | .id' | sort -n)
+TEAMS_WINDOWS=$(jq <<<"$WINDOWS" '.[] | select((.app | test("^Microsoft Teams")) and (.title | index("Shared content") | not) and (.title | index("Notification") | not)) | .id' | sort -n)
+TEAMS_MAIN=$(head <<<"$TEAMS_WINDOWS" -n 1)
+if [[ $(wc <<<"$TEAMS_WINDOWS" -l | tr -d ' \n') -gt 1 ]]; then
+    TEAMS_MEETING=$(tail <<<"$TEAMS_WINDOWS" -n 1)
+    #  TEAMS_MEETING=$(jq -c 'select(.title | index("Shared content") | not)' <<<"$TEAMS_WINDOWS" | tail -n 1)
 fi
 
 # Get Slack call window ID.
-SLACK_CALL=$(<<< "$WINDOWS" jq -r '.[] | select(.title | test("Slack \\| .* \\| [0-9]+:[0-9]+")) | .id')
+# SLACK_CALL=$(jq <<<"$WINDOWS" -r '.[] | select(.title | test("Slack \\| .* \\| [0-9]+:[0-9]+")) | .id')
+# 	"title":"Huddle: team-seedy - Bishop Fox - Slack",
+SLACK_CALL=$(jq <<<"$WINDOWS" -r '.[] | select(.title | test("Huddle:.*Slack")) | .id')
 
 # Get Slack post window ID.
-SLACK_POST=$(<<< "$WINDOWS" jq -r '.[] | select(.title | test("Slack \\| [^\\|]+$")) | .id')
+SLACK_POST=$(jq <<<"$WINDOWS" -r '.[] | select(.title | test("Slack \\| [^\\|]+$")) | .id')
 
 # Get Chrome window IDs.
-SLACK_POST=$(<<< "$WINDOWS" jq -r '.[] | select(.title | test("Slack \\| [^\\|]+$")) | .id')
-CHROME_WINDOWS=$(<<< "$WINDOWS" jq -r '.[] | select(.app == "Google Chrome") | [.id, .pid] | @tsv')
+SLACK_POST=$(jq <<<"$WINDOWS" -r '.[] | select(.title | test("Slack \\| [^\\|]+$")) | .id')
+CHROME_WINDOWS=$(jq <<<"$WINDOWS" -r '.[] | select(.app == "Google Chrome") | [.id, .pid] | @tsv')
 get_chrome_window() {
     echo "$CHROME_WINDOWS" | while read WID WPID; do
         PROFILE=$($(which ps) -p "$WPID" -o 'command=' | sed -E 's/.*user-data-dir=.*chrome-(Work|Home).*/\1/')
@@ -125,41 +115,69 @@ get_chrome_window() {
 CHROME_WORK=$(get_chrome_window 'Work')
 CHROME_HOME=$(get_chrome_window 'Home')
 
+# TEAMS_SHARED=$(jq <<<"$WINDOWS" -r 'map(select(.app == "Microsoft Teams" and (.title | test("Shared content"))))[] | .id')
+TEAMS_SHARED=$(jq <<<"$WINDOWS" -r 'map(select((.app | test("^Microsoft Teams")) and (.title | test("Shared content"))))[] | .id')
+
+# SLACK_HUDDLE=$(jq <<<"$WINDOWS" -r 'map(select(.app == "Slack" and (.title | test("^Slack.*Huddle$"))))[] | .id')
+SLACK_HUDDLE=$(jq <<<"$WINDOWS" -r 'map(select(.app == "Slack" and (.title | test("Huddle: .* Slack.*"))))[] | .id')
+
 # Display initial notififcation. Useful to ensure that the script is running
 # when there aren't any windows that need moving (i.e., when there aren't any
 # further notifications).
-notify 'Organizing windows...'
+notify '(5/5) Organizing windows...'
 
 # Move windows.
 # move_window 'Firefox (Work)'          0 0 "$(<<< "$FIREFOX_PROFILES" jq -r '.Work     | @tsv')"
 # move_window 'Firefox (Personal)'      2 0 "$(<<< "$FIREFOX_PROFILES" jq -r '.Personal | @tsv')"
-move_window 'Firefox'                 0 0
+move_window 'Firefox' 0 0
 # move_window 'Chromium'                1 0
 move_window 'Burp Suite Professional' 1 0
-move_window 'Ghidra'                  1 0
-move_window 'Preview'                 1 0
-move_window 'Skim'                    1 0
-move_window 'GIMP-2.10'               1 0
-move_window 'Microsoft PowerPoint'    1 0
-move_window 'Slack (Post)'            1 0 "$SLACK_POST"
-move_window 'Google Chrome (Work)'    0 0 "$CHROME_WORK"
-move_window 'Google Chrome (Home)'    2 0 "$CHROME_HOME"
-move_window 'VMware Fusion'           3 0
-move_window 'VirtualBox VM'           3 0
-move_window 'VirtualBox'              3 0
+move_window 'Ghidra' 1 0
+move_window 'Preview' 1 0
+move_window 'Skim' 1 0
+move_window 'GIMP-2.10' 1 0
+move_window 'Microsoft Word' 1 0
+move_window 'Microsoft PowerPoint' 1 0
+move_window 'Slack (Post)' 1 0 "$SLACK_POST"
+move_window 'Google Chrome (Work)' 0 0 "$CHROME_WORK"
+move_window 'Google Chrome (Home)' 2 0 "$CHROME_HOME"
+move_window 'Arc' 2 0
+# move_window 'VMware Fusion' 3 0
+# move_window 'VirtualBox VM' 3 0
+# move_window 'VirtualBox' 3 0
 
 # If a second display is attached, then change the space offset and display
 # accordingly.
-if [[ $(<<< "$DISPLAYS" jq 'length') == 2 ]]; then
+if [[ $(jq <<<"$DISPLAYS" 'length') -ge 2 ]]; then
     DISPLAY_INDEX='1'
     SPACE_INDEX_OFFSET='0'
 else
     DISPLAY_INDEX='0'
     SPACE_INDEX_OFFSET='4'
 fi
-move_window 'Microsoft Outlook'         $((SPACE_INDEX_OFFSET + 0)) "$DISPLAY_INDEX"
-move_window 'Microsoft Teams (Main)'    $((SPACE_INDEX_OFFSET + 1)) "$DISPLAY_INDEX" "$TEAMS_MAIN"
-move_window 'Slack'                     $((SPACE_INDEX_OFFSET + 2)) "$DISPLAY_INDEX"
+move_window 'Microsoft Outlook' $((SPACE_INDEX_OFFSET + 0)) "$DISPLAY_INDEX"
+move_window 'Microsoft Teams (Main)' $((SPACE_INDEX_OFFSET + 1)) "$DISPLAY_INDEX" "$TEAMS_MAIN"
+move_window 'Slack' $((SPACE_INDEX_OFFSET + 2)) "$DISPLAY_INDEX"
+move_window 'Slack (Call)' $((SPACE_INDEX_OFFSET + 3)) "$DISPLAY_INDEX" "$SLACK_CALL"
+move_window 'zoom.us' $((SPACE_INDEX_OFFSET + 3)) "$DISPLAY_INDEX"
+
+if [[ $(jq <<<"$DISPLAYS" 'length') -gt 2 ]]; then
+    DISPLAY_INDEX='0'
+    SPACE_INDEX_OFFSET='-3'
+fi
+move_window 'Microsoft Teams (Shared)' $((SPACE_INDEX_OFFSET + 3)) "$DISPLAY_INDEX" "$TEAMS_SHARED"
+
+if [[ $(jq <<<"$DISPLAYS" 'length') -gt 2 ]]; then
+    DISPLAY_INDEX='2'
+    SPACE_INDEX_OFFSET='-3'
+fi
 move_window 'Microsoft Teams (Meeting)' $((SPACE_INDEX_OFFSET + 3)) "$DISPLAY_INDEX" "$TEAMS_MEETING"
-move_window 'Slack (Call)'              $((SPACE_INDEX_OFFSET + 3)) "$DISPLAY_INDEX" "$SLACK_CALL"
-move_window 'zoom.us'                   $((SPACE_INDEX_OFFSET + 3)) "$DISPLAY_INDEX"
+move_window 'Slack (Huddle)' $((SPACE_INDEX_OFFSET + 3)) "$DISPLAY_INDEX" "$SLACK_HUDDLE"
+
+# shared content window
+# 𝄢 yabai -m query --windows | g shared
+# 	"title":"Shared content | Seedy Trunk | Microsoft Teams",
+
+# meeting window while not sharing
+# 𝄢 yabai -m query --windows | g trunk
+# 	"title":"Seedy Trunk | Microsoft Teams",

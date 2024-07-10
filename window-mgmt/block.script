@@ -1,0 +1,19 @@
+#!/usr/bin/osascript
+
+tell application "System Events"
+    set frontApp to name of first application process whose frontmost is true
+    if frontApp is not "Microsoft Outlook" then
+        log "frontmost app is not Microsoft Outlook"
+        return
+    end if
+    
+    -- If Microsoft Outlook is the frontmost app, proceed with the menu actions
+    tell process "Microsoft Outlook"
+        -- Navigate the menu
+        click menu item "Block" of menu "Message" of menu bar 1
+        delay 1 -- Wait for the dialog to appear
+        
+        # -- Press "Enter" to click "OK" in the dialog
+        # key code 36
+    end tell
+end tell
