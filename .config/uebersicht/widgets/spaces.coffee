@@ -20,14 +20,17 @@ generateIcons: (spaces) ->
   return iconString
 
 render: (output) ->
-  spaces = JSON.parse(output)
+  # spaces = JSON.parse(output)
+  parsed = JSON.parse(output)
+  # console.log(parsed)
+  spaces = parsed['spaces']
   htmlString = """
-    <div class="spaces-container" data-count="#{spaces.length}">
+    <span class="spaces-container" data-count="#{spaces.length}">
       <ul>
         #{@generateIcons(spaces)}
       </ul>
       <span id="fader"></span>
-    </div>
+    </span>
   """
 
 style: """
@@ -67,19 +70,27 @@ style: """
 """
 
 update: (output, domEl) ->
+  # https://github.com/felixhageloh/uebersicht/issues/216#issuecomment-231367936
+  display = parseInt(window.location.pathname.split("/")[1])
+
   if (output == "")
     console.log('Empty output: ', output)
     return
-  spaces = JSON.parse(output)
+  parsed = JSON.parse(output)
+  spaces = parsed['spaces']
+  displays = parsed['displays']
+  didx = (d for d in displays when d.id is display)[0].index
+
   if ($(domEl).find('.spaces-container').attr('data-count') != spaces.length.toString())
     $(domEl).find('.spaces-container').attr('data-count', "#{spaces.length}")
     $(domEl).find('ul').html(@generateIcons(spaces))
   else
     $(domEl).find('li.visible').removeClass('visible')
   for space in spaces
-    if space['is-visible']
+    if space['is-visible'] and didx == space['display']
       $(domEl).find("li#desktop#{space['index']}").addClass('visible')
-    if space['windows'].length
+    # if space['windows'].length
+    if space['first-window'] != 0 and space['last-window'] != 0
       $(domEl).find("li#desktop#{space['index']}").removeClass('empty')
     else
       $(domEl).find("li#desktop#{space['index']}").addClass('empty')

@@ -16,5 +16,9 @@ TEAMS_WINDOWS=$(yabai -m query --windows |
 [[ -z "$TEAMS_WINDOWS" ]] && TEAMS_WINDOWS='[]'
 
 # Get spaces while removing windows whose IDs match Teams windows.
-yabai -m query --spaces |
-    jq --argjson teams_windows "$TEAMS_WINDOWS" 'del(.[].windows[] | select(. | IN($teams_windows[])))'
+# yabai -m query --spaces |
+#     jq --argjson teams_windows "$TEAMS_WINDOWS" 'del(.[].windows[] | select(. | IN($teams_windows[])))'
+# jo spaces="$(yabai -m query --spaces |
+#     jq --argjson teams_windows $TEAMS_WINDOWS 'del(.[].windows[] | select(. | IN($teams_windows[])))')" displays="$(yabai -m query --displays)"
+
+yabai -m query --spaces

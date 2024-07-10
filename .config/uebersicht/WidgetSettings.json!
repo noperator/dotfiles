@@ -1,0 +1,32 @@
+{
+  "status-coffee": {
+    "showOnAllScreens": false,
+    "showOnMainScreen": false,
+    "showOnSelectedScreens": true,
+    "hidden": false,
+    "screens": []
+  },
+  "top-bar-coffee": {
+    "showOnAllScreens": true,
+    "showOnMainScreen": false,
+    "showOnSelectedScreens": false,
+    "hidden": false,
+    "screens": []
+  },
+  "spaces-coffee": {
+    "showOnAllScreens": true,
+    "showOnMainScreen": false,
+    "showOnSelectedScreens": false,
+    "hidden": false,
+    "screens": []
+  },
+  "status-notch-coffee": {
+    "showOnAllScreens": false,
+    "showOnMainScreen": false,
+    "showOnSelectedScreens": true,
+    "hidden": false,
+    "screens": [
+      1
+    ]
+  }
+}
