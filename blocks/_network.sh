@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "$(dirname $0)/_abbr-ipv6.sh"
+source "$(dirname $0)/_abbreviate.sh"
 source "$(dirname $0)/.env"
 
 # Get information about default route.
@@ -8,12 +8,12 @@ source "$(dirname $0)/.env"
 # @return <GATEWAY-IP> <GATEWAY-IFACE>
 get_default_route() {
     case "$OSTYPE" in
-        'linux-gnu'*)
-            ip -f "$1"  route | awk '$1 ~ "default|0/1" {print $3, $5}' | head -n 1
-            ;;
-        'darwin'*)
-            netstat -rnf "$1" | awk '$1 ~ "default|0/1" {print $2, $4}' | head -n 1
-            ;;
+    'linux-gnu'*)
+        ip -f "$1" route | awk '$1 ~ "default|0/1" {print $3, $5}' | head -n 1
+        ;;
+    'darwin'*)
+        netstat -rnf "$1" | awk '$1 ~ "default|0/1" {print $2, $4}' | head -n 1
+        ;;
     esac
 }
 
@@ -22,12 +22,12 @@ get_default_route() {
 # @return <IPV4-ADDR>
 get_iface_ipv4() {
     case "$OSTYPE" in
-        'linux-gnu'*)
-            ip -4 addr show "$1" | perl -n -e "/inet ([^\/]+).* scope global/ && print \$1 and exit"
-            ;;
-        'darwin'*)
-            ifconfig "$1" inet | awk '$1 == "inet" {print $2}'
-            ;;
+    'linux-gnu'*)
+        ip -4 addr show "$1" | perl -n -e "/inet ([^\/]+).* scope global/ && print \$1 and exit"
+        ;;
+    'darwin'*)
+        ifconfig "$1" inet | awk '$1 == "inet" {print $2}'
+        ;;
     esac
 }
 
@@ -36,12 +36,12 @@ get_iface_ipv4() {
 # @return <IPV6-ADDR>
 get_iface_ipv6() {
     case "$OSTYPE" in
-        'linux-gnu'*)
-            ip -6 addr show "$1" | grep -B 1 'sec' | awk 'NR == 1 {sub(/\/.*/, "", $2); print $2}'
-            ;;
-        'darwin'*)
-            ifconfig "$1" inet6 | awk '{if ($6 == "temporary" && ! match($2, "^f[cd]")) print $2}'
-            ;;
+    'linux-gnu'*)
+        ip -6 addr show "$1" | grep -B 1 'sec' | awk 'NR == 1 {sub(/\/.*/, "", $2); print $2}'
+        ;;
+    'darwin'*)
+        ifconfig "$1" inet6 | awk '{if ($6 == "temporary" && ! match($2, "^f[cd]")) print $2}'
+        ;;
     esac
 }
 
@@ -51,36 +51,41 @@ get_iface_ipv6() {
 # @return <MAC-ADDR>
 get_neighbor() {
     case "$OSTYPE" in
-        'linux-gnu'*)
-            # Used to check the neighbor state, but that value switches between
-            # "reachable," "stale," and "delay" every few minutes which would
-            # cause the status bar to flicker with those value changes in a
-            # distracting way. For my purposes, I decided it's fine to ignore
-            # the state.
-            # MAC=$(ip -f "$1" neigh | awk -v "gw=$2" '{if ($1 == gw && $NF == "REACHABLE") {print $5}}' | sort -u)
-            MAC=$(ip -f "$1" neigh | awk -v "gw=$2" '{if ($1 == gw) {print $5}}' | sort -u)
-            ;;
-        'darwin'*)
-            if [[ "$1" == 'inet' ]]; then
-                MAC=$(arp -an | awk -v "gw=$2" '$2 == "("gw")" {print $4}')
-            else
+    'linux-gnu'*)
+        # Used to check the neighbor state, but that value switches between
+        # "reachable," "stale," and "delay" every few minutes which would
+        # cause the status bar to flicker with those value changes in a
+        # distracting way. For my purposes, I decided it's fine to ignore
+        # the state.
+        # MAC=$(ip -f "$1" neigh | awk -v "gw=$2" '{if ($1 == gw && $NF == "REACHABLE") {print $5}}' | sort -u)
+        MAC=$(ip -f "$1" neigh | awk -v "gw=$2" '{if ($1 == gw) {print $5}}' | sort -u)
+        ;;
+    'darwin'*)
+        if [[ "$1" == 'inet' ]]; then
+            MAC=$(arp -an | awk -v "gw=$2" '$2 == "("gw")" {print $4}')
+        else
 
-                MAC=$(ndp -an 2>/dev/null | awk -v "gw=$2" '$1 == gw {print $2}')
-            fi
-            ;;
+            MAC=$(ndp -an 2>/dev/null | awk -v "gw=$2" '$1 == gw {print $2}')
+        fi
+        ;;
     esac
     if [[ -z "$MAC" ]]; then
         echo
     else
-    <<< "$MAC" sort -u | awk '{split(toupper($0), mac, ":"); for (i = 1; i <= 6; i++) printf "%02s", mac[i]; print ""}' | tr ' ' '0'
+        sort <<<"$MAC" -u | awk '{split(toupper($0), mac, ":"); for (i = 1; i <= 6; i++) printf "%02s", mac[i]; print ""}' | tr ' ' '0'
     fi
 }
 
-# Get a vendor from a MAC address's OUI (first three octets).
+# Get a vendor from a MAC address's OUI (first three octets). Update OUIs like this:
+# ```
+# curl -s https://gitlab.com/wireshark/wireshark/-/raw/master/manuf |
+# 	grep -vE '^(#|$)' | awk '{gsub(/:/, "", $1); print}' >oui.txt
+# ```
 # @param $1 OUI in all caps, no colon (e.g., A1B2C3).
 # @return <VENDOR>
 get_vendor() {
-    awk -v "oui=$1" -F '\t' '$1 ~ oui {sub(/[, ].*/, "", $3); print $3}' "$(dirname $0)/oui.txt"
+    # awk -v "oui=$1" -F '\t' '$1 ~ oui {sub(/[, ].*/, "", $3); print $3}' "$(dirname $0)/oui.txt"
+    awk -v "oui=$1" '$1 ~ oui {print $2}' "$(dirname $0)/oui.txt"
 }
 
 # Determine if interface is enabled.
@@ -88,31 +93,30 @@ get_vendor() {
 # @return <BOOLEAN> true or false.
 iface_enabled() {
     case "$OSTYPE" in
-        'linux-gnu'*)
-            < "/sys/class/net/$1/flags" awk '{if ($1 == "0x1003") {print "true"} else {print "false"}}'
-            ;;
-        'darwin'*)
-            ifconfig "$1" | awk '$2 ~ /flags=/ {if ($2 ~ /RUNNING/) {print "true"} else {print "false"}}'
-            ;;
+    'linux-gnu'*)
+        awk <"/sys/class/net/$1/flags" '{if ($1 == "0x1003") {print "true"} else {print "false"}}'
+        ;;
+    'darwin'*)
+        ifconfig "$1" | awk '$2 ~ /flags=/ {if ($2 ~ /RUNNING/) {print "true"} else {print "false"}}'
+        ;;
     esac
 }
-
 
 # Determine if Ethernet cable is plugged in.
 # @param $1 Ethernet interface name. e.g., en3, eth2, etc.
 # @return <BOOLEAN> true or false.
 ethernet_connected() {
     case "$OSTYPE" in
-        'linux-gnu'*)
-            if grep -E '1' "/sys/class/net/$1/carrier" &>/dev/null; then
-                echo 'true'
-            else
-                echo 'false'
-            fi
-            ;;
-        'darwin'*)
-            ifconfig "$1" | awk '$1 == "status:" {if ($2 == "active") {print "true"} else {print "false"}}'
-            ;;
+    'linux-gnu'*)
+        if grep -E '1' "/sys/class/net/$1/carrier" &>/dev/null; then
+            echo 'true'
+        else
+            echo 'false'
+        fi
+        ;;
+    'darwin'*)
+        ifconfig "$1" | awk '$1 == "status:" {if ($2 == "active") {print "true"} else {print "false"}}'
+        ;;
     esac
 }
 
@@ -121,12 +125,12 @@ ethernet_connected() {
 # @return <BOOLEAN> true or false.
 wifi_connected() {
     case "$OSTYPE" in
-        'linux-gnu'*)
-            < "/sys/class/net/$1/operstate" awk '{if ($1 == "up") {print "true"} else {print "false"}}'
-            ;;
-        'darwin'*)
-            ifconfig "$1" | awk '$1 == "status:" {if ($2 == "active") {print "true"} else {print "false"}}'
-            ;;
+    'linux-gnu'*)
+        awk <"/sys/class/net/$1/operstate" '{if ($1 == "up") {print "true"} else {print "false"}}'
+        ;;
+    'darwin'*)
+        ifconfig "$1" | awk '$1 == "status:" {if ($2 == "active") {print "true"} else {print "false"}}'
+        ;;
     esac
 }
 
@@ -134,35 +138,50 @@ wifi_connected() {
 # @param $1 Interface name. e.g., en0, wlp3s1, eth2, etc.
 # @return <BOOLEAN> true or false.
 iface_exists() {
-    if ip link show dev "$1" &>/dev/null; then
-        echo 'true'
-    else
-        echo 'false'
-    fi
+    case "$OSTYPE" in
+    'linux-gnu'*)
+        if ip link show dev "$1" &>/dev/null; then
+            echo 'true'
+        else
+            echo 'false'
+        fi
+        ;;
+    'darwin'*)
+        if ifconfig "$1" &>/dev/null; then
+            echo 'true'
+        else
+            echo 'false'
+        fi
+        ;;
+    esac
 }
 
 # Check if VPN connected.
 # @return <BOOLEAN> true or false.
 vpn_connected() {
     case "$OSTYPE" in
-        'linux-gnu'*)
-            if pgrep openvpn &>/dev/null; then
-                echo 'true'
-            else
-                echo 'false'
-            fi
-            ;;
-        'darwin'*)
-            if osascript \
-                -e 'tell application "/Applications/Tunnelblick.app"' \
-                -e 'get state of configurations' \
-                -e 'end tell' |
-            grep 'CONNECTED' &>/dev/null; then
-                echo 'true'
-            else
-                echo 'false'
-            fi
-            ;;
+    'linux-gnu'*)
+        if pgrep openvpn &>/dev/null; then
+            echo 'true'
+        else
+            echo 'false'
+        fi
+        ;;
+    'darwin'*)
+        # if osascript \
+        #     -e 'tell application "/Applications/Tunnelblick.app"' \
+        #     -e 'get state of configurations' \
+        #     -e 'end tell' |
+        if osascript \
+            -e 'tell application "Viscosity"' \
+            -e 'get state of first connection' \
+            -e 'end tell' |
+            grep -iq '^connected$'; then
+            echo 'true'
+        else
+            echo 'false'
+        fi
+        ;;
     esac
 }
 
@@ -170,29 +189,39 @@ vpn_connected() {
 # @return <VPN-IFACE>
 get_vpn_iface() {
     case "$OSTYPE" in
-        'linux-gnu'*)
-            ;;
-        'darwin'*)
-            cat /Library/Application\ Support/Tunnelblick/Logs/*.openvpn.log |
-            sort -n |
-            awk '{if ($3 == "/sbin/ifconfig" && $NF == "up") {print $4}}' |
-            tail -n 1
-            ;;
+    'linux-gnu'*) ;;
+
+    'darwin'*)
+        # cat /Library/Application\ Support/Tunnelblick/Logs/*.openvpn.log |
+        #     sort -n |
+        #     awk '{if ($3 == "/sbin/ifconfig" && $NF == "up") {print $4}}' |
+        #     tail -n 1
+        IPV4=$(osascript \
+            -e 'tell application "Viscosity"' \
+            -e 'get IPv4Address of first connection' \
+            -e 'end tell')
+        ifconfig | grep -E '^[a-z0-9]+:|inet ' | grep -B 1 "$IPV4" | head -n 1 | cut -d : -f 1
+        ;;
     esac
+
 }
 
 # Get name of active VPN connection.
 # @return <VPN-IFACE>
 get_vpn_name() {
     case "$OSTYPE" in
-        'linux-gnu'*)
-            ;;
-        'darwin'*)
-            osascript \
-                -e 'tell application "/Applications/Tunnelblick.app"' \
-                -e 'get name of configuration 1 whose state = "CONNECTED"' \
-                -e 'end tell'
-            ;;
+    'linux-gnu'*) ;;
+
+    'darwin'*)
+        # osascript \
+        #     -e 'tell application "/Applications/Tunnelblick.app"' \
+        #     -e 'get name of configuration 1 whose state = "CONNECTED"' \
+        #     -e 'end tell'
+        osascript \
+            -e 'tell application "Viscosity"' \
+            -e 'get name of connection 1 whose state = "connected"' \
+            -e 'end tell'
+        ;;
     esac
 }
 

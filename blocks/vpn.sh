@@ -4,21 +4,23 @@ source "$(dirname $0)/_fa-icons.sh"
 source "$(dirname $0)/_network.sh"
 
 VPN_CONNECTED=$(vpn_connected)
-ALREADY_CONNECTED=$(cat /var/tmp/vpn-connected.txt)
+ALREADY_CONNECTED=$(cat /var/tmp/blocks/vpn-connected.txt)
 
-print_fa_icon 'shield-alt'
 if [[ "$VPN_CONNECTED" == 'false' ]]; then
     if [[ $ALREADY_CONNECTED == 'true' ]]; then
-        rm /var/tmp/public-ip-{time,data}.txt
+        rm /var/tmp/blocks/public-ip-{time,data}.txt 2>/dev/null
     fi
-    echo 'OFF'
+    # echo 'OFF'
+    echo "$VPN_CONNECTED" >/var/tmp/blocks/vpn-connected.txt
+    exit
 else
+    print_fa_icon 'shield-alt'
     if [[ $ALREADY_CONNECTED == 'false' ]]; then
-        rm /var/tmp/public-ip-{time,data}.txt
+        rm /var/tmp/blocks/public-ip-{time,data}.txt
     fi
     VPN_IFACE=$(get_vpn_iface)
-    get_iface_ipv4 "$VPN_IFACE" | tr '\n' ' '
-    get_vpn_name
+    abbr_ipv4 $(get_iface_ipv4 "$VPN_IFACE")
+    abbr_str $(get_vpn_name)
+    echo -n ' '
+    echo "$VPN_CONNECTED" >/var/tmp/blocks/vpn-connected.txt
 fi
-
-echo "$VPN_CONNECTED" > /var/tmp/vpn-connected.txt

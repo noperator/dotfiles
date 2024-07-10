@@ -4,21 +4,21 @@ source "$(dirname $0)/_fa-icons.sh"
 
 SOURCE=''
 case "$OSTYPE" in
-    'linux-gnu'*)
-        PERCENT=$(acpi -b | awk '{s += $4; i += 1} END {print int(s/i)}')
-        acpi -a | grep 'on-line' &>/dev/null && SOURCE='AC'
-        ;;
-    'darwin'*)
-        BATTERY=$(pmset -g batt)
-        PERCENT=$(<<< "$BATTERY" grep -oE '\d*%' | tr -d '%')
-        SOURCE=$(<<< "$BATTERY" tr -d "'" | awk '/Now drawing from/ {print $4}')
-        ;;
+'linux-gnu'*)
+    PERCENT=$(acpi -b | awk '{s += $4; i += 1} END {print int(s/i)}')
+    acpi -a | grep 'on-line' &>/dev/null && SOURCE='AC'
+    ;;
+'darwin'*)
+    BATTERY=$(pmset -g batt)
+    PERCENT=$(echo "$BATTERY" | grep -oE '\d*%' | tr -d '%')
+    SOURCE=$(tr <<<"$BATTERY" -d "'" | awk '/Now drawing from/ {print $4}')
+    ;;
 esac
 
 if [[ "$SOURCE" == 'AC' ]]; then
     ICON='plug'
 else
-    if   [[ "$PERCENT" -lt 10 ]]; then
+    if [[ "$PERCENT" -lt 10 ]]; then
         LVL='empty'
     elif [[ "$PERCENT" -lt 35 ]]; then
         LVL='quarter'

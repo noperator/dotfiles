@@ -22,15 +22,16 @@ dbm_to_percent() {
 # @return <SSID> <SIGNAL-DBM>
 get_wifi_info() {
     case "$OSTYPE" in
-        'linux-gnu'*)
-            iw dev "$1" link | awk '/SSID:/ {printf substr($2, 0, 6) "… "}'
-            awk -v "iface=$1" '$1 == iface {print $4}' /proc/net/wireless
-            ;;
-        'darwin'*)
-            WIFI_STATUS="$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport --getinfo)"
-            <<< "$WIFI_STATUS" awk '/[^B]SSID/ {printf substr($NF, 0, 6) "… "}'
-            <<< "$WIFI_STATUS" awk '/agrCtlRSSI/ {print $NF}'
-            ;;
+    'linux-gnu'*)
+        iw dev "$1" link | awk '/SSID:/ {printf substr($2, 0, 6) "… "}'
+        awk -v "iface=$1" '$1 == iface {print $4}' /proc/net/wireless
+        ;;
+    'darwin'*)
+        WIFI_STATUS="$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport --getinfo)"
+        awk '/[^B]SSID/ {sub(/.*: /, "", $0); printf substr($0, 0, 6)}' <<<"$WIFI_STATUS" | tr ' ' ' '
+        echo -n '… '
+        awk <<<"$WIFI_STATUS" '/agrCtlRSSI/ {print $NF}'
+        ;;
     esac
 }
 
@@ -40,11 +41,19 @@ if [[ "$WIFI_ENABLED" == 'false' ]]; then
 elif [[ "$WIFI_CONNECTED" == 'false' ]]; then
     echo 'NONE'
 else
-    IPV4=$(get_iface_ipv4 "$WIFI_IFACE")
+    get_iface_ipv4 "$WIFI_IFACE" >/var/tmp/blocks/ipv4-wif.txt
+    IPV4=$(abbr_ipv4 $(get_iface_ipv4 "$WIFI_IFACE"))
     IPV6=$(abbr_ipv6 $(get_iface_ipv6 "$WIFI_IFACE"))
     WIFI_INFO=$(get_wifi_info "$WIFI_IFACE")
-    SSID=$(<<< "$WIFI_INFO" awk '{print $1}')
-    SIGNAL=$(<<< "$WIFI_INFO" awk '{print $2}')
-    QUALITY=$(dbm_to_percent "$SIGNAL")
-    echo "$IPV4 $IPV6 $SSID $QUALITY%"
+    SSID=$(awk <<<"$WIFI_INFO" '{print $1}')
+    SIGNAL=$(awk <<<"$WIFI_INFO" '{print $2}')
+    QUALITY=$(dbm_to_percent "$SIGNAL")%
+    BSSID=$(cat /var/tmp/blocks/bssid.txt)
+    OUI=$(echo "$BSSID" | tr : '\n' | head -n 3 | xargs printf "%02s" | tr '[:lower:]' '[:upper:]')
+    VENDOR=$(abbr_str $(get_vendor "$OUI"))
+    for VAR in IPV4 IPV6 SSID QUALITY VENDOR; do
+        if [[ -n ${!VAR} ]]; then
+            echo -n "${!VAR} " | tr ' ' ' '
+        fi
+    done
 fi
