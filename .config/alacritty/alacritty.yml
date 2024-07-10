@@ -1,5 +1,13 @@
 # Source: https://github.com/eendroroy/alacritty-theme/blob/master/themes/gruvbox_dark.yaml
 
+
+window:
+  dynamic_title: true
+  decorations: None
+  padding:
+    x: 5
+    y: 5
+
 # Colors (Gruvbox dark)
 colors:
   # Default colors
@@ -37,7 +45,9 @@ hints:
    # URLs
    - regex: "(ipfs:|ipns:|magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)\
              [^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
-     command: xdg-open
+     # command: /Users/calebgross/tmp/open.sh
+     # command: ~/.config/alacritty/open.sh
+     command: open
      post_processing: true
      mouse:
        enabled: true
