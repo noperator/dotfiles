@@ -1,0 +1,4 @@
+/* https://github.com/typora/typora-issues/issues/957 */
+.md-comment {
+display: none
+}

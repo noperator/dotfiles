@@ -24,6 +24,7 @@ imap <F5> <C-R>=substitute(system('date -u +"%FT%TZ // "'),'[\r\n]*$','','')<CR>
 nmap cm o<details><summary></summary><CR><p><CR><CR>```<CR>```<CR><CR></p><CR></details><CR><Esc>8k18li
 
 " Insert hN-level fold and place cursor at header.
+nmap ch0 i {{{<CR><CR><CR><CR><BS>}}}<Esc>4k4hi
 nmap ch1 i#  {{{<CR><CR><CR><CR>}}}<Esc>4ki
 nmap ch2 i##  {{{<CR><CR><CR><CR>}}}<Esc>4kli
 nmap ch3 i###  {{{<CR><CR><CR><CR>}}}<Esc>4k2li
@@ -110,6 +111,9 @@ cnoreabbrev <expr> black ((getcmdtype() is# ':' && getcmdline() is# 'black')?('B
 " Underline current line with hyphens.
 nmap U yyp<c-v>$r-
 
+" Insert a horizontal line.
+nmap UU o<CR><Esc>46i-<Esc>o<CR><Esc>
+
 " Tab navigation like qutebrowser.
 nmap K :tabprevious<CR>
 nmap J :tabnext<CR>
@@ -126,8 +130,11 @@ else
 endif
 
 " Open in external editor.
-" nmap <C-T> :silent !open -a Typora.app '%:p'<CR>
-nmap <C-T> :silent !typora '%:p' &<CR>
+if has('mac')
+    nmap <C-T> :silent !open -a Typora.app '%:p'<CR>
+elseif has('unix')
+    nmap <C-T> :silent !typora '%:p' &<CR>
+endif
 
 " Put signs into the number column. Or, show persistent sign column with clear background.
 if has('nvim')
@@ -140,3 +147,5 @@ endif
 
 " Embed interactive IPython shell.
 " nmap ip oimport IPython; IPython.embed()<Esc>
+
+set mouse=

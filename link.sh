@@ -2,26 +2,23 @@
 
 # Link a file from the dotfiles directory to its intended location.
 link() {
+
+    # $1 is always the filename as it exists in dotfiles.
     SOURCE_DOTFILE="$HOME/dotfiles/$1"
     SOURCE_FILENAME=$(basename "$1")
 
-    # $1 is always the filename as it exists in dotfiles. $2 can be:
-    # 1. Nothing, in which case the filename in $1 should be the target under
-    #    $HOME.
-    # 2. A directory under $HOME where the filename in $1 should be linked.
-    # 3. An alternate name that the file should be renamed as under $HOME.
-    LINK='[*] Link:   '
+    # $2 can be:
+    # 1. Not provided, in which case the filename in $1 should simply be the
+    #    target under $HOME.
     if [[ -z "$2" ]]; then
-        LINK="$LINK$SOURCE_DOTFILE -> \$HOME/$SOURCE_FILENAME"
         TARGET="$HOME/$SOURCE_FILENAME"
+    # 2. A directory name ending in '/', in which case $1 should be linked
+    #    under that directory in $HOME.
+    elif [[ -d "$HOME/$2" && "${2: -1}" == '/' ]]; then
+        TARGET="$HOME/$2$SOURCE_FILENAME"
+    # 3. An alternate name that the file should be renamed as under $HOME.
     else
-        if [[ -d "$HOME/$2" ]]; then
-            LINK="$LINK$SOURCE_DOTFILE -> \$HOME/$2/$SOURCE_FILENAME"
-            TARGET="$HOME/$2/$SOURCE_FILENAME"
-        else
-            LINK="$LINK$SOURCE_DOTFILE -> \$HOME/$2"
-            TARGET="$HOME/$2"
-        fi
+        TARGET="$HOME/$2"
     fi
 
     # Remove existing symlinks. Otherwise, backup existing files.
@@ -35,7 +32,7 @@ link() {
     fi
 
     # Finally, link the dotfile to its intended target.
-    echo "$LINK"
+    echo "[*] Link:   $LINK_MSG$SOURCE_DOTFILE -> $TARGET"
     ln -s "$SOURCE_DOTFILE" "$TARGET"
 }
 
@@ -69,11 +66,13 @@ case "$OSTYPE" in
     done
     ;;
 'darwin'*)
+    link .finicky.js
     link .skhdrc.yabai .skhdrc
     link .yabairc
-    link .config/uebersicht 'Library/Application Support/Übersicht/widgets'
-    for PROFILE in $(ls "$HOME/Library/Application Support/Firefox/Profiles/"); do
-        link .config/firefox/user.js "Library/Application Support/Firefox/Profiles/$PROFILE"
-    done
+    link .config/uebersicht/WidgetSettings.json 'Library/Application Support/tracesOf.Uebersicht/'
+    link .config/uebersicht/widgets 'Library/Application Support/Übersicht/'
+    # for PROFILE in $(ls "$HOME/Library/Application Support/Firefox/Profiles/"); do
+    #     link .config/firefox/user.js "Library/Application Support/Firefox/Profiles/$PROFILE"
+    # done
     ;;
 esac

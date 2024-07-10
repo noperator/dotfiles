@@ -1,5 +1,5 @@
 # Open terminal.
-cmd - return : ~/.config/kitty/launch-instance.sh
+cmd - return : ~/.config/alacritty/launch-instance.sh
 
 # Kill terminal.
 shift + alt - q : /usr/bin/pkill -9 -afi kitty
@@ -8,16 +8,51 @@ shift + alt - q : /usr/bin/pkill -9 -afi kitty
 shift + cmd - return : ~/dotfiles/window-mgmt/organize-windows.sh
 
 # Start applications.
-shift + cmd + ctrl - return : ~/dotfiles/window-mgmt/start-apps.sh
+# shift + cmd + ctrl - return : ~/dotfiles/window-mgmt/start-apps.sh
+
+# Restart Übersicht.
+shift + cmd - u: pkill -f Übersicht.app && open -a Übersicht.app
 
 # Refresh all Übersicht widgets.
 # https://github.com/felixhageloh/uebersicht#scripting-support
 shift + cmd - r: osascript -e 'tell application id "tracesOf.Uebersicht" to refresh'
 
+# Restart yabai to fix stuck/invisible windows.
+# shift + cmd - y: brew services restart yabai && ~/dotfiles/window-mgmt/cycle.script
+# shift + cmd - y: ~/dotfiles/window-mgmt/restart-yabai.sh
+shift + cmd - y: source ~/dotfiles/window-mgmt/_functions.sh && restart-yabai
+
+# Balance out all windows both horizontally and vertically.
+shift + cmd - b: yabai -m space --balance
+
+# Clear for focus
+# shift + cmd - c: ~/dotfiles/window-mgmt/blank.sh
+# shift + cmd - c: source ~/dotfiles/window-mgmt/_functions.sh && focus-spaces 2 4 8
+# TODO: make this into a script, like organize-windows.sh
+# shift + cmd - c: source ~/dotfiles/window-mgmt/_functions.sh && focus-spaces $(yabai -m query --spaces | jq -r --argjson spaces $(jo -a $(jo display=1 index=2) $(jo display=2 index=4) $(jo display=3 index=8)) 'map({display, index} | select(. as $space | $spaces | index($space)) | .index) | join(" ")')
+shift + cmd - c: source ~/dotfiles/window-mgmt/_functions.sh && focus-spaces $(yabai -m query --spaces | jq -r --argjson spaces $(jo -a $(jo display=1 index=4) $(jo display=2 index=9)) 'map({display, index} | select(. as $space | $spaces | index($space)) | .index) | join(" ")') && ~/dotfiles/window-mgmt/gray.script
+
+# Dezoom
+shift + cmd - z: source ~/dotfiles/window-mgmt/_functions.sh && dezoom
+
+# Timers
+shift + ctrl - 0 : source ~/.bashrc.d/43-timer.sh && stop-timer
+shift + ctrl - 1 : source ~/.bashrc.d/43-timer.sh && start-timer 15minute
+shift + ctrl - 2 : source ~/.bashrc.d/43-timer.sh && start-timer 30minute
+shift + ctrl - 3 : source ~/.bashrc.d/43-timer.sh && start-timer 45minute
+shift + ctrl - 4 : source ~/.bashrc.d/43-timer.sh && start-timer 1hour
+
+# Toggle grayscale.
+shift + cmd - g: ~/dotfiles/window-mgmt/gray.script toggle
+
+# Block sender in outlook
+ctrl - b: ~/dotfiles/window-mgmt/block.script
+
 # Focus window.
 cmd - h : yabai -m window --focus west
 cmd - j : yabai -m window --focus south
-cmd - k : yabai -m window --focus north
+# cmd - k : yabai -m window --focus north
+cmd - k : ~/.config/yabai/cmd-k.sh
 cmd - l : yabai -m window --focus east
 
 # Swap window.
@@ -176,7 +211,13 @@ cmd + alt - 2: yabai -m space --display 2
 .blacklist [
     "gimp-2.10"
     "virtualbox vm"
-    "vmware fusion"
-    "slack"
-    "screen sharing"
+    # "vmware fusion"
+    "Screen Sharing"
+    # "vncviewer"
+    # "TigerVNC Viewer"
+    "VNC Viewer"
 ]
+
+:: passthrough
+cmd + ctrl - t ; passthrough
+passthrough < cmd + ctrl - t; default

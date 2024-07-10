@@ -35,6 +35,8 @@ for DIR in \
     "$HOMEBREW_PREFIX/sbin" \
     "$HOMEBREW_PREFIX/opt/util-linux/bin" \
     "$HOMEBREW_PREFIX/opt/util-linux/sbin" \
+    /opt/local/sbin \
+    /opt/local/bin \
     /snap/bin \
     /usr/local/sbin \
     /usr/local/bin \
