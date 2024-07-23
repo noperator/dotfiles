@@ -43,6 +43,8 @@ update: (output, domEl) ->
   notch_width = 33
   usable_space = 109
   usable_space = 108
+  # not sure why it changed from 108 to 113 from upgrade from monterey to sonoma
+  usable_space = 113
 
   debug = false
   # debug = true
