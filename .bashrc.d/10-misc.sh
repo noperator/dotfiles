@@ -212,3 +212,9 @@ gfu() {
 nln() {
     nl -nln | sed -E "s/(^[0-9]+)/\1.$1/"
 }
+
+fad() {
+    curl -s 'https://www.fakepersongenerator.com/Random/generate_address' -d 'state=0&city=&zip=' |
+        htmlq '.info-detail > input' -a value |
+        head -n 6
+}
