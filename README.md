@@ -48,6 +48,8 @@ git -C "$HOME" clone https://github.com/noperator/dotfiles.git && cd "$HOME/dotf
 
 ### Configure
 
+<details><summary>Blocks</summary>
+
 Create a file at `blocks/.env` containing the names of the Wi-Fi and Ethernet interfaces that you'd like to be displayed in the status bar. For example, on macOS this might look like:
 
 ```
@@ -56,6 +58,75 @@ ETH_IFACE='en4'
 ```
 
 Note that the name of the VPN interface is determined automatically.
+
+</details>
+
+<details><summary>Browser keys</summary>
+
+Arc keyboard shortcuts.
+
+```
+cat Library/Application\ Support/Arc/StorableKeyBindings.json |
+    jq '.userOverrides | map({
+            mod: .state.valid._0 .deviceIndependentModifierFlags,
+            key: .state.valid._0 .keyEquivalent,
+            action: .action.name
+        }) |
+        group_by(.mod) |
+        map({
+            mod: .[0].mod,
+            shortcuts: map(del(.mod) | .key + ": " + .action) | sort
+        })'
+
+[
+  {
+    "mod": null,
+    "shortcuts": [
+      ": Archive Tab"
+    ]
+  },
+  {
+    "mod": 262144,
+    "shortcuts": [
+      ",: Preferences…",
+      "h: Go Back",
+      "j: Next Tab",
+      "k: Previous Tab",
+      "l: Go Forward",
+      "o: Open Command Bar",
+      "p: Pin/Unpin Tab",
+      "s: Reveal/Hide Sidebar",
+      "x: Reopen Last Closed Tab",
+      "y: Copy Page URL"
+    ]
+  },
+  {
+    "mod": 393216,
+    "shortcuts": [
+      "h: Previous Space",
+      "l: Next Space",
+      "o: New Tab…",
+      "y: Copy URL as Markdown"
+    ]
+  },
+  {
+    "mod": 786432,
+    "shortcuts": [
+      "o: Add Split View"
+    ]
+  }
+]
+```
+
+Vimium key mappings ([download backup](blob:chrome-extension://dbepggeogbaibhgnhhndojpepiihcmeb/1f6a297b-2c9a-46fb-9048-2dd9ad180cf6)).
+
+```
+map K previousTab
+map J nextTab
+```
+
+</details>
+
 
 ## Back matter
 
