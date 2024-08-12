@@ -48,7 +48,8 @@ else
     SSID=$(awk <<<"$WIFI_INFO" '{print $1}')
     SIGNAL=$(awk <<<"$WIFI_INFO" '{print $2}')
     QUALITY=$(dbm_to_percent "$SIGNAL")%
-    BSSID=$(cat /var/tmp/blocks/bssid.txt)
+    # BSSID=$(cat /var/tmp/blocks/bssid.txt)
+    BSSID=$(~/Applications/wifi-unredactor.app/Contents/MacOS/wifi-unredactor | jq -r '.bssid')
     OUI=$(echo "$BSSID" | tr : '\n' | head -n 3 | xargs printf "%02s" | tr '[:lower:]' '[:upper:]')
     VENDOR=$(abbr_str $(get_vendor "$OUI"))
     for VAR in IPV4 IPV6 SSID QUALITY VENDOR; do
