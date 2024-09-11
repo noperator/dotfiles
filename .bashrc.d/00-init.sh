@@ -31,6 +31,7 @@ for DIR in \
     /usr/local/Cellar/python\@3.9/3.9.0/bin \
     /usr/local/Cellar/python\@3.9/3.9.2_1/bin \
     /usr/local/Cellar/python\@3.8/3.8.8_1/bin \
+    /opt/homebrew/opt/node@20/bin \
     "$HOMEBREW_PREFIX/bin" \
     "$HOMEBREW_PREFIX/sbin" \
     "$HOMEBREW_PREFIX/opt/util-linux/bin" \
