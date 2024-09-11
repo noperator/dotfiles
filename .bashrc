@@ -1,5 +1,5 @@
 # https://stackoverflow.com/a/69915614
-printf '\33c\e[3J'
+# printf '\33c\e[3J'
 
 for FILE in $(find "$HOME/.bashrc.d/" -iname '*.sh' | sort); do
     source "$FILE"

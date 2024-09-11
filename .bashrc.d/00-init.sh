@@ -8,7 +8,7 @@ export SSH_AUTH_SOCK="$HOME/.ssh/ssh-agent.$HOSTNAME.sock"
 export TMPDIR='/tmp/'
 export NPM_PACKAGES="$HOME/.npm-packages"
 export TIMEFORMAT='%3lR' # Only show elapsed time.
-tabs -4                  # Set tab interval.
+# tabs -4                  # Set tab interval.
 
 # Homebrew stuff.
 export HOMEBREW_PREFIX="/opt/homebrew"
