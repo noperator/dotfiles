@@ -218,3 +218,14 @@ fad() {
         htmlq '.info-detail > input' -a value |
         head -n 6
 }
+
+alias tl='tmux ls'
+alias tn='tmux new -s'
+alias ta='tmux attach -t'
+_tmux_session_complete() {
+    local cur_word="${COMP_WORDS[COMP_CWORD]}"
+    local sessions=$(tmux list-sessions -F "#{session_name}" 2>/dev/null)
+
+    COMPREPLY=($(compgen -W "$sessions" -- "$cur_word"))
+}
+complete -F _tmux_session_complete ta
