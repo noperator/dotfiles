@@ -140,3 +140,16 @@ i() {
 # alias bat='batcat'
 alias batp='bat --style=plain'
 alias lf='ls -tr | tail -n 1'
+
+# For use with LLMs, etc.
+print-files() {
+    find "$1" -type f | while read FILE; do
+        if file "$FILE" | grep -qE 'executable|data'; then
+            continue
+        fi
+        echo -e "\`$FILE\`\n\n"
+        echo -e '```'
+        cat "$FILE"
+        echo -e '```\n\n'
+    done
+}
