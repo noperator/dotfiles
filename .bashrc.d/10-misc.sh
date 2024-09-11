@@ -84,6 +84,9 @@ case "$OSTYPE" in
     alias pc='pbcopy'
     alias rc='launchctl stop homebrew.mxcl.chunkwm'
     alias wn='osascript -e "set Volume 2"; (play -nq -c 2 synth brownnoise band 5120 6144 &>/dev/null &)'
+    switchresx() {
+        open "$HOME/Library/PreferencePanes/SwitchResX.prefPane/Contents/PlugIns/SwitchResX Control.app"
+    }
     ;;
 'linux-gnu'*)
     q() {
