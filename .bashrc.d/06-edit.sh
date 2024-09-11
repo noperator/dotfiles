@@ -106,3 +106,11 @@ todo() {
         cat -s |
         bat -l md --paging never --style plain
 }
+
+cursor() {
+    /Applications/Cursor.app/Contents/MacOS/Cursor "$1" &>/dev/null &
+}
+
+code() {
+    "/Applications/Visual Studio Code.app/Contents/MacOS/Electron" "$1" &>/dev/null &
+}

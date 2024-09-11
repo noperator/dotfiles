@@ -19,7 +19,8 @@ white = "0xa89984"
 yellow = "0xd79921"
 
 [colors.primary]
-background = "0x282828"
+# background = "0x282828"
+background = "0x2d2d2d"
 foreground = "0xebdbb2"
 
 [[hints.enabled]]
@@ -38,3 +39,6 @@ dynamic_title = true
 [window.padding]
 x = 5
 y = 5
+
+[shell]
+program = "/opt/homebrew/bin/bash"

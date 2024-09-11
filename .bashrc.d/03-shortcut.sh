@@ -2,22 +2,24 @@
 
 DROPBOX="$HOME/Dropbox"
 alias cdb="cd $DROPBOX"
+alias cdco="cd $HOME/.config"
 alias cds="cd $HOME/.ssh"
 alias cdv="cd $HOME/.vim"
-alias cdf="cd $HOME/dotfiles"
-alias cdg="cd $HOME/guides"
-alias cdl="cd $HOME/Downloads"
 alias cde="cd $HOME/Desktop"
-alias ltd="lt --color=always $HOME/Downloads | tail"
-alias cdt='cd /tmp'
-alias ltt='lt /tmp/'
-alias cdu="cd $HOME/tmp"
-alias ltu="lt $HOME/tmp"
+alias cdl="cd $HOME/Downloads"
+alias cdf="cd $HOME/dotfiles"
 alias cdbd="cd $HOME/dotfiles/.bashrc.d"
 alias cdbl="cd $HOME/dotfiles/blocks"
-alias cdco="cd $HOME/.config"
+alias cdg="cd $HOME/guides"
+alias cdgh="cd $HOME/github"
+alias cdp="cd $HOME/projects"
 alias cdsc="cd $HOME/screenshots"
+alias cdu="cd $HOME/tmp"
+alias ltu="lt $HOME/tmp"
+alias ltd="lt --color=always $HOME/Downloads | tail"
+alias cdt='cd /tmp'
 alias cdvt='cd /var/tmp'
+alias ltt='lt /tmp/'
 alias mb='mv'
 
 case "$OSTYPE" in

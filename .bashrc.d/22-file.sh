@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Various wrappers for ls.
-if which exa &>/dev/null; then
-    alias ll='exa -la'
+if which eza &>/dev/null; then
+    alias ll='eza -la'
     alias lt='ll -s mod'
     alias lh='ll -s size'
     alias lg='lt --git'
