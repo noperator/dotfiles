@@ -232,3 +232,10 @@ _tmux_session_complete() {
     COMPREPLY=($(compgen -W "$sessions" -- "$cur_word"))
 }
 complete -F _tmux_session_complete ta
+
+_ssh_host_complete() {
+    local cur_word="${COMP_WORDS[COMP_CWORD]}"
+    local hosts=$(rg -NIg config '^Host' ~/.ssh | sed -E 's/^Host //' | tr ' ' '\n' | sort -u | grep -vE '^\s*$')
+    COMPREPLY=($(compgen -W "$hosts" -- "$cur_word"))
+}
+complete -F _ssh_host_complete ssh
