@@ -27,6 +27,7 @@ for DIR in \
     "$HOME/go/bin" \
     "$HOME/.cargo/bin" \
     "$HOME/kitty/kitty/launcher" \
+    /usr/local/texlive/2024/bin/universal-darwin/ \
     /usr/local/go/bin \
     /usr/local/Cellar/python\@3.9/3.9.0/bin \
     /usr/local/Cellar/python\@3.9/3.9.2_1/bin \
