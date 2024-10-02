@@ -149,3 +149,14 @@ endif
 " nmap ip oimport IPython; IPython.embed()<Esc>
 
 set mouse=
+
+augroup StripPromptString
+    autocmd!
+    autocmd BufReadPost,BufWritePre notes.txt call StripPromptString()
+augroup END
+
+function! StripPromptString()
+    let l:save_cursor = getpos(".")
+    silent! %s/^𝄢 //e
+    call setpos('.', l:save_cursor)
+endfunction
