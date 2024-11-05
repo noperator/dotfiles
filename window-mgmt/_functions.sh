@@ -104,7 +104,14 @@ get-layout() {
         jq -r '.[] | select(.minimized != 1) | "yabai -m window \(.id) --display \(.display) --space \(.space) --move abs:\(.frame.x):\(.frame.y) --resize abs:\(.frame.w):\(.frame.h)"'
 }
 
-restart-yabai() {
+restart-win-mgmt() {
+
+    # Start SwitchResX daemon.
+    if ! pgrep -f 'SwitchResX Daemon.app' &>/dev/null; then
+        notify 'Starting SwitchResX Daemon…'
+        open "$HOME/Library/PreferencePanes/SwitchResX.prefPane/Contents/PlugIns/SwitchResX Daemon.app"
+    fi
+
     # Save currently visible spaces so we can return back to them later.
     #
     # TODO: Save window arrangement, too.
@@ -118,7 +125,7 @@ restart-yabai() {
     # restart, unless I'm currently focused on the space where it's located.
     # Possibly move all windows to the focused space before restart, and then
     # reorganize after? That seems extreme.
-    notify '(1/5) Restarting yabai, please wait…'
+    notify 'Restarting yabai…'
     # brew services restart yabai
     yabai --restart-service
     # while ! pgrep yabai &>/dev/null; do
