@@ -20,7 +20,7 @@ shift + cmd - r: osascript -e 'tell application id "tracesOf.Uebersicht" to refr
 # Restart yabai to fix stuck/invisible windows.
 # shift + cmd - y: brew services restart yabai && ~/dotfiles/window-mgmt/cycle.script
 # shift + cmd - y: ~/dotfiles/window-mgmt/restart-yabai.sh
-shift + cmd - y: source ~/dotfiles/window-mgmt/_functions.sh && restart-yabai
+shift + cmd - y: source ~/dotfiles/window-mgmt/_functions.sh && restart-win-mgmt
 
 # Balance out all windows both horizontally and vertically.
 shift + cmd - b: yabai -m space --balance
