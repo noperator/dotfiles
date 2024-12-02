@@ -5,6 +5,7 @@
 .config/asciinema/
 .config/binwalk/
 .config/chrome-*
+.config/exercism/
 .config/gh/
 .config/github-copilot/
 .config/gtk-2.0/
