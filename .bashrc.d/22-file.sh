@@ -144,7 +144,7 @@ alias lf='ls -tr | tail -n 1'
 # For use with LLMs, etc.
 print-files() {
     find "$1" -type f | while read FILE; do
-        if file "$FILE" | grep -qE 'executable|data'; then
+        if file "$FILE" | grep -qE 'bit executable|image data|Git (pack|index)'; then
             continue
         fi
         echo -e "\`$FILE\`\n\n"
@@ -152,4 +152,15 @@ print-files() {
         cat "$FILE"
         echo -e '```\n\n'
     done
+}
+
+print-file() {
+    FILE="$1"
+    if file "$FILE" | grep -qE 'bit executable|image data|Git (pack|index)'; then
+        continue
+    fi
+    echo -e "\`$FILE\`\n\n"
+    echo -e '```'
+    cat "$FILE"
+    echo -e '```\n\n'
 }

@@ -85,7 +85,8 @@ case "$OSTYPE" in
     alias rc='launchctl stop homebrew.mxcl.chunkwm'
     alias wn='osascript -e "set Volume 2"; (play -nq -c 2 synth brownnoise band 5120 6144 &>/dev/null &)'
     switchresx() {
-        open "$HOME/Library/PreferencePanes/SwitchResX.prefPane/Contents/PlugIns/SwitchResX Control.app"
+        # open "$HOME/Library/PreferencePanes/SwitchResX.prefPane/Contents/PlugIns/SwitchResX Control.app"
+        open "$HOME/Library/PreferencePanes/SwitchResX.prefPane/Contents/PlugIns/SwitchResX Daemon.app"
     }
     ;;
 'linux-gnu'*)
@@ -239,3 +240,8 @@ _ssh_host_complete() {
     COMPREPLY=($(compgen -W "$hosts" -- "$cur_word"))
 }
 complete -F _ssh_host_complete ssh
+
+# Generate new ntfy.sh topic.
+gnt() {
+    echo "curl -d@/dev/stdin -H \"Authorization: Bearer $(op item get ntfy.sh --fields access_token)\" ntfy.sh/$(LC_ALL=C base64 </dev/urandom | tr -d '/+=' | head -c 40)"
+}
