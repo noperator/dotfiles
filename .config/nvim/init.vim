@@ -8,7 +8,13 @@ source ~/.vimrc
 call plug#begin(stdpath('data') . '/plugged')
 Plug 'neovim/nvim-lspconfig'                                " LSP core
 Plug 'glepnir/lspsaga.nvim'                                 " LSP UI features
-Plug 'hrsh7th/nvim-compe'                                   " Autocomplete
+" Plug 'hrsh7th/nvim-compe'                                   " Autocomplete
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " Syntax highlight
 " Plug 'nvim-treesitter/nvim-treesitter-refactor'             " Smart refactor
