@@ -11,7 +11,7 @@ LAYOUTS=$(
         $(
             jo -a \
                 $(
-                    jo display=1 spaces=8
+                    jo display=1 spaces=9
                 )
         ) \
         $(
@@ -77,7 +77,7 @@ move_window 'Signal' 2 0
 
 # If a second display is attached, then change the space offset and display
 # accordingly.
-if [[ $(jq <<<"$DISPLAYS" 'length') -ge 2 ]]; then
+if [[ $(jq <<<"$DISPLAYS" 'length') -eq 2 ]]; then
     DISPLAY_INDEX='1'
     SPACE_INDEX_OFFSET='0'
 else
@@ -85,4 +85,4 @@ else
     SPACE_INDEX_OFFSET='4'
 fi
 
-move_window 'Arc' 2 1
+move_window 'Arc' $((SPACE_INDEX_OFFSET + 2)) $DISPLAY_INDEX
