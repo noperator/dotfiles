@@ -40,5 +40,7 @@ dynamic_title = true
 x = 5
 y = 5
 
-[shell]
+[terminal]
+
+[terminal.shell]
 program = "/opt/homebrew/bin/bash"
