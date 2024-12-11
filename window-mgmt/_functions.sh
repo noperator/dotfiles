@@ -134,7 +134,7 @@ restart-win-mgmt() {
     done
     # sleep 1
     # notify 'Focusing spaces…'
-    notify '(2/5) Registering windows…'
+    notify 'Registering windows…'
     focus-spaces $(yabai -m query --spaces | jq -r 'map(.index) | sort | @tsv')
 
     # Finally, return back to the previously visible spaces.
@@ -145,6 +145,10 @@ restart-win-mgmt() {
     # notify 'Organizing windows…'
     # "$(dirname $0)/organize-windows.sh"
     ~/dotfiles/window-mgmt/organize-windows.sh
+
+    # Refresh Uebersicht widgets (to update space indicators).
+    osascript -e 'tell application id "tracesOf.Uebersicht" to refresh'
+    notify 'Refreshing widgets…'
 }
 
 move-window() {
