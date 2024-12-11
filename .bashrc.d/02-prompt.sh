@@ -124,12 +124,7 @@ if ! tty | grep -E 'tty[^s]' &>/dev/null; then
     PS2_SYM="$ELLIPSIS"
 
     # Remote server; prepend authority string.
-    # Checking for either the presence of an SSH-related environment variable,
-    # or the who utility output implying a non-local login. It seems that when
-    # an X server is running, `who -m` doesn't return any output, which we're
-    # handling in awk's END line below.
-    # - https://unix.stackexchange.com/a/12761
-    if [[ -v SSH_TTY ]] || who -m | awk '{if ($NF ~ /\([^:]*\)/) {exit 0} else {exit 1}} END {if (NR == 0) {exit 1}}'; then
+    if [[ "$REMOTE_SHELL" == 'true' ]]; then
         PS1="$AUTHORITY$PS1"
         PS1_CLR="${PS_CLR[RED]}"
     fi
@@ -186,8 +181,15 @@ export PS1="\$(venv_info)$PS1"
 
 # Finalize prompt variables.
 PS1="$PS1\n$PS1_CLR$PS1_SYM${PS_CLR[END]} "
-# PS1="$PS1 $PS1_CLR$PS1_SYM${PS_CLR[END]}\n"
 PS2="$PS2_CLR$PS2_SYM${PS_CLR[END]} "
+
+set_title() {
+    if [[ "$REMOTE_SHELL" == 'true' ]]; then
+        echo -ne "\e]2;${USER}@${HOSTNAME}:${PWD}\007"
+    else
+        echo -ne "\e]2;${PWD}\007"
+    fi
+}
 
 prompt_command() {
     # Set Alacritty title to current working directory, which is picked up when
@@ -195,7 +197,7 @@ prompt_command() {
     # prompt-related, but this is the best place to put it so the terminal
     # title is always kept up to date.
     # - https://github.com/alacritty/alacritty/issues/3588#issuecomment-613189338
-    echo -ne "\e]2;$PWD\007"
+    set_title
 
     LAST_EXIT_CODE="$?"
     LAST_LAST_HISTCMD="$LAST_HISTCMD"
