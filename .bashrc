@@ -54,13 +54,24 @@ done
 # - https://www.techjunkie.com/how-to-create-a-4gbs-ram-disk-in-mac-os-x/
 HOME_TMPDIR="$HOME/tmp"
 if [[ "$OSTYPE" == 'darwin'* ]]; then
-    if ! mount | grep -q "$HOME_TMPDIR"; then
-        mkdir -p "$HOME_TMPDIR"
-        SECTORS=$((4 * 1024 * 2048)) # 4 GB
-        DEV_FILE=$(hdiutil attach -nomount "ram://$SECTORS" | tr -d '[:space:]')
-        newfs_hfs "$DEV_FILE"
-        mount -t hfs "$DEV_FILE" "$HOME_TMPDIR"
-    fi
+	if ! mount | grep -q "$HOME_TMPDIR"; then
+		mkdir -p "$HOME_TMPDIR"
+		SECTORS=$((4 * 1024 * 2048)) # 4 GB
+		DEV_FILE=$(hdiutil attach -nomount "ram://$SECTORS" | tr -d '[:space:]')
+		newfs_hfs "$DEV_FILE"
+		mount -t hfs "$DEV_FILE" "$HOME_TMPDIR"
+	fi
+elif [[ "$OSTYPE" == 'linux-gnu' ]]; then
+	if dpkg -l | grep -q 'libpam-tmpdir'; then
+		if [[ -L "$HOME_TMPDIR" ]]; then
+			rm "$HOME_TMPDIR"
+		elif [[ -e "$HOME_TMPDIR" ]]; then
+			mv "$HOME_TMPDIR" "$HOME_TMPDIR.bu.$(date '+%s')"
+		fi
+		ln -s "/tmp/user/$UID" "$HOME_TMPDIR"
+	else
+		mkdir "$HOME_TMPDIR"
+	fi
 fi
 
 # Send downloads to the temporary directory.
