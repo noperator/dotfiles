@@ -4,11 +4,12 @@ export VISUAL='vim'
 export EDITOR="$VISUAL"
 export HISTCONTROL='ignorespace'
 export DIALOGRC="$HOME/.dialogrc"
-export SSH_AUTH_SOCK="$HOME/.ssh/ssh-agent.$HOSTNAME.sock"
+# export SSH_AUTH_SOCK="$HOME/.ssh/ssh-agent.$HOSTNAME.sock"
 export TMPDIR='/tmp/'
 export NPM_PACKAGES="$HOME/.npm-packages"
 export TIMEFORMAT='%3lR' # Only show elapsed time.
 # tabs -4                  # Set tab interval.
+export GPG_TTY=$(tty)
 
 # Homebrew stuff.
 export HOMEBREW_PREFIX="/opt/homebrew"
