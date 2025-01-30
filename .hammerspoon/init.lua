@@ -107,3 +107,59 @@ local spacesWatcher = hs.spaces.watcher.new(function()
     refreshDesktopToSpaceMapping()
 end)
 spacesWatcher:start()
+
+-- Reflect macOS notifications
+-- https://stackoverflow.com/a/76418565
+
+local notificationCenterBundleID = "com.apple.notificationcenterui"
+local notificationCenter = hs.axuielement.applicationElement(notificationCenterBundleID)
+assert(notificationCenter, "Unable to find Notification Center AX element")
+
+local processedNotificationIDs = {}
+local notificationSubroles = {
+  AXNotificationCenterAlert = true,
+  AXNotificationCenterBanner = true,
+}
+
+notificationObserver = hs.axuielement.observer
+  .new(notificationCenter:pid())
+  :callback(function(_, element)
+    if notificationCenter:asHSApplication():focusedWindow() then return end
+
+    if not notificationSubroles[element.AXSubrole] or processedNotificationIDs[element.AXIdentifier] then
+      return
+    end
+
+    processedNotificationIDs[element.AXIdentifier] = true
+
+    local staticTexts = hs.fnutils.imap(
+      hs.fnutils.ifilter(element, function(value)
+        return value.AXRole == "AXStaticText"
+      end),
+      function(value)
+        return value.AXValue
+      end
+    )
+
+    -- log.i("Notification: " .. hs.inspect(staticTexts))
+
+    local title, subtitle, message
+    if #staticTexts == 2 then
+      title, message = table.unpack(staticTexts)
+    elseif #staticTexts == 3 then
+      title, subtitle, message = table.unpack(staticTexts)
+    end
+
+    -- Show simple alert with notification content
+    local alertText = title or "Notification"
+    if subtitle then alertText = alertText .. "\n" .. subtitle end
+    if message then alertText = alertText .. "\n" .. message end
+
+    local style = hs.alert.defaultStyle  -- edit as needed
+    hs.alert.show(alertText, style, hs.screen.mainScreen(), 5)
+  end)
+  :addWatcher(
+    notificationCenter,
+    hs.axuielement.observer.notifications["layoutChanged"]
+  )
+  :start()
