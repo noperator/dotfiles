@@ -38,14 +38,12 @@ function moveFocusedWindowToSpace(desktopNum)
     local focusedWindow = hs.window.focusedWindow()
     if not focusedWindow then
         log.w("No focused window")
-        hs.alert.show("No focused window")
         return
     end
 
     local spaceID = getSpaceIDForDesktop(desktopNum)
     if not spaceID then
         log.w("Could not find space ID for desktop " .. desktopNum)
-        hs.alert.show("Invalid desktop number: " .. desktopNum)
         return
     end
 
@@ -55,8 +53,42 @@ function moveFocusedWindowToSpace(desktopNum)
         log.i("Moved window to desktop " .. desktopNum .. " (Space ID: " .. spaceID .. ")")
     else
         log.e("Failed to move window to desktop " .. desktopNum)
-        hs.alert.show("Failed to move window")
     end
+end
+
+-- Function to move all windows of an application to a specific Mission Control desktop number
+function moveAppWindowsToSpace(appName, desktopNum)
+    -- Get the target space ID
+    local spaceID = getSpaceIDForDesktop(desktopNum)
+    if not spaceID then
+        log.w("Invalid desktop number: " .. desktopNum)
+        return
+    end
+
+    -- Find all windows for the application using window filter
+    local windows = hs.window.filter.new(function(w)
+        return w:application():name() == appName
+    end):getWindows()
+
+    log.i("Found " .. #windows .. " windows for " .. appName)
+
+    if #windows == 0 then
+        log.w("No windows found for " .. appName)
+        return
+    end
+
+    -- Move each window to the target space
+    local successCount = 0
+    for i, window in ipairs(windows) do
+        log.i("Moving window " .. i .. ": " .. window:title())
+        if hs.spaces.moveWindowToSpace(window, spaceID) then
+            successCount = successCount + 1
+        else
+            log.e("Failed to move window: " .. window:title())
+        end
+    end
+
+    log.i("Successfully moved " .. successCount .. " out of " .. #windows .. " windows of " .. appName .. " to desktop " .. desktopNum)
 end
 
 -- Initialize the desktop to space mapping
