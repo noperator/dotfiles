@@ -66,6 +66,7 @@ case "$OSTYPE" in
     done
     ;;
 'darwin'*)
+    link .hammerspoon
     link .finicky.js
     link .skhdrc.yabai .skhdrc
     link .yabairc
