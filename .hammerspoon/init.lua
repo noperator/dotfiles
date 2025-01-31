@@ -121,6 +121,11 @@ local notificationSubroles = {
   AXNotificationCenterBanner = true,
 }
 
+-- Apps to ignore notifications from
+local ignoredApps = {
+    "Slack",
+}
+
 notificationObserver = hs.axuielement.observer
   .new(notificationCenter:pid())
   :callback(function(_, element)
@@ -129,6 +134,27 @@ notificationObserver = hs.axuielement.observer
     if not notificationSubroles[element.AXSubrole] or processedNotificationIDs[element.AXIdentifier] then
       return
     end
+
+    -- Get the app name from element description
+    local appName = element:attributeValue("AXDescription")
+    -- Check if app is in ignored list
+    for _, ignoredApp in ipairs(ignoredApps) do
+        if appName == ignoredApp then
+            log.i("Ignoring notification from: " .. appName)
+            return
+        end
+    end
+
+    -- Try to get the application name from the element's parent
+    local parent = element:attributeValue("AXParent")
+    if parent then
+        local description = parent:attributeValue("AXDescription")
+        log.i("Notification parent description: " .. (description or "nil"))
+    end
+
+    -- Also log the element's description
+    local elemDescription = element:attributeValue("AXDescription")
+    log.i("Notification element description: " .. (elemDescription or "nil"))
 
     processedNotificationIDs[element.AXIdentifier] = true
 
