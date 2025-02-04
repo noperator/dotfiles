@@ -58,3 +58,19 @@ alias dg='dig @8.8.8.8 google.com'
 sshc() {
     ssh -G "$1" | grep -E '^(user|hostname|port|identityfile) '
 }
+
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+
+    # Get the original macOS ssh-agent socket
+    SSH_AGENT_PID=$(pgrep -u "$USER" ssh-agent)
+    SSH_AUTH_SOCK=$(lsof -U | awk -v pid="$SSH_AGENT_PID" '$1 == "ssh-agent" && $2 == pid {print $NF}')
+
+    export SSH_AGENT_PID
+    export SSH_AUTH_SOCK
+
+    # Kill any other ssh-agents
+    for PID in $(pgrep -u "$USER" ssh-agent | tail -n +2); do
+        kill "$PID"
+    done
+
+fi
