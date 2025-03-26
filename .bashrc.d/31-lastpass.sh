@@ -8,12 +8,12 @@ export LPASS_HOME="$HOME/.lpass-home"
 alias lpt='lpass status; echo LPASS_HOME=$LPASS_HOME'
 
 # Create folders for separate LastPass accounts.
-for ACCOUNT in home work; do
-    DIR="$HOME/.lpass-$ACCOUNT"
-    if ! [[ -d "$DIR" ]]; then
-        mkdir "$DIR"
-    fi
-done
+# for ACCOUNT in home work; do
+#     DIR="$HOME/.lpass-$ACCOUNT"
+#     if ! [[ -d "$DIR" ]]; then
+#         mkdir "$DIR"
+#     fi
+# done
 
 # Switch LastPass account.
 lpsa() {
