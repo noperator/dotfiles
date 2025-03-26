@@ -245,3 +245,18 @@ complete -F _ssh_host_complete ssh
 gnt() {
     echo "curl -d@/dev/stdin -H \"Authorization: Bearer $(op item get ntfy.sh --fields access_token)\" ntfy.sh/$(LC_ALL=C base64 </dev/urandom | tr -d '/+=' | head -c 40)"
 }
+
+wayback() {
+    URL="$1"
+    wget "$URL"
+    curl -s "http://web.archive.org/cdx/search/cdx?url=$URL&output=json" |
+        jq -r '.[1:] | .[] | .[1]' |
+        xargs -I {} -P 8 wget -O {}.html -nv "https://web.archive.org/web/{}/$URL"
+}
+
+# When GPG doesn't recognize my YubiKey's smart card serial number.
+restart-gpg-agent() {
+    gpgconf --kill gpg-agent
+    echo "UPDATESTARTUPTTY" | gpg-connect-agent
+    export GPG_TTY=$(tty)
+}
