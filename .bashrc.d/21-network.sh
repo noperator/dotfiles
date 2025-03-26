@@ -65,14 +65,17 @@ sshc() {
 if [[ "$OSTYPE" == 'darwin'* ]]; then
 
     # Get the original macOS ssh-agent socket
-    SSH_AGENT_PID=$(pgrep -u "$USER" ssh-agent)
-    SSH_AUTH_SOCK=$(lsof -U | awk -v pid="$SSH_AGENT_PID" '$1 == "ssh-agent" && $2 == pid {print $NF}')
-
-    export SSH_AGENT_PID
-    export SSH_AUTH_SOCK
+    SSH_AGENT_PID=$(pgrep -u "$USER" ssh-agent | sort -n | head -n 1)
+    if [[ -z "$SSH_AGENT_PID" ]]; then
+        eval "$(ssh-agent -s)" >/dev/null
+    else
+        SSH_AUTH_SOCK=$(lsof -U | awk -v pid="$SSH_AGENT_PID" '$1 == "ssh-agent" && $2 == pid {print $NF}')
+        export SSH_AGENT_PID
+        export SSH_AUTH_SOCK
+    fi
 
     # Kill any other ssh-agents
-    for PID in $(pgrep -u "$USER" ssh-agent | tail -n +2); do
+    for PID in $(pgrep -u "$USER" ssh-agent | sort -n | tail -n +2); do
         kill "$PID"
     done
 
