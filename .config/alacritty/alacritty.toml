@@ -44,3 +44,6 @@ y = 5
 
 [terminal.shell]
 program = "/opt/homebrew/bin/bash"
+
+[selection]
+save_to_clipboard = true
