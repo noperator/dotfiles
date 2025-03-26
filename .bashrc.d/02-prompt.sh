@@ -6,6 +6,11 @@ ELLIPSIS=$(printf '\xe2\x80\xa6')
 # Print color-coded, abbreviated Git status and branch.
 git_info() {
 
+    # Running `git status` over NFS is slooow.
+    if mount | awk -v pwd="$PWD" '{if ($3 == pwd) {print $4}}' | grep -q nfs; then
+        return
+    fi
+
     # Bail if this isn't a git repo.
     if git status |& grep -i '^fatal: not a git repo' &>/dev/null; then
         false
