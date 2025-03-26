@@ -158,7 +158,8 @@ i() {
 }
 
 # alias bat='batcat'
-alias batp='bat --style=plain'
+# alias batp='bat --style=plain'
+alias bat='bat -Pp'
 alias lf='ls -tr | tail -n 1'
 
 # For use with LLMs, etc.
