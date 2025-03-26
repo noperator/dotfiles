@@ -45,17 +45,17 @@ diff-layout "$LAYOUTS"
 # Make sure some apps are actually showing/visible.
 # ----------------------------------------------
 
-notify 'Showing windows…'
-VIS=$(get-visible-spaces)
-for APP in \
-    "Slack" \
-    "Microsoft Outlook" \
-    "Google Chrome" \
-    "Microsoft Teams"; do
-    show-app "$APP"
-done
-sleep .4
-focus-spaces "$VIS"
+# notify 'Showing windows…'
+# VIS=$(get-visible-spaces)
+# for APP in \
+#     "Slack" \
+#     "Microsoft Outlook" \
+#     "Google Chrome" \
+#     "Microsoft Teams"; do
+#     show-app "$APP"
+# done
+# sleep .4
+# focus-spaces "$VIS"
 
 # ----------------------------------------------
 # Move windows to correct spaces.
