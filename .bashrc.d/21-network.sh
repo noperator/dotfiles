@@ -28,6 +28,9 @@ if [[ "$OSTYPE" == 'linux-gnu'* ]]; then
     alias ua='ufw allow'
     alias ud='ufw delete'
 
+    # delete rules by regex match
+    # us | grep -E '<MATCH>' | grep -oE '\[[ 0-9]+\]' | tr -d '[] ' | sort -rn | while read NUM; do yes | ud "$NUM"; done
+
     # Misc.
     pgw() { ping $(ip route | awk '$1 == "default" {print $3}'); }
     bt() {
