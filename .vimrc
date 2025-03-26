@@ -150,13 +150,19 @@ endif
 
 set mouse=
 
-augroup StripPromptString
+augroup CleanNotes
     autocmd!
-    autocmd BufReadPost,BufWritePre notes.txt call StripPromptString()
+    autocmd BufReadPost,BufWritePost notes.{txt,md} call CleanNotes()
 augroup END
 
-function! StripPromptString()
+function! CleanNotes()
     let l:save_cursor = getpos(".")
+    
+    " Strip prompt string
     silent! %s/^𝄢 //e
+    
+    " Run cat -s to squeeze multiple blank lines
+    silent! %!cat -s
+    
     call setpos('.', l:save_cursor)
 endfunction
