@@ -70,7 +70,7 @@ elif [[ "$OSTYPE" == 'linux-gnu' ]]; then
 		fi
 		ln -s "/tmp/user/$UID" "$HOME_TMPDIR"
 	else
-		mkdir "$HOME_TMPDIR"
+		mkdir -p "$HOME_TMPDIR"
 	fi
 fi
 
