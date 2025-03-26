@@ -46,7 +46,7 @@ require("completion")
 require("lsp")
 require("treesitter")
 require'lspconfig'.gopls.setup{}
-require'lspconfig'.tsserver.setup {}
+require'lspconfig'.ts_ls.setup {}
 EOF
 
 " LSP mappings, borrowed from:
