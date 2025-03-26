@@ -2,6 +2,7 @@
 
 export VISUAL='vim'
 export EDITOR="$VISUAL"
+export SYSTEMD_EDITOR="$VISUAL"
 export HISTCONTROL='ignorespace'
 export DIALOGRC="$HOME/.dialogrc"
 # export SSH_AUTH_SOCK="$HOME/.ssh/ssh-agent.$HOSTNAME.sock"
@@ -29,6 +30,7 @@ for DIR in \
     "$NPM_PACKAGES/bin" \
     "$HOME/kitty/kitty/launcher" \
     "$HOME/.bfrtk/bin" \
+    "$HOME/.codeium/windsurf/bin" \
     /usr/local/texlive/2024/bin/universal-darwin/ \
     /usr/local/go/bin \
     /usr/local/Cellar/python\@3.9/3.9.0/bin \
