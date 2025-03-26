@@ -13,7 +13,7 @@ k)
     fi
     ;;
 l)
-    if [[ $(yabai -m query --windows --window | jq -r '.app') =~ ^(Cursor)$ ]]; then
+    if [[ $(yabai -m query --windows --window | jq -r '.app') =~ ^(Cursor|Windsurf)$ ]]; then
         skhd --key 'cmd + ctrl - t'
         skhd --key 'cmd - l'
         skhd --key 'cmd + ctrl - t'
