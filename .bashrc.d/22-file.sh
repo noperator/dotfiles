@@ -31,8 +31,8 @@ if which fd &>/dev/null; then
             column -t -s '@' |
             cut -c -"$COLUMNS"
     }
-    ft() { ff "$@" | sort -n; }
-    fs() { ff "$@" | sort -n -k 2; }
+    # ft() { ff "$@" | sort -n; }
+    # fs() { ff "$@" | sort -n -k 2; }
 else
     f() { find . -iname '*'"$@"'*'; }
     ff() {
@@ -43,9 +43,29 @@ else
             column -t -s '@' |
             cut -c -"$COLUMNS"
     }
-    ft() { ff "$@" | sort -n; }
-    fs() { ff "$@" | sort -n -k 2; }
+    # ft() { ff "$@" | sort -n; }
+    # fs() { ff "$@" | sort -n -k 2; }
 fi
+
+ft() {
+    find "$@" ! -empty -type f -printf '%.19T+#%s#%p\n' 2>/dev/null |
+        while read LINE; do
+            printf '%q\n' "$LINE"
+        done |
+        column -t -s '#' |
+        sort -V |
+        cut -c -"$COLUMNS"
+}
+
+fs() {
+    find "$@" ! -empty -type f -printf '%.19T+#%s#%p\n' 2>/dev/null |
+        while read LINE; do
+            printf '%q\n' "$LINE"
+        done |
+        column -t -s '#' |
+        sort -nk2 |
+        cut -c -"$COLUMNS"
+}
 
 # Reduce ripgrep's level of "smart" searching. Two -u flags won’t respect
 # .gitignore (etc.) files and will search hidden files and directories. Also, use smart case.
