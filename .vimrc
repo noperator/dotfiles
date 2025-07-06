@@ -17,8 +17,10 @@ autocmd FileType python     setl ts=4 sts=4 sw=4 fdm=indent
 autocmd FileType tex        setl ts=2 sts=0 sw=2
 
 " Insert timestamp.
-nmap <F5> i<C-R>=substitute(system('date -u +"%FT%TZ // "'),'[\r\n]*$','','')<CR><Esc><CR>
-imap <F5> <C-R>=substitute(system('date -u +"%FT%TZ // "'),'[\r\n]*$','','')<CR>
+" nmap <F5> i<C-R>=substitute(system('date -u +"%FT%TZ // "'),'[\r\n]*$','','')<CR><Esc><CR>
+" imap <F5> <C-R>=substitute(system('date -u +"%FT%TZ // "'),'[\r\n]*$','','')<CR>
+nmap <F5> i<C-R>=substitute(system('date -u +"# %FT%TZ — "'),'[\r\n]*$','','')<CR><Esc><CR>
+imap <F5> <C-R>=substitute(system('date -u +"# %FT%TZ — "'),'[\r\n]*$','','')<CR>
 
 " Insert collapsible Markdown and place cursor at summary.
 nmap cm o<details><summary></summary><CR><p><CR><CR>```<CR>```<CR><CR></p><CR></details><CR><Esc>8k18li
