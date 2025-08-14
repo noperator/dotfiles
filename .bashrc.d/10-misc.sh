@@ -260,3 +260,8 @@ restart-gpg-agent() {
     echo "UPDATESTARTUPTTY" | gpg-connect-agent
     export GPG_TTY=$(tty)
 }
+
+yknotify-restart() {
+    launchctl stop com.user.yknotify
+    launchctl start com.user.yknotify
+}

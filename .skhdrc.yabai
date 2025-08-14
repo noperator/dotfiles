@@ -31,7 +31,7 @@ shift + cmd - b: yabai -m space --balance
 # shift + cmd - c: source ~/dotfiles/window-mgmt/_functions.sh && focus-spaces 2 4 8
 # TODO: make this into a script, like organize-windows.sh
 # shift + cmd - c: source ~/dotfiles/window-mgmt/_functions.sh && focus-spaces $(yabai -m query --spaces | jq -r --argjson spaces $(jo -a $(jo display=1 index=2) $(jo display=2 index=4) $(jo display=3 index=8)) 'map({display, index} | select(. as $space | $spaces | index($space)) | .index) | join(" ")')
-shift + cmd - c: source ~/dotfiles/window-mgmt/_functions.sh && focus-spaces $(yabai -m query --spaces | jq -r --argjson spaces $(jo -a $(jo display=1 index=4) $(jo display=2 index=9)) 'map({display, index} | select(. as $space | $spaces | index($space)) | .index) | join(" ")') && ~/dotfiles/window-mgmt/gray.script
+# shift + cmd - c: source ~/dotfiles/window-mgmt/_functions.sh && focus-spaces $(yabai -m query --spaces | jq -r --argjson spaces $(jo -a $(jo display=1 index=4) $(jo display=2 index=9)) 'map({display, index} | select(. as $space | $spaces | index($space)) | .index) | join(" ")') && ~/dotfiles/window-mgmt/gray.script
 
 # Dezoom
 shift + cmd - z: source ~/dotfiles/window-mgmt/_functions.sh && dezoom
@@ -92,7 +92,10 @@ cmd + alt - n : yabai -m space --create && \
                 yabai -m space --focus "${index}"
 
 # Destroy space.
-cmd + alt - w : yabai -m space --destroy
+# cmd + alt - w : yabai -m space --destroy
+
+# GrandOrgue.
+cmd + alt - g : source ~/.bashrc.extra && grandorgue
 
 # Fast focus space.
 # cmd + alt - x : yabai -m space --focus recent

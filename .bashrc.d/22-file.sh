@@ -48,21 +48,23 @@ else
 fi
 
 ft() {
-    find "$@" ! -empty -type f -printf '%.19T+#%s#%p\n' 2>/dev/null |
+    find "$@" ! -empty -type f -printf '%.19T+;%s;%p\n' 2>/dev/null |
         while read LINE; do
             printf '%q\n' "$LINE"
         done |
-        column -t -s '#' |
+        sed -E 's/\\;/;/g' |
+        column -t -s ';' |
         sort -V |
         cut -c -"$COLUMNS"
 }
 
 fs() {
-    find "$@" ! -empty -type f -printf '%.19T+#%s#%p\n' 2>/dev/null |
+    find "$@" ! -empty -type f -printf '%.19T+;%s;%p\n' 2>/dev/null |
         while read LINE; do
             printf '%q\n' "$LINE"
         done |
-        column -t -s '#' |
+        sed -E 's/\\;/;/g' |
+        column -t -s ';' |
         sort -nk2 |
         cut -c -"$COLUMNS"
 }
@@ -184,4 +186,8 @@ print-file() {
     echo -e '```'
     cat "$FILE"
     echo -e '```\n\n'
+}
+
+bak() {
+    mv -v "$1" "$1.$(date +%Y%m%d-%H%M%S).bak"
 }

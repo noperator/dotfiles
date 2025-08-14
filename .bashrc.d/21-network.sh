@@ -80,3 +80,9 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     done
 
 fi
+
+# sfnl port host
+sfnl() {
+    ssh -fNL "127.0.0.1:$1:127.0.0.1:$1" "$2"
+    echo "http://127.0.0.1:$1"
+}

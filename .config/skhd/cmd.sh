@@ -8,6 +8,10 @@ k)
         skhd --key 'cmd + ctrl - t'
         skhd --key 'cmd - k'
         skhd --key 'cmd + ctrl - t'
+    elif [[ $(yabai -m query --windows --window | jq -r '.app') == 'Google Chrome' ]] && [[ $(yabai -m query --windows --window | jq -r '.title') =~ Vikunja ]]; then
+        skhd --key 'cmd + ctrl - t'
+        skhd --key 'cmd - k'
+        skhd --key 'cmd + ctrl - t'
     else
         yabai -m window --focus north
     fi

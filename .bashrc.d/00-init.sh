@@ -31,7 +31,7 @@ for DIR in \
     "$HOME/kitty/kitty/launcher" \
     "$HOME/.bfrtk/bin" \
     "$HOME/.codeium/windsurf/bin" \
-    /usr/local/texlive/2024/bin/universal-darwin/ \
+    /usr/local/texlive/2025/bin/universal-darwin \
     /usr/local/go/bin \
     /usr/local/Cellar/python\@3.9/3.9.0/bin \
     /usr/local/Cellar/python\@3.9/3.9.2_1/bin \

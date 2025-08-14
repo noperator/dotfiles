@@ -31,6 +31,7 @@ Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install --frozen-lockfile --production',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html'] }
 Plug 'github/copilot.vim'
+Plug 'preservim/vim-markdown'
 " require 'lspconfig'
 
 call plug#end()
