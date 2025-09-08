@@ -32,5 +32,10 @@ PATH="/opt/homebrew/bin:$PATH"
 #     jo spaces=:/dev/stdin displays="$(yabai -m query --displays)"
 # jo spaces="$(yabai -m query --spaces |
 #     jq --argjson teams_windows $TEAMS_WINDOWS 'del(.[].windows[] | select(. | IN($teams_windows[])))')" displays="$(yabai -m query --displays)"
-{ yabai -m query --spaces |
-    jo spaces=:/dev/stdin displays="$(yabai -m query --displays)"; } 2>/dev/null
+# { yabai -m query --spaces |
+#     jo spaces=:/dev/stdin displays="$(yabai -m query --displays)"; } 2>/dev/null
+
+{
+    aerospace list-workspaces --all --json --format '%{workspace} %{workspace-is-focused} %{workspace-is-visible} %{monitor-id} %{monitor-appkit-nsscreen-screens-id} %{monitor-name}'
+    aerospace list-windows --all --json --format '%{window-id} %{window-title} %{window-is-fullscreen} %{app-bundle-id} %{app-name} %{app-pid} %{app-exec-path} %{app-bundle-path} %{workspace} %{workspace-is-focused} %{workspace-is-visible} %{monitor-id} %{monitor-appkit-nsscreen-screens-id} %{monitor-name}' | jq 'group_by(.workspace) | map({workspace: .[0].workspace, windows: map(.)})'
+} | jq -s 'add | group_by(.workspace) | map(add)' | jo spaces=:/dev/stdin

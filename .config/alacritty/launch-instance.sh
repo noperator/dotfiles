@@ -33,15 +33,16 @@ case "$OSTYPE" in
 'darwin'*)
     PATH="/Applications/Alacritty.app/Contents/MacOS/:$PATH"
     # Get display info before spawning
-    CURSOR_DISPLAY=$(yabai -m query --displays --display mouse | jq '.index')
-    FOCUSED_WINDOW=$(yabai -m query --windows --window)
-    WINDOW_DISPLAY=$(echo "$FOCUSED_WINDOW" | jq '.display')
-    IS_ALACRITTY=$(echo "$FOCUSED_WINDOW" | jq '.app == "Alacritty"')
+    # CURSOR_DISPLAY=$(yabai -m query --displays --display mouse | jq '.index')
+    # FOCUSED_WINDOW=$(yabai -m query --windows --window)
+    FOCUSED_WINDOW=$(aerospace list-windows --focused --json | jq .[0])
+    # WINDOW_DISPLAY=$(echo "$FOCUSED_WINDOW" | jq '.display')
+    IS_ALACRITTY=$(echo "$FOCUSED_WINDOW" | jq '.["app-name"] == "Alacritty"')
 
     if pgrep -aq alacritty; then
         OPTS='msg create-window'
         if [[ "$IS_ALACRITTY" == "true" ]]; then
-            WINDOW_TITLE=$(echo "$FOCUSED_WINDOW" | jq -r '.title')
+            WINDOW_TITLE=$(echo "$FOCUSED_WINDOW" | jq -r '.["window-title"]')
 
             # Try to parse as SSH session first
             SSH_CMD=$(parse_ssh_title "$WINDOW_TITLE")
@@ -60,14 +61,14 @@ case "$OSTYPE" in
         fi
     fi
 
-    yabai -m signal --add \
-        action="yabai -m window --focus \$YABAI_WINDOW_ID; \
-                yabai -m window --display $CURSOR_DISPLAY; \
-                yabai -m window --focus \$YABAI_WINDOW_ID; \
-                yabai -m signal --remove temp_move_alacritty" \
-        app=Alacritty \
-        event=window_created \
-        label=temp_move_alacritty
+    # yabai -m signal --add \
+    #     action="yabai -m window --focus \$YABAI_WINDOW_ID; \
+    #             yabai -m window --display $CURSOR_DISPLAY; \
+    #             yabai -m window --focus \$YABAI_WINDOW_ID; \
+    #             yabai -m signal --remove temp_move_alacritty" \
+    #     app=Alacritty \
+    #     event=window_created \
+    #     label=temp_move_alacritty
     ;;
 
 'linux-gnu'*)

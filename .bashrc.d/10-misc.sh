@@ -265,3 +265,7 @@ yknotify-restart() {
     launchctl stop com.user.yknotify
     launchctl start com.user.yknotify
 }
+
+vae() {
+    vim "$HOME/.config/aerospace/aerospace.toml"
+}
