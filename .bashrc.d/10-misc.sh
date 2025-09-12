@@ -223,16 +223,36 @@ fad() {
         head -n 6
 }
 
-alias tl='tmux ls'
-alias tn='tmux new -s'
-alias ta='tmux attach -t'
-_tmux_session_complete() {
-    local cur_word="${COMP_WORDS[COMP_CWORD]}"
-    local sessions=$(tmux list-sessions -F "#{session_name}" 2>/dev/null)
+# shopt -s huponexit
+if which shpool &>/dev/null; then
+    alias tl='shpool list'
+    tn() {
+        local sess_name="${1:-shp-$(date +%s)}"
+        local temp_rc=$(mktemp)
+        echo "source ~/.bashrc; cd ${PWD@Q}; rm -f $temp_rc" >"$temp_rc"
+        shpool attach "$sess_name" -c "bash --rcfile $temp_rc"
+    }
 
-    COMPREPLY=($(compgen -W "$sessions" -- "$cur_word"))
-}
-complete -F _tmux_session_complete ta
+    alias ta='tn'
+    _shpool_session_complete() {
+        local cur_word="${COMP_WORDS[COMP_CWORD]}"
+        local sessions=$(shpool list | tail -n +2 | awk '{print $1}' 2>/dev/null)
+
+        COMPREPLY=($(compgen -W "$sessions" -- "$cur_word"))
+    }
+    complete -F _shpool_session_complete ta
+else
+    alias tl='tmux ls'
+    alias tn='tmux new -s'
+    alias ta='tmux attach -t'
+    _tmux_session_complete() {
+        local cur_word="${COMP_WORDS[COMP_CWORD]}"
+        local sessions=$(tmux list-sessions -F "#{session_name}" 2>/dev/null)
+
+        COMPREPLY=($(compgen -W "$sessions" -- "$cur_word"))
+    }
+    complete -F _tmux_session_complete ta
+fi
 
 _ssh_host_complete() {
     local cur_word="${COMP_WORDS[COMP_CWORD]}"
