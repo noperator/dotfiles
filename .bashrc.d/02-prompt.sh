@@ -11,7 +11,7 @@ git_info() {
         false
         return
     else
-        echo -n ' '
+        echo -ne "${CLR[BBL]}#${CLR[RED]}"
     fi
 
     # Force Git to preserve colorized output throughout the pipeline. For some
@@ -101,16 +101,25 @@ git_info() {
             sort -r | uniq -c | awk -v "yel=${CLR[YEL]}" -v "end=${CLR[END]}" '{printf $2 yel $1 end}'
         ) |
         tr '\n' ':' |
-        perl -pe "s/:$(sed <<<${CLR[END]} 's/\[/\\[/'):/:/g; s/:*$//"
+        perl -pe "s/:$(sed <<<${CLR[END]} 's/\[/\\[/'):/:/g; s/:*$//" |
+        sed -E "s/:/${CLR[BBL]}:${CLR[END]}/g"
 }
 
 # Print abbreviated working directory.
 pwd_abbr() { sed <<<"$PWD" -E "s|$HOME|~|; s|(\.?[^/])[^/]*/|\1/|g"; }
 
+shpool_count() {
+    local count=$(shpool list 2>/dev/null | tail -n +2 | wc -l)
+    if [[ "$count" -gt 0 ]]; then
+        echo -ne "${CLR[BBL]}:${CLR[END]}${CLR[BLU]}$count${CLR[END]}"
+    fi
+}
+
 PWD_ABBR="${PS_CLR[YEL]}\$(pwd_abbr)${PS_CLR[END]}"
 GIT_INFO="\$(git_info)"
-PS1="$PWD_ABBR$GIT_INFO"
-AUTHORITY="${PS_CLR[CYN]}\u${PS_CLR[END]}@${PS_CLR[MAG]}\h${PS_CLR[END]}:"
+SHPOOL_INFO="\$([ -n \"\$SHPOOL_SESSION_NAME\" ] && echo \"${PS_CLR[BBL]}?${PS_CLR[BLU]}\$SHPOOL_SESSION_NAME${PS_CLR[END]}\")"
+PS1="$PWD_ABBR$SHPOOL_INFO$GIT_INFO"
+AUTHORITY="${PS_CLR[CYN]}\u${PS_CLR[BBL]}@${PS_CLR[MAG]}\h\$(shpool_count)${PS_CLR[BBL]}/"
 PS1_CLR="${PS_CLR[CYN]}"
 PS2_CLR="${PS_CLR[CYN]}"
 PS1_SYM='$'
@@ -127,6 +136,10 @@ if ! tty | grep -E 'tty[^s]' &>/dev/null; then
     if [[ "$REMOTE_SHELL" == 'true' ]]; then
         PS1="$AUTHORITY$PS1"
         PS1_CLR="${PS_CLR[RED]}"
+    fi
+
+    if [[ -n "$SHPOOL_SESSION_NAME" ]]; then
+        PS1_CLR="${PS_CLR[YEL]}"
     fi
 fi
 
