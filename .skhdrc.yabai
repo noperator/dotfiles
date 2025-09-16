@@ -1,5 +1,6 @@
 # Open terminal.
 cmd - return : ~/.config/alacritty/launch-instance.sh
+ctrl + cmd - return : ~/.config/alacritty/launch-instance.sh local
 
 # Kill terminal.
 shift + alt - q : /usr/bin/pkill -9 -afi kitty
@@ -15,7 +16,7 @@ shift + cmd - u: pkill -f Übersicht.app && open -a Übersicht.app
 
 # Refresh all Übersicht widgets.
 # https://github.com/felixhageloh/uebersicht#scripting-support
-shift + cmd - r: osascript -e 'tell application id "tracesOf.Uebersicht" to refresh'
+shift + cmd - r: { osascript -e 'tell application id "tracesOf.Uebersicht" to refresh'; hs -c 'hs.reload()'; }
 
 # Restart yabai to fix stuck/invisible windows.
 # shift + cmd - y: brew services restart yabai && ~/dotfiles/window-mgmt/cycle.script
@@ -30,7 +31,7 @@ shift + cmd - b: yabai -m space --balance
 # shift + cmd - c: source ~/dotfiles/window-mgmt/_functions.sh && focus-spaces 2 4 8
 # TODO: make this into a script, like organize-windows.sh
 # shift + cmd - c: source ~/dotfiles/window-mgmt/_functions.sh && focus-spaces $(yabai -m query --spaces | jq -r --argjson spaces $(jo -a $(jo display=1 index=2) $(jo display=2 index=4) $(jo display=3 index=8)) 'map({display, index} | select(. as $space | $spaces | index($space)) | .index) | join(" ")')
-shift + cmd - c: source ~/dotfiles/window-mgmt/_functions.sh && focus-spaces $(yabai -m query --spaces | jq -r --argjson spaces $(jo -a $(jo display=1 index=4) $(jo display=2 index=9)) 'map({display, index} | select(. as $space | $spaces | index($space)) | .index) | join(" ")') && ~/dotfiles/window-mgmt/gray.script
+# shift + cmd - c: source ~/dotfiles/window-mgmt/_functions.sh && focus-spaces $(yabai -m query --spaces | jq -r --argjson spaces $(jo -a $(jo display=1 index=4) $(jo display=2 index=9)) 'map({display, index} | select(. as $space | $spaces | index($space)) | .index) | join(" ")') && ~/dotfiles/window-mgmt/gray.script
 
 # Dezoom
 shift + cmd - z: source ~/dotfiles/window-mgmt/_functions.sh && dezoom
@@ -91,7 +92,10 @@ cmd + alt - n : yabai -m space --create && \
                 yabai -m space --focus "${index}"
 
 # Destroy space.
-cmd + alt - w : yabai -m space --destroy
+# cmd + alt - w : yabai -m space --destroy
+
+# GrandOrgue.
+cmd + alt - g : source ~/.bashrc.extra && grandorgue
 
 # Fast focus space.
 # cmd + alt - x : yabai -m space --focus recent
@@ -112,16 +116,16 @@ cmd + alt - w : yabai -m space --destroy
 # shift + cmd - x : yabai -m window --space recent; yabai -m space --focus recent
 # shift + cmd - z : yabai -m window --space prev; yabai -m space --focus prev
 # shift + cmd - c : yabai -m window --space next; yabai -m space --focus next
-shift + cmd - 1 : yabai -m window --space  1; # yabai -m space --focus 1
-shift + cmd - 2 : yabai -m window --space  2; # yabai -m space --focus 2
-shift + cmd - 3 : yabai -m window --space  3; # yabai -m space --focus 3
-shift + cmd - 4 : yabai -m window --space  4; # yabai -m space --focus 4
-shift + cmd - 5 : yabai -m window --space  5; # yabai -m space --focus 5
-shift + cmd - 6 : yabai -m window --space  6; # yabai -m space --focus 6
-shift + cmd - 7 : yabai -m window --space  7; # yabai -m space --focus 7
-shift + cmd - 8 : yabai -m window --space  8; # yabai -m space --focus 8
-shift + cmd - 9 : yabai -m window --space  9; # yabai -m space --focus 9
-shift + cmd - 0 : yabai -m window --space 10; # yabai -m space --focus 10
+shift + cmd - 1 : hs -c "moveFocusedWindowToSpace(1)" # yabai -m window --space  1; # yabai -m space --focus 1
+shift + cmd - 2 : hs -c "moveFocusedWindowToSpace(2)" # yabai -m window --space  2; # yabai -m space --focus 2
+shift + cmd - 3 : hs -c "moveFocusedWindowToSpace(3)" # yabai -m window --space  3; # yabai -m space --focus 3
+shift + cmd - 4 : hs -c "moveFocusedWindowToSpace(4)" # yabai -m window --space  4; # yabai -m space --focus 4
+shift + cmd - 5 : hs -c "moveFocusedWindowToSpace(5)" # yabai -m window --space  5; # yabai -m space --focus 5
+shift + cmd - 6 : hs -c "moveFocusedWindowToSpace(6)" # yabai -m window --space  6; # yabai -m space --focus 6
+shift + cmd - 7 : hs -c "moveFocusedWindowToSpace(7)" # yabai -m window --space  7; # yabai -m space --focus 7
+shift + cmd - 8 : hs -c "moveFocusedWindowToSpace(8)" # yabai -m window --space  8; # yabai -m space --focus 8
+shift + cmd - 9 : hs -c "moveFocusedWindowToSpace(9)" # yabai -m window --space  9; # yabai -m space --focus 9
+# shift + cmd - 0 : yabai -m window --space 10; # yabai -m space --focus 10
 
 # Focus monitor.
 ctrl + alt - x  : yabai -m display --focus recent

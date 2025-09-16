@@ -1,11 +1,5 @@
 #!/usr/bin/osascript
 
-# If System Preferences is already open in a different space, then the "reveal
-# anchor" command won't work. So, we first kill it, and it'll reopen in this
-# space (but not activate (i.e., become visible)) with the "reveal anchor"
-# command. Small cost in time delay but it saves me from having to research the
-# proper way to get around the space issue :shrug:
-
 on run argv
 
     set toggle to false
@@ -16,20 +10,13 @@ on run argv
         end if
     end if
 
-    tell application "System Preferences"
-        quit
-        delay 0.25
-        reveal anchor "Seeing_Display" of pane id "com.apple.preference.universalaccess"
-        delay 0.25
-    end tell
-    
-    tell application "System Events"
-        tell tab group 1 of group 1 of window "Accessibility" of application process "System Preferences"
-            click radio button "Color Filters"
-            if toggle or value of checkbox "Enable Color Filters" is 0 then
-                click checkbox "Enable Color Filters"
-            end if
-        end tell
+    tell application "SwitchResX Daemon"
+    	activate
+        if toggle then
+            set gray levels to not (gray levels)
+        else
+            set gray levels to true
+        end if
     end tell
 
 end run

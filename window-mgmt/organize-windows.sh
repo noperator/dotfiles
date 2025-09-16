@@ -45,17 +45,17 @@ diff-layout "$LAYOUTS"
 # Make sure some apps are actually showing/visible.
 # ----------------------------------------------
 
-notify 'Showing windows…'
-VIS=$(get-visible-spaces)
-for APP in \
-    "Slack" \
-    "Microsoft Outlook" \
-    "Google Chrome" \
-    "Microsoft Teams"; do
-    show-app "$APP"
-done
-sleep .4
-focus-spaces "$VIS"
+# notify 'Showing windows…'
+# VIS=$(get-visible-spaces)
+# for APP in \
+#     "Slack" \
+#     "Microsoft Outlook" \
+#     "Google Chrome" \
+#     "Microsoft Teams"; do
+#     show-app "$APP"
+# done
+# sleep .4
+# focus-spaces "$VIS"
 
 # ----------------------------------------------
 # Move windows to correct spaces.
@@ -70,10 +70,8 @@ export WINDOWS=$(get_windows)
 # further notifications).
 notify 'Organizing windows…'
 
-move_window 'Microsoft Outlook' 0 0
-move_window 'Microsoft Teams' 1 0
-move_window 'Slack' 2 0
-move_window 'Signal' 2 0
+hs -c 'moveAppWindowsToSpace("Slack", 2)'
+hs -c 'moveAppWindowsToSpace("Signal", 2)'
 
 # If a second display is attached, then change the space offset and display
 # accordingly.
@@ -85,4 +83,5 @@ else
     SPACE_INDEX_OFFSET='4'
 fi
 
-move_window 'Arc' $((SPACE_INDEX_OFFSET + 2)) $DISPLAY_INDEX
+# move_window 'Arc' $((SPACE_INDEX_OFFSET + 2)) $DISPLAY_INDEX
+hs -c 'moveAppWindowsToSpace("Arc", 7)'

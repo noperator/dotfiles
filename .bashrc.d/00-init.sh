@@ -5,11 +5,14 @@ export EDITOR="$VISUAL"
 export SYSTEMD_EDITOR="$VISUAL"
 export HISTCONTROL='ignorespace'
 export DIALOGRC="$HOME/.dialogrc"
-export SSH_AUTH_SOCK="$HOME/.ssh/ssh-agent.$HOSTNAME.sock"
+if [[ "$REMOTE_SHELL" == 'false' ]]; then
+    export SSH_AUTH_SOCK="$HOME/.ssh/ssh-agent.$HOSTNAME.sock"
+fi
 export TMPDIR='/tmp/'
 export NPM_PACKAGES="$HOME/.npm-packages"
 export TIMEFORMAT='%3lR' # Only show elapsed time.
 # tabs -4                  # Set tab interval.
+export GPG_TTY=$(tty)
 
 # Homebrew stuff.
 export HOMEBREW_PREFIX="/opt/homebrew"
@@ -34,7 +37,8 @@ for DIR in \
     "$NPM_PACKAGES/bin" \
     "$HOME/kitty/kitty/launcher" \
     "$HOME/.bfrtk/bin" \
-    /usr/local/texlive/2024/bin/universal-darwin/ \
+    "$HOME/.codeium/windsurf/bin" \
+    /usr/local/texlive/2025/bin/universal-darwin \
     /usr/local/go/bin \
     /usr/local/Cellar/python\@3.9/3.9.0/bin \
     /usr/local/Cellar/python\@3.9/3.9.2_1/bin \

@@ -10,11 +10,11 @@ removeDuplicates: (ar) ->
   value for key, value of res
 
 generateIcons: (spaces) ->
-  displays = @removeDuplicates((space['display'] for space in spaces))
+  displays = @removeDuplicates((space['monitor-appkit-nsscreen-screens-id'] for space in spaces))
   iconString = ""
   for display in displays
-    for space in spaces when space['display'] == display
-      iconString += "<li id=\"desktop#{space['index']}\">#{space['index']}</li>"
+    for space in spaces when space['monitor-appkit-nsscreen-screens-id'] == display
+      iconString += "<li id=\"desktop#{space['workspace']}\">#{space['workspace']}</li>"
     if display < displays.length
       iconString += "<li>—</li>"
   return iconString
@@ -78,8 +78,9 @@ update: (output, domEl) ->
     return
   parsed = JSON.parse(output)
   spaces = parsed['spaces']
-  displays = parsed['displays']
-  didx = (d for d in displays when d.id is display)[0].index
+  # displays = parsed['displays']
+  # didx = (d for d in displays when d.id is display)[0].index
+  didx = display
 
   if ($(domEl).find('.spaces-container').attr('data-count') != spaces.length.toString())
     $(domEl).find('.spaces-container').attr('data-count', "#{spaces.length}")
@@ -87,10 +88,11 @@ update: (output, domEl) ->
   else
     $(domEl).find('li.visible').removeClass('visible')
   for space in spaces
-    if space['is-visible'] and didx == space['display']
-      $(domEl).find("li#desktop#{space['index']}").addClass('visible')
+    if space['workspace-is-visible'] and didx == space['monitor-appkit-nsscreen-screens-id']
+      $(domEl).find("li#desktop#{space['workspace']}").addClass('visible')
     # if space['windows'].length
-    if space['first-window'] != 0 and space['last-window'] != 0
-      $(domEl).find("li#desktop#{space['index']}").removeClass('empty')
+    # if space['first-window'] != 0 and space['last-window'] != 0
+    if space['windows']
+      $(domEl).find("li#desktop#{space['workspace']}").removeClass('empty')
     else
-      $(domEl).find("li#desktop#{space['index']}").addClass('empty')
+      $(domEl).find("li#desktop#{space['workspace']}").addClass('empty')

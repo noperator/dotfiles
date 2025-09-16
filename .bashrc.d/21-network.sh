@@ -28,6 +28,9 @@ if [[ "$OSTYPE" == 'linux-gnu'* ]]; then
     alias ua='ufw allow'
     alias ud='ufw delete'
 
+    # delete rules by regex match
+    # us | grep -E '<MATCH>' | grep -oE '\[[ 0-9]+\]' | tr -d '[] ' | sort -rn | while read NUM; do yes | ud "$NUM"; done
+
     # Misc.
     pgw() { ping $(ip route | awk '$1 == "default" {print $3}'); }
     bt() {
@@ -57,4 +60,29 @@ syn() { sudo nmap -oG - -Pn -sS -p "$2" "$1" | grep -oE 'Ports:.*'; }
 alias dg='dig @8.8.8.8 google.com'
 sshc() {
     ssh -G "$1" | grep -E '^(user|hostname|port|identityfile) '
+}
+
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+
+    # Get the original macOS ssh-agent socket
+    SSH_AGENT_PID=$(pgrep -u "$USER" ssh-agent | sort -n | head -n 1)
+    if [[ -z "$SSH_AGENT_PID" ]]; then
+        eval "$(ssh-agent -s)" >/dev/null
+    else
+        SSH_AUTH_SOCK=$(lsof -U | awk -v pid="$SSH_AGENT_PID" '$1 == "ssh-agent" && $2 == pid {print $NF}')
+        export SSH_AGENT_PID
+        export SSH_AUTH_SOCK
+    fi
+
+    # Kill any other ssh-agents
+    for PID in $(pgrep -u "$USER" ssh-agent | sort -n | tail -n +2); do
+        kill "$PID"
+    done
+
+fi
+
+# sfnl port host
+sfnl() {
+    ssh -fNL "127.0.0.1:$1:127.0.0.1:$1" "$2"
+    echo "http://127.0.0.1:$1"
 }

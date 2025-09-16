@@ -66,14 +66,24 @@ case "$OSTYPE" in
     done
     ;;
 'darwin'*)
+    link .hammerspoon
     link .finicky.js
     link .skhdrc.yabai .skhdrc
     link .yabairc
     link .config/uebersicht/WidgetSettings.json 'Library/Application Support/tracesOf.Uebersicht/'
     link .config/uebersicht/widgets 'Library/Application Support/Übersicht/'
     link .config/arc/StorableKeyBindings.json 'Library/Application Support/Arc/'
-    # for PROFILE in $(ls "$HOME/Library/Application Support/Firefox/Profiles/"); do
-    #     link .config/firefox/user.js "Library/Application Support/Firefox/Profiles/$PROFILE"
-    # done
+    ls LaunchAgents/*.plist | while read -r FILE; do
+        link "$FILE" 'Library/LaunchAgents/'
+    done
+
+    for corner in tl tr bl br; do
+        defaults write com.apple.dock "wvous-$corner-corner" -int 0   # clear hot corner
+        defaults write com.apple.dock "wvous-$corner-modifier" -int 0 # clear corner modifier
+    done
+    defaults write com.apple.dock static-only -bool true # no pinned apps in dock
+    killall Dock
+    defaults write com.apple.finder CreateDesktop false # no desktop icons
+    killall Finder
     ;;
 esac

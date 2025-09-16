@@ -115,7 +115,7 @@ restart-win-mgmt() {
     # Save currently visible spaces so we can return back to them later.
     #
     # TODO: Save window arrangement, too.
-    VIS=$(get-visible-spaces)
+    # VIS=$(get-visible-spaces)
     # LAY=$(get-layout)
 
     # Restart yabai, and cycle through all spaces so that the spaces in those
@@ -134,17 +134,17 @@ restart-win-mgmt() {
     done
     # sleep 1
     # notify 'Focusing spaces…'
-    notify 'Registering windows…'
-    focus-spaces $(yabai -m query --spaces | jq -r 'map(.index) | sort | @tsv')
+    # notify 'Registering windows…'
+    # focus-spaces $(yabai -m query --spaces | jq -r 'map(.index) | sort | @tsv')
 
     # Finally, return back to the previously visible spaces.
-    focus-spaces "$VIS"
-    # echo "$LAY" | bash
+    # focus-spaces "$VIS"
+    # # echo "$LAY" | bash
 
     # TODO: Factor the organize windows logic out more cleanly.
     # notify 'Organizing windows…'
     # "$(dirname $0)/organize-windows.sh"
-    ~/dotfiles/window-mgmt/organize-windows.sh
+    # ~/dotfiles/window-mgmt/organize-windows.sh
 
     # Refresh Uebersicht widgets (to update space indicators).
     osascript -e 'tell application id "tracesOf.Uebersicht" to refresh'

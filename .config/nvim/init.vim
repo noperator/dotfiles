@@ -31,6 +31,8 @@ Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install --frozen-lockfile --production',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html'] }
 Plug 'github/copilot.vim'
+Plug 'preservim/vim-markdown'
+Plug 'lewis6991/gitsigns.nvim'
 " require 'lspconfig'
 
 call plug#end()
@@ -46,7 +48,14 @@ require("completion")
 require("lsp")
 require("treesitter")
 require'lspconfig'.gopls.setup{}
-require'lspconfig'.tsserver.setup {}
+require'lspconfig'.ts_ls.setup {}
+require('gitsigns').setup{
+  on_attach = function(bufnr)
+    local gs = package.loaded.gitsigns
+    vim.keymap.set('n', '<leader>td', gs.toggle_deleted, {buffer = bufnr})
+    vim.keymap.set('n', '<leader>tw', gs.toggle_word_diff, {buffer = bufnr})
+  end
+}
 EOF
 
 " LSP mappings, borrowed from:
