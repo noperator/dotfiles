@@ -13,10 +13,13 @@ fi
 # - https://unix.stackexchange.com/a/12761
 REMOTE_SHELL='false'
 if [[ -n "$SSH_CONNECTION" ]] ||
+    [[ -n "$SHPOOL_SESSION_NAME" ]] ||
     [[ -v SSH_TTY ]] ||
     who -m | awk '{if ($NF ~ /\([^:]*\)/) {exit 0} else {exit 1}} END {if (NR == 0) {exit 1}}'; then
     REMOTE_SHELL='true'
 fi
+
+export REMOTE_SHELL
 
 if [[ "$REMOTE_SHELL" == 'true' ]]; then
    cat << 'EOF'

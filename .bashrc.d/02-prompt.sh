@@ -120,11 +120,18 @@ shpool_count() {
     fi
 }
 
+ssh_agent_pubkey_count() {
+    local count=$(ssh-add -l 2>/dev/null | wc -l)
+    if [[ "$count" -gt 0 ]]; then
+        echo -ne "${CLR[BBL]}:${CLR[END]}${CLR[BLU]}$count${CLR[END]}"
+    fi
+}
+
 PWD_ABBR="${PS_CLR[YEL]}\$(pwd_abbr)${PS_CLR[END]}"
 GIT_INFO="\$(git_info)"
 SHPOOL_INFO="\$([ -n \"\$SHPOOL_SESSION_NAME\" ] && echo \"${PS_CLR[BBL]}?${PS_CLR[BLU]}\$SHPOOL_SESSION_NAME${PS_CLR[END]}\")"
 PS1="$PWD_ABBR$SHPOOL_INFO$GIT_INFO"
-AUTHORITY="${PS_CLR[CYN]}\u${PS_CLR[BBL]}@${PS_CLR[MAG]}\h\$(shpool_count)${PS_CLR[BBL]}/"
+AUTHORITY="${PS_CLR[CYN]}\u\$(ssh_agent_pubkey_count)${PS_CLR[BBL]}@${PS_CLR[MAG]}\h\$(shpool_count)${PS_CLR[BBL]}/"
 PS1_CLR="${PS_CLR[CYN]}"
 PS2_CLR="${PS_CLR[CYN]}"
 PS1_SYM='$'

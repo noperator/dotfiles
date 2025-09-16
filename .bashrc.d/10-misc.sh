@@ -115,7 +115,21 @@ case "$OSTYPE" in
     alias wn="nohup play -nq -c 2 synth brownnoise band 5120 6144 &>/dev/null &"
     alias nn="$(which pkill) play"
 
-    alias pc='xclip'
+    if [[ "$REMOTE_SHELL" == 'true' ]]; then
+        pc() {
+            local input
+            if [ -p /dev/stdin ]; then
+                input=$(cat -)
+            else
+                input="$*"
+            fi
+            local encoded
+            encoded=$(echo -n "$input" | base64)
+            echo -en "\033]52;c;${encoded}\a"
+        }
+    else
+        alias pc='xclip'
+    fi
     alias susp='systemctl suspend'
     ;;
 esac
