@@ -8,7 +8,7 @@ alias vv="vim $HOME/.vimrc"
 alias vnv="vim $HOME/.config/nvim/init.vim"
 alias vk="vim $HOME/.config/kitty/kitty.conf"
 alias vf="vim $HOME/.finicky.js"
-alias va="vim $HOME/.config/alacritty/alacritty.yml"
+alias va="vim $HOME/.config/alacritty/alacritty.toml"
 tbh() { tail -n $(if [[ -z "$1" ]]; then echo 10; else echo "$1"; fi) "$HOME/.bash_history"; }
 gbh() { grep -iE --color "$@" "$HOME/.bash_history"; }
 gbr() { grep -iE --color "$@" "$HOME/.bashrc"; }
