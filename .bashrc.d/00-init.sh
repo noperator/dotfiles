@@ -2,6 +2,7 @@
 
 export VISUAL='vim'
 export EDITOR="$VISUAL"
+export SYSTEMD_EDITOR="$VISUAL"
 export HISTCONTROL='ignorespace'
 export DIALOGRC="$HOME/.dialogrc"
 export SSH_AUTH_SOCK="$HOME/.ssh/ssh-agent.$HOSTNAME.sock"
@@ -16,6 +17,11 @@ export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
 export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX"
 # export MANPATH="$HOMEBREW_PREFIX/share/man${MANPATH+:$MANPATH}:";
 # export INFOPATH="$HOMEBREW_PREFIX/share/info:${INFOPATH:-}";
+
+# nvm stuff
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # Prepend directories to PATH without the variable growing each time this file is sourced.
 OLD_PATH=$(echo "$PATH" | tr ':' '\n' | uniq | tr '\n' ':')
