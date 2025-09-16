@@ -2,7 +2,7 @@
 
 # Various wrappers for ls.
 if which eza &>/dev/null; then
-    alias ll='eza -la'
+    alias ll='eza -la --group'
     alias lt='ll -s mod'
     alias lh='ll -s size'
     alias lg='lt --git'

@@ -80,6 +80,15 @@ case "$OSTYPE" in
         SHELL_PID=$(pgrep -P "$TERM_PID" ${SHELL##*/})
         DEST_WD=$(readlink -e "/proc/$SHELL_PID/cwd")
     fi
+
+    # Now we mimic yabai's split ratio. Running `i3-msg split` forces the new
+    # window to always open in a new container; this allows us to change
+    # orientation with `i3-msg layout toggle split`.
+    DIMENSIONS=$(xdotool getwindowgeometry --shell $(xdotool getactivewindow))
+    i3-msg split h
+    if [[ $(echo "$DIMENSIONS" | awk -F = '/HEIGHT/ {print $2}') -gt $(echo "$DIMENSIONS" | awk -F = '/WIDTH/ {print $2}') ]]; then
+        i3-msg split v
+    fi
     ;;
 esac
 
