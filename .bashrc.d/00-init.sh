@@ -5,7 +5,9 @@ export EDITOR="$VISUAL"
 export SYSTEMD_EDITOR="$VISUAL"
 export HISTCONTROL='ignorespace'
 export DIALOGRC="$HOME/.dialogrc"
-# export SSH_AUTH_SOCK="$HOME/.ssh/ssh-agent.$HOSTNAME.sock"
+if [[ "$REMOTE_SHELL" == 'false' ]]; then
+    export SSH_AUTH_SOCK="$HOME/.ssh/ssh-agent.$HOSTNAME.sock"
+fi
 export TMPDIR='/tmp/'
 export NPM_PACKAGES="$HOME/.npm-packages"
 export TIMEFORMAT='%3lR' # Only show elapsed time.

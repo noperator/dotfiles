@@ -257,7 +257,7 @@ if which shpool &>/dev/null; then
     complete -F _shpool_session_complete ta
 else
     alias tl='tmux ls'
-    alias tn='tmux new -s'
+    tn() { tmux new -s "$1"; }
     alias ta='tmux attach -t'
     _tmux_session_complete() {
         local cur_word="${COMP_WORDS[COMP_CWORD]}"
