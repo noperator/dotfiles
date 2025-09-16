@@ -158,5 +158,44 @@ augroup END
 function! StripPromptString()
     let l:save_cursor = getpos(".")
     silent! %s/^𝄢 //e
+    silent! %s/^>>> //e
     call setpos('.', l:save_cursor)
 endfunction
+
+nnoremap <C-n> :set number! relativenumber!<CR>
+
+if $REMOTE_SHELL == 'true'
+    function! SendViaOSC52(text)
+        let encoded = system('base64', a:text)
+        let encoded = substitute(encoded, '\n$', '', '')
+        let escaped = printf("\033]52;c;%s\007", encoded)
+        " Try different methods of outputting the escape sequence
+        if exists('g:neovim_terminal')
+            call chansend(g:neovim_terminal, escaped)
+        elseif exists('$TMUX')
+            " For tmux we need to escape % and \ characters
+            let escaped = substitute(escaped, '\', '\\\\', 'g')
+            let escaped = substitute(escaped, '%', '%%', 'g')
+            call system('tmux load-buffer -w -', escaped)
+        else
+            " Regular terminal
+            if has('nvim')
+                call chansend(v:stderr, escaped)
+            else
+                execute "silent! !echo " . shellescape(escaped)
+            endif
+        endif
+    endfunction
+
+    let g:clipboard = {
+          \   'name': 'osc52',
+          \   'copy': {
+          \      '+': {lines, regtype -> SendViaOSC52(join(lines, "\n"))},
+          \      '*': {lines, regtype -> SendViaOSC52(join(lines, "\n"))}
+          \    },
+          \   'paste': {
+          \      '+': {-> []},
+          \      '*': {-> []}
+          \   }
+          \ }
+endif
