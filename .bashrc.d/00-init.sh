@@ -13,6 +13,7 @@ export NPM_PACKAGES="$HOME/.npm-packages"
 export TIMEFORMAT='%3lR' # Only show elapsed time.
 # tabs -4                  # Set tab interval.
 export GPG_TTY=$(tty)
+export PYTHON_BASIC_REPL=1 # https://github.com/python/cpython/issues/118840
 
 # Homebrew stuff.
 export HOMEBREW_PREFIX="/opt/homebrew"
