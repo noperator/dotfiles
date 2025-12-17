@@ -42,6 +42,7 @@ for FILE in \
     .bashrc \
     .bashrc.d \
     .config \
+    .gitignore_global \
     .hushlogin \
     .inputrc \
     .inputrc.tmux \
@@ -87,3 +88,5 @@ case "$OSTYPE" in
     killall Finder
     ;;
 esac
+
+git config --global core.excludesfile ~/.gitignore_global

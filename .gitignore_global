@@ -1,0 +1,10 @@
+*.bak
+*.env
+*.log
+*.tmp
+*notes.txt
+.env/
+.venv/
+archive*/
+env/
+venv/
