@@ -3,6 +3,7 @@
 export VISUAL='vim'
 export EDITOR="$VISUAL"
 export SYSTEMD_EDITOR="$VISUAL"
+export SUDO_EDITOR="$VISUAL"
 export HISTCONTROL='ignorespace'
 export DIALOGRC="$HOME/.dialogrc"
 if [[ "$REMOTE_SHELL" == 'false' ]]; then

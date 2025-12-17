@@ -67,13 +67,13 @@ case "$OSTYPE" in
     done
     ;;
 'darwin'*)
-    link .hammerspoon
-    link .finicky.js
-    link .skhdrc.yabai .skhdrc
-    link .yabairc
+    # link .hammerspoon
+    # link .finicky.js
+    # link .skhdrc.yabai .skhdrc
+    # link .yabairc
     link .config/uebersicht/WidgetSettings.json 'Library/Application Support/tracesOf.Uebersicht/'
     link .config/uebersicht/widgets 'Library/Application Support/Übersicht/'
-    link .config/arc/StorableKeyBindings.json 'Library/Application Support/Arc/'
+    # link .config/arc/StorableKeyBindings.json 'Library/Application Support/Arc/'
     ls LaunchAgents/*.plist | while read -r FILE; do
         link "$FILE" 'Library/LaunchAgents/'
     done
