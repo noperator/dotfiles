@@ -239,7 +239,14 @@ fad() {
 
 # shopt -s huponexit
 if which shpool &>/dev/null; then
-    alias tl='shpool list'
+    tl() {
+        shpool list \
+            --connected-at \
+            --disconnected-at \
+            --date-format '%Y-%m-%dT%H:%M:%S' |
+            tee >/dev/null >(head -n 1) >(tail -n +2 | sort -Vk4) |
+            column -t
+    }
     tn() {
         local sess_name="${1:-shp-$(date +%s)}"
         local temp_rc=$(mktemp)
