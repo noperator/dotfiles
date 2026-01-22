@@ -41,6 +41,7 @@ for FILE in \
     .bash_profile \
     .bashrc \
     .bashrc.d \
+    .commitlintrc.js \
     .config \
     .gitignore_global \
     .hushlogin \
@@ -54,6 +55,9 @@ for FILE in \
     nvim; do
     link "$FILE"
 done
+
+# Global git hooks (Conventional Commits, etc.)
+git config --global core.hooksPath "$HOME/dotfiles/git/hooks"
 
 # OS-specific files.
 case "$OSTYPE" in

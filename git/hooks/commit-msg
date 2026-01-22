@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Allow bypass
+[ -f .git/NO_COMMITLINT ] && exit 0
+
+# Only run if commitlint is available
+# npm install -g @commitlint/cli @commitlint/config-conventional
+command -v npx >/dev/null 2>&1 || exit 0
+
+npx --no -- commitlint \
+  --config "$HOME/.commitlintrc.js" \
+  --edit "$1"
