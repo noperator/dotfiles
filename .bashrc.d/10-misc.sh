@@ -240,12 +240,26 @@ fad() {
 # shopt -s huponexit
 if which shpool &>/dev/null; then
     tl() {
-        shpool list \
-            --connected-at \
-            --disconnected-at \
-            --date-format '%Y-%m-%dT%H:%M:%S' |
-            tee >/dev/null >(head -n 1) >(tail -n +2 | sort -Vk4) |
-            column -t
+        {
+            shpool list --json |
+                jq -r '.sessions |
+                    sort_by([
+                        ({
+                            "Disconnected": 0,
+                            "Attached": 1
+                        }[.status]),
+                        (if .status == "Attached" then .connected_at_unix_ms else .disconnected_at_unix_ms end)
+                    ]) |
+                    map(
+                        .started_at_unix_ms = (.started_at_unix_ms / 1000 | todate) |
+                        .last_connected_at_unix_ms = (if .last_connected_at_unix_ms == null then null else (.last_connected_at_unix_ms / 1000 | todate) end) |
+                        .last_disconnected_at_unix_ms = (if .last_disconnected_at_unix_ms == null then null else (.last_disconnected_at_unix_ms / 1000 | todate) end) |
+                        to_entries
+                    ) | tab | @csv' |
+                sed -E 's/_at_unix_ms//g' |
+                xsv select name,status,started,last_connected,last_disconnected |
+                xsv table
+        } 2>/dev/null
     }
     tn() {
         local sess_name="${1:-shp-$(date +%s)}"

@@ -40,7 +40,41 @@ gc() {
 
 alias ga='git add'
 alias gau='git update-index --assume-unchanged'
-alias gb='git branch -a'
+# alias gb='git branch -a'
+gb() {
+    local merged
+    merged=$(git branch --merged main 2>/dev/null | sed 's/^[* ]*//')
+
+    git branch --format=$'%(committerdate:iso)\t%(committerdate:short)\t%(HEAD)\t%(refname:short)\t%(subject)' |
+        sort -rt$'\t' -k1 |
+        cut -f2- |
+        awk -v merged="$merged" -F'\t' '
+            BEGIN { split(merged, a, "\n"); for (i in a) m[a[i]] = 1 }
+            {
+                date=$1; head=$2; name=$3; subj=$4
+                is_current = (head == "*")
+                is_merged  = (name in m) && !is_current
+                is_main    = (name == "main")
+
+                ahead = ""; behind = ""
+                if (!is_merged && !is_main) {
+                    cmd = "git rev-list --left-right --count main..." name " 2>/dev/null"
+                    if ((cmd | getline result) > 0) {
+                        split(result, ab, "\t")
+                        behind = "-" ab[1]; ahead = "+" ab[2]
+                    }
+                    close(cmd)
+                }
+
+                display_name = name
+                if (is_current) display_name = "\033[32m" name "\033[0m"
+                line = date "\t" head " " display_name "\t" ahead "\t" behind "\t" subj
+                print is_merged ? "\033[2m" line "\033[0m" : line
+            }
+        ' |
+        column -ts$'\t'
+}
+
 alias gcl="git config --list --show-origin | column -t -s \"$(printf '\t')\""
 alias gcv='git commit -v'
 alias gd='git diff'
