@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# Determine the default branch using a fallback chain.
+_git_default_branch() {
+    local branch
+    branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||')
+    [[ -n "$branch" ]] && echo "$branch" && return 0
+
+    for b in main master; do
+        if git show-ref --verify --quiet "refs/heads/$b"; then
+            echo "$b" && return 0
+        fi
+    done
+
+    return 1
+}
+
 # Print a brief, color-coded Git log truncated at the terminal window width.
 # Can alternatively use `tput rmam` and `tput smam` to disable and re-enable
 # line wrapping, respectively.
@@ -8,6 +23,18 @@ gl() {
         FOLLOW=''
     else
         FOLLOW='--follow'
+    fi
+
+    local base_branch current_branch
+    base_branch=$(_git_default_branch 2>/dev/null)
+    current_branch=$(git branch --show-current 2>/dev/null)
+
+    # Build set of commits unique to this branch (not reachable from base)
+    declare -A _unique_hashes
+    if [[ -n "$base_branch" && "$current_branch" != "$base_branch" ]]; then
+        while IFS= read -r h; do
+            _unique_hashes["$h"]=1
+        done < <(git log "${base_branch}..HEAD" --format='%h' 2>/dev/null)
     fi
 
     export COLUMNS
@@ -19,9 +46,18 @@ gl() {
             --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an <%ae>%Cgreen%d %Creset%s' $FOLLOW "$@"
         echo
     ) |
-        while read LINE; do
-            # Cut while ignoring ANSI-type escape sequences. Regex source:
-            # - https://unix.stackexchange.com/a/46982
+        while IFS= read -r LINE; do
+            # Dim commits that already exist in the base branch
+            if [[ -n "$base_branch" && "$current_branch" != "$base_branch" ]]; then
+                local raw hash
+                raw=$(sed 's/\x1b\[[0-9;]*m//g' <<<"$LINE")
+                hash=$(awk '{print $1}' <<<"$raw")
+                if [[ -n "$hash" && -z "${_unique_hashes[$hash]}" ]]; then
+                    # LINE=$(sed 's/\x1b\[m/\x1b[2m/g; s/\x1b\[0m/\x1b[2m/g' <<<"$LINE")
+                    LINE=$(sed 's/\x1b\[m/\x1b[0;2m/g; s/\x1b\[0m/\x1b[0;2m/g' <<<"$LINE")
+                    LINE=$'\e[2m'"${LINE}"
+                fi
+            fi
             perl <<<"$LINE" -pe 's/^((?:(?>(?:\e\[.*?m)*).){$ENV{COLUMNS}}).*/$1\e[m/'
         done
 }
@@ -42,23 +78,26 @@ alias ga='git add'
 alias gau='git update-index --assume-unchanged'
 # alias gb='git branch -a'
 gb() {
+    local base_branch
+    base_branch=$(_git_default_branch 2>/dev/null) || base_branch="main"
+
     local merged
-    merged=$(git branch --merged main 2>/dev/null | sed 's/^[* ]*//')
+    merged=$(git branch --merged "$base_branch" 2>/dev/null | sed 's/^[* ]*//')
 
     git branch --format=$'%(committerdate:iso)\t%(committerdate:short)\t%(HEAD)\t%(refname:short)\t%(subject)' |
         sort -rt$'\t' -k1 |
         cut -f2- |
-        awk -v merged="$merged" -F'\t' '
+        awk -v merged="$merged" -v base="$base_branch" -F'\t' '
             BEGIN { split(merged, a, "\n"); for (i in a) m[a[i]] = 1 }
             {
                 date=$1; head=$2; name=$3; subj=$4
                 is_current = (head == "*")
                 is_merged  = (name in m) && !is_current
-                is_main    = (name == "main")
+                is_base    = (name == base)
 
                 ahead = ""; behind = ""
-                if (!is_merged && !is_main) {
-                    cmd = "git rev-list --left-right --count main..." name " 2>/dev/null"
+                if (!is_merged && !is_base) {
+                    cmd = "git rev-list --left-right --count " base "..." name " 2>/dev/null"
                     if ((cmd | getline result) > 0) {
                         split(result, ab, "\t")
                         behind = "-" ab[1]; ahead = "+" ab[2]
@@ -91,6 +130,111 @@ alias gss='git status -s'
 
 trt() {
     wget 'https://gist.githubusercontent.com/noperator/4eba8fae61a23dc6cb1fa8fbb9122d45/raw/eab7566e53b33240ff6bf7c3241c86a4048ed374/README.md'
+}
+
+# pf() {
+#     git ls-files |
+#         parallel file | grep text | sed -E 's/:.*//' |
+#         while read file; do
+#             print-file "$file"
+#         done |
+#         cat -s
+# }
+
+# Usage:
+#   git_clone_pin <url-or-repo> [ref]
+git_clone_pin() {
+    if (($# < 1 || $# > 2)); then
+        echo "Usage: git_clone_pin <url-or-repo> [ref]" >&2
+        return 1
+    fi
+
+    local input="$1" explicit_ref="${2:-}"
+    input="${input%%\?*}"
+    input="${input%%\#*}"
+    input="${input%/}"
+
+    local repo_url="" repo_name="" ref_from_url="" ref=""
+    local dest_suffix dest
+
+    # ---- parse GitHub URLs
+    if [[ "$input" =~ ^https?://github\.com/([^/]+)/([^/]+)(/.*)?$ ]]; then
+        local owner="${BASH_REMATCH[1]}"
+        local repo="${BASH_REMATCH[2]%.git}"
+        local rest="${BASH_REMATCH[3]:-}"
+
+        repo_url="https://github.com/$owner/$repo.git"
+        repo_name="$repo"
+
+        # Extract ref from /releases/tag/<ref> OR /tree/<ref> OR /commit/<sha>
+        if [[ "$rest" =~ ^/releases/tag/(.+)$ || "$rest" =~ ^/tree/(.+)$ || "$rest" =~ ^/commit/([0-9a-fA-F]{7,40})$ ]]; then
+            ref_from_url="${BASH_REMATCH[1]}"
+        fi
+    else
+        # Assume it's already a git remote URL
+        repo_url="$input"
+        repo_name="$(basename -s .git "$repo_url")"
+    fi
+
+    ref="${explicit_ref:-$ref_from_url}"
+    dest_suffix="${ref:-default}"
+    dest_suffix="${dest_suffix//\//-}"
+    dest_suffix="${dest_suffix// /_}"
+    dest="${repo_name}-${dest_suffix}"
+
+    # ---- common git opts (no blob filtering)
+    local -a G=(git -c protocol.version=2)
+    local -a CLONE_SHALLOW=(clone --depth 1 --single-branch --no-tags)
+    local -a FETCH_SHALLOW=(fetch --depth 1 --no-tags)
+    local -a ENV=(env GIT_TERMINAL_PROMPT=0)
+
+    _clone_default() { "${ENV[@]}" "${G[@]}" "${CLONE_SHALLOW[@]}" "$repo_url" "$1"; }
+    _clone_ref() { "${ENV[@]}" "${G[@]}" "${CLONE_SHALLOW[@]}" --branch "$1" "$repo_url" "$2"; }
+
+    _fetch_checkout() { # $1=commit-ish $2=dest
+        mkdir -p "$2" && cd "$2" || return 1
+        "${G[@]}" init -q || return 1
+        "${G[@]}" remote add origin "$repo_url" || return 1
+        "${ENV[@]}" "${G[@]}" "${FETCH_SHALLOW[@]}" origin "$1" || return 1
+        "${G[@]}" checkout -q FETCH_HEAD
+    }
+
+    # ---- no ref: shallow default branch
+    if [[ -z "$ref" ]]; then
+        echo "Shallow cloning default branch -> $dest"
+        _clone_default "$dest"
+        return $?
+    fi
+
+    # ---- if it looks like a SHA, try commit first
+    if [[ "$ref" =~ ^[0-9a-fA-F]{7,40}$ ]]; then
+        echo "Fetching commit -> $dest"
+        _fetch_checkout "$ref" "$dest" && return 0
+        cd - >/dev/null 2>&1 || true
+        rm -rf "$dest"
+    fi
+
+    # ---- try tag
+    if "${G[@]}" ls-remote --tags "$repo_url" "refs/tags/$ref" | grep -q .; then
+        echo "Cloning tag '$ref' -> $dest"
+        _clone_ref "$ref" "$dest" && return 0
+    fi
+
+    # ---- try branch
+    if "${G[@]}" ls-remote --heads "$repo_url" "refs/heads/$ref" | grep -q .; then
+        echo "Cloning branch '$ref' -> $dest"
+        _clone_ref "$ref" "$dest" && return 0
+    fi
+
+    # ---- last try: commit-ish
+    echo "Trying '$ref' as commit-ish -> $dest"
+    _fetch_checkout "$ref" "$dest" && return 0
+
+    # ---- fallback
+    echo "Pin '$ref' not found. Falling back to default branch -> ${repo_name}-default"
+    cd - >/dev/null 2>&1 || true
+    rm -rf "$dest"
+    _clone_default "${repo_name}-default"
 }
 
 _stat_size() {
