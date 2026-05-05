@@ -7,6 +7,11 @@
 # npm install -g @commitlint/cli @commitlint/config-conventional
 command -v npx >/dev/null 2>&1 || exit 0
 
+if ! command -v commitlint >/dev/null 2>&1 && ! npm list -g commitlint >/dev/null 2>&1; then
+  echo "commitlint not installed. Run: npm install -g @commitlint/cli @commitlint/config-conventional"
+  exit 1
+fi
+
 npx --no -- commitlint \
   --config "$HOME/.commitlintrc.js" \
   --edit "$1"

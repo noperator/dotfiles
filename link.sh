@@ -44,6 +44,7 @@ for FILE in \
     .commitlintrc.js \
     .config \
     .gitignore_global \
+    .golangci.yml \
     .hushlogin \
     .inputrc \
     .inputrc.tmux \

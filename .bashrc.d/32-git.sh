@@ -93,11 +93,82 @@ trt() {
     wget 'https://gist.githubusercontent.com/noperator/4eba8fae61a23dc6cb1fa8fbb9122d45/raw/eab7566e53b33240ff6bf7c3241c86a4048ed374/README.md'
 }
 
-pf() {
-    git ls-files |
-        parallel file | grep text | sed -E 's/:.*//' |
-        while read file; do
-            print-file "$file"
-        done |
-        cat -s
+_stat_size() {
+    if [[ "$(uname)" == "Darwin" ]]; then
+        stat -f '%z' "$1"
+    else
+        stat -c '%s' "$1"
+    fi
 }
+
+gf() {
+    local OPTIND=1
+    local sep=$'\x1f'
+    local n_flag=0
+
+    while getopts "n" opt; do
+        case $opt in
+        n) n_flag=1 ;;
+        esac
+    done
+
+    if [[ "$n_flag" -eq 1 ]]; then
+        git ls-files | while read -r file; do
+            grep -qI '' "$file" 2>/dev/null && echo "$file"
+        done | sort
+    else
+        git ls-files | while read -r file; do
+            grep -qI '' "$file" 2>/dev/null && echo "$(_stat_size "$file")${sep}${file}"
+        done | sort -n | column -ts "$sep"
+    fi
+}
+
+pf() {
+    if [ -t 0 ]; then
+        gf -n | while read -r file; do
+            print-file "$file"
+        done
+    else
+        while read -r file; do
+            print-file "$file"
+        done
+    fi
+}
+
+gw() {
+    local branch="$1"
+    local root=$(git rev-parse --show-toplevel 2>/dev/null || (cd "$(git rev-parse --git-common-dir)/.." && pwd))
+    root=$(git -C "$root" rev-parse --show-toplevel 2>/dev/null)
+
+    if [[ -z "$branch" ]]; then
+        gb
+        return
+    fi
+
+    # Check if branch is already checked out in any worktree
+    local existing=$(git worktree list --porcelain | awk -v b="$branch" '
+        /^worktree / { wt=$2 }
+        /^branch refs\/heads\// { br=substr($2,12); if (br==b) print wt }
+    ')
+    if [[ -n "$existing" ]]; then
+        cd "$existing"
+        return
+    fi
+
+    local path="$root/.worktrees/$branch"
+    if git show-ref --verify --quiet "refs/heads/$branch"; then
+        git worktree add "$path" "$branch"
+    else
+        git worktree add -b "$branch" "$path"
+    fi && cd "$path"
+}
+
+_gw_complete() {
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local branches=$(git branch --format='%(refname:short)' 2>/dev/null)
+    COMPREPLY=($(compgen -W "$branches" -- "$cur"))
+}
+complete -F _gw_complete gw
+
+alias gr='cd $(git rev-parse --show-toplevel)'
+alias grr='cd $(git -C "$(git rev-parse --git-common-dir)/.." rev-parse --show-toplevel)'
