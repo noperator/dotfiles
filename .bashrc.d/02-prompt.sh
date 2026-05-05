@@ -209,11 +209,14 @@ PS1="$PS1\n$PS1_CLR$PS1_SYM${PS_CLR[END]} "
 PS2="$PS2_CLR$PS2_SYM${PS_CLR[END]} "
 
 set_title() {
+    local title
     if [[ "$REMOTE_SHELL" == 'true' ]]; then
-        echo -ne "\e]2;${USER}@${HOSTNAME}:${PWD}\007"
+        title="${USER}@${HOSTNAME}:${PWD}"
     else
-        echo -ne "\e]2;${PWD}\007"
+        title="$PWD"
     fi
+    echo -ne "\e]2;${title}\007"
+    export MEMBRANE_TITLE="$title"
 }
 
 prompt_command() {
