@@ -39,3 +39,5 @@ PATH="/opt/homebrew/bin:$PATH"
     aerospace list-workspaces --all --json --format '%{workspace} %{workspace-is-focused} %{workspace-is-visible} %{monitor-id} %{monitor-appkit-nsscreen-screens-id} %{monitor-name}'
     aerospace list-windows --all --json --format '%{window-id} %{window-title} %{window-is-fullscreen} %{app-bundle-id} %{app-name} %{app-pid} %{app-exec-path} %{app-bundle-path} %{workspace} %{workspace-is-focused} %{workspace-is-visible} %{monitor-id} %{monitor-appkit-nsscreen-screens-id} %{monitor-name}' | jq 'group_by(.workspace) | map({workspace: .[0].workspace, windows: map(.)})'
 } | jq -s 'add | group_by(.workspace) | map(add)' | jo spaces=:/dev/stdin
+
+# } | jq -s 'add | group_by(.workspace) | map(add)' | jo spaces=:/dev/stdin | jq 'walk(if type == "object" and .["monitor-appkit-nsscreen-screens-id"] == 2 then ."monitor-appkit-nsscreen-screens-id" |= 3 else . end)'

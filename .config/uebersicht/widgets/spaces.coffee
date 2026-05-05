@@ -2,6 +2,8 @@ command: "./query-spaces.sh"
 
 refreshFrequency: 1000
 
+BUILTIN_DISPLAY_NAME: "Built-in Retina Display"
+
 removeDuplicates: (ar) ->
   if ar.length == 0
     return []
@@ -20,9 +22,7 @@ generateIcons: (spaces) ->
   return iconString
 
 render: (output) ->
-  # spaces = JSON.parse(output)
   parsed = JSON.parse(output)
-  # console.log(parsed)
   spaces = parsed['spaces']
   htmlString = """
     <span class="spaces-container" data-count="#{spaces.length}">
@@ -70,7 +70,6 @@ style: """
 """
 
 update: (output, domEl) ->
-  # https://github.com/felixhageloh/uebersicht/issues/216#issuecomment-231367936
   display = parseInt(window.location.pathname.split("/")[1])
 
   if (output == "")
@@ -78,9 +77,12 @@ update: (output, domEl) ->
     return
   parsed = JSON.parse(output)
   spaces = parsed['spaces']
-  # displays = parsed['displays']
-  # didx = (d for d in displays when d.id is display)[0].index
-  didx = display
+
+  # Find the NSScreen index aerospace has assigned to the built-in display.
+  # If our Ubersicht index matches it, we're the built-in. Otherwise we're
+  # whatever external display is connected — no need to know its name.
+  builtinScreenId = (space['monitor-appkit-nsscreen-screens-id'] for space in spaces when space['monitor-name'] == @BUILTIN_DISPLAY_NAME)[0]
+  isBuiltin = display == builtinScreenId
 
   if ($(domEl).find('.spaces-container').attr('data-count') != spaces.length.toString())
     $(domEl).find('.spaces-container').attr('data-count', "#{spaces.length}")
@@ -88,10 +90,12 @@ update: (output, domEl) ->
   else
     $(domEl).find('li.visible').removeClass('visible')
   for space in spaces
-    if space['workspace-is-visible'] and didx == space['monitor-appkit-nsscreen-screens-id']
+    onThisDisplay = if isBuiltin
+      space['monitor-name'] == @BUILTIN_DISPLAY_NAME
+    else
+      space['monitor-name'] != @BUILTIN_DISPLAY_NAME
+    if space['workspace-is-visible'] and onThisDisplay
       $(domEl).find("li#desktop#{space['workspace']}").addClass('visible')
-    # if space['windows'].length
-    # if space['first-window'] != 0 and space['last-window'] != 0
     if space['windows']
       $(domEl).find("li#desktop#{space['workspace']}").removeClass('empty')
     else
