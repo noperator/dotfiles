@@ -340,3 +340,25 @@ yknotify-restart() {
 vae() {
     vim "$HOME/.config/aerospace/aerospace.toml"
 }
+
+ytt() {
+    local format="text"
+    local url
+
+    if [[ "$1" == "-t" || "$1" == "--timestamps" ]]; then
+        format="srt"
+        shift
+    fi
+
+    url="$1"
+
+    if [[ -z "$url" ]]; then
+        echo "usage: ytt [-t|--timestamps] <youtube-url>" >&2
+        return 2
+    fi
+
+    local id
+    id="$(yt-dlp --get-id "$url")" || return 1
+
+    youtube_transcript_api "$id" --languages en --format "$format"
+}
