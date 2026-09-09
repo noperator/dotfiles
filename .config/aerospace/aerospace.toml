@@ -226,10 +226,14 @@ run = ["layout floating"]
     # organ
     cmd-alt-g = 'exec-and-forget ~/dotfiles/misc/organ.sh'
 
+    # grayscale
+    cmd-shift-g = 'exec-and-forget ~/dotfiles/window-mgmt/gray.script toggle'
+
     alt-shift-h = ['join-with left', 'mode main']
     alt-shift-j = ['join-with down', 'mode main']
     alt-shift-k = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
+
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
