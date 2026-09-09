@@ -1,11 +1,12 @@
-command: "head -n 1 /var/tmp/blocks/termdown.txt 2>/dev/null"
+command: ""
 
-refreshFrequency: 900
+refreshFrequency: false
 
 render: (output) -> 
   ""
 
 update: (output, domEl) ->
+  output = output.replace(/[^0-9hms :]/g, '')
   for sid in ['#status', '#status-notch']
     status = $(sid)
     if status

@@ -11,7 +11,7 @@ refresh-status() {
 }
 
 VOICE=Tessa
-FILE=/var/tmp/blocks/termdown.txt
+FILE=$HOME/.cache/blocks/termdown.txt
 
 start-timer() {
     if [[ -e "$FILE" ]]; then
