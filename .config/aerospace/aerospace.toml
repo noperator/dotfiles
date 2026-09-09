@@ -73,6 +73,11 @@ automatically-unhide-macos-hidden-apps = false
     8 = 'secondary'
     9 = 'secondary'
 
+[[on-window-detected]]
+if.app-id = "com.1password.1password"
+if.window-title-regex-substring = "^[^—]+ — 1Password$"
+run = ["layout floating"]
+
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 # 'main' binding mode must be always presented
