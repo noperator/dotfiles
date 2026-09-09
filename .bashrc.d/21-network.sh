@@ -40,6 +40,21 @@ if [[ "$OSTYPE" == 'linux-gnu'* ]]; then
             ri3b_bt
         ) &
     }
+
+    randport() {
+        comm -13 \
+            <(
+                ss -ant |
+                    awk '$4 ~ /(127\.0\.0\.1|0\.0\.0\.0)/ {sub(/.*:/, "", $4); print $4}' |
+                    sort -u
+            ) \
+            <(
+                shuf -i 1024-65535 -n 10 |
+                    sort
+            ) |
+            head -n 1
+    }
+
 fi
 
 case "$OSTYPE" in
