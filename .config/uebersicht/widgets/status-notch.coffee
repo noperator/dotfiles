@@ -55,13 +55,17 @@ update: (output, domEl) ->
   # - Get the usable_space right
   # - Get the notch_width right
 
+  # Sanitize output before DOM injection.
+  escapeHtml = (s) -> s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')
+  output = escapeHtml(output)
+
   # Break string up so it fits on either side of the notch.
   fa_placehold = '@'.repeat(2)
   split = output.split(' ')
   str_right = ''
   for token in split.reverse()
-    pseudo_token = token.replace /@.*?@/g, (match) -> fa_placehold
-    if (str_right.replace /@.*?@/g, (match) -> fa_placehold).length + pseudo_token.length <= (usable_space - 1)
+    pseudo_token = token.replace /@[a-z0-9-]+@/g, (match) -> fa_placehold
+    if (str_right.replace /@[a-z0-9-]+@/g, (match) -> fa_placehold).length + pseudo_token.length <= (usable_space - 1)
       str_right = token + ' ' + str_right
     else
       break
@@ -69,7 +73,7 @@ update: (output, domEl) ->
 
   # Fill in any unused space on the right side with non-breaking space, and
   # fill the left in with the same amount of space.
-  margin = usable_space - (str_right.replace /@.*?@/g, (match) -> fa_placehold).length
+  margin = usable_space - (str_right.replace /@[a-z0-9-]+@/g, (match) -> fa_placehold).length
   if margin <= 0
     # margin = 1
     margin = 0
@@ -78,9 +82,9 @@ update: (output, domEl) ->
   else
     notch_str = str_left + '&nbsp;'.repeat(margin * 2 + notch_width) + str_right
   if debug
-    compare_str = ((notch_str.replace /@.*?@/g, (match) -> fa_placehold).replace /[^@]/g, (match) -> '#').replace /.$/, (match) -> ''
+    compare_str = ((notch_str.replace /@[a-z0-9-]+@/g, (match) -> fa_placehold).replace /[^@]/g, (match) -> '#').replace /.$/, (match) -> ''
   else
     compare_str = ''
-  notch_str = notch_str.replace /@.*?@/g, (match) -> "<i class='fas fa-fw fa-" + (match.replace /@/g, '') + "'></i>"
+  notch_str = notch_str.replace /@([a-z0-9-]+)@/g, (match, icon) -> "<i class='fas fa-fw fa-" + icon + "'></i>"
   notch_str += "<br/>" + compare_str
   $(domEl).find('#status-notch').html(notch_str)

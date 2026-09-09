@@ -19,5 +19,7 @@ style: """
   """
 
 update: (output, domEl) ->
-  output = output.replace /@.*?@/g, (match) -> "<i class='fas fa-fw fa-" + (match.replace /@/g, '') + "'></i>"
+  escapeHtml = (s) -> s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')
+  output = escapeHtml(output)
+  output = output.replace /@([a-z0-9-]+)@/g, (match, icon) -> "<i class='fas fa-fw fa-" + icon + "'></i>"
   $(domEl).find('#status').html(output)
