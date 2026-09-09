@@ -188,3 +188,7 @@ print-file() {
 bak() {
     mv -v "$1" "$1.$(date +%Y%m%d-%H%M%S).bak"
 }
+
+bakk() {
+    cp -v "$1" "$1.$(date +%Y%m%d-%H%M%S).bak"
+}
