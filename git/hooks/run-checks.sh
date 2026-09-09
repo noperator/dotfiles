@@ -1,4 +1,7 @@
 #!/bin/sh
+
+[ -f "$(git rev-parse --git-dir)/NO_CHECKS" ] && exit 0
+
 # Usage: run-checks.sh [--warn | --block | --all]
 # Default: --all
 MODE="${1:---all}"

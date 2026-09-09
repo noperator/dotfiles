@@ -1,17 +1,21 @@
 #!/bin/sh
 
 # Allow bypass
-[ -f .git/NO_COMMITLINT ] && exit 0
+[ -f "$(git rev-parse --git-dir)/NO_COMMITLINT" ] && exit 0
 
-# Only run if commitlint is available
-# npm install -g @commitlint/cli @commitlint/config-conventional
-command -v npx >/dev/null 2>&1 || exit 0
+COMMITLINT=$(command -v commitlint 2>/dev/null)
 
-if ! command -v commitlint >/dev/null 2>&1 && ! npm list -g commitlint >/dev/null 2>&1; then
-  echo "commitlint not installed. Run: npm install -g @commitlint/cli @commitlint/config-conventional"
-  exit 1
+if [ -z "$COMMITLINT" ]; then
+    echo "commitlint not installed"
+    exit 1
 fi
 
-npx --no -- commitlint \
-  --config "$HOME/.commitlintrc.js" \
-  --edit "$1"
+# Resolve the executable to its installed package, then expose that
+# installation's node_modules so commitlint can resolve shared configs.
+COMMITLINT=$(realpath "$COMMITLINT")
+NODE_MODULES=$(dirname "$(dirname "$(dirname "$COMMITLINT")")")
+export NODE_PATH="$NODE_MODULES${NODE_PATH:+:$NODE_PATH}"
+
+exec "$COMMITLINT" \
+    --config "$HOME/.commitlintrc.js" \
+    --edit "$1"
