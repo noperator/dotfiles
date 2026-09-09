@@ -41,16 +41,16 @@ if [[ "$WIFI_ENABLED" == 'false' ]]; then
 elif [[ "$WIFI_CONNECTED" == 'false' ]]; then
     echo 'NONE'
 else
-    get_iface_ipv4 "$WIFI_IFACE" >/var/tmp/blocks/ipv4-wif.txt
-    IPV4=$(abbr_ipv4 $(get_iface_ipv4 "$WIFI_IFACE"))
-    IPV6=$(abbr_ipv6 $(get_iface_ipv6 "$WIFI_IFACE"))
+    get_iface_ipv4 "$WIFI_IFACE" >"$BLOCKS_DIR/ipv4-wif.txt"
+    IPV4=$(abbr_ipv4 "$(get_iface_ipv4 "$WIFI_IFACE")")
+    IPV6=$(abbr_ipv6 "$(get_iface_ipv6 "$WIFI_IFACE")")
     WIFI_INFO=$(get_wifi_info "$WIFI_IFACE")
     SSID=$(awk <<<"$WIFI_INFO" '{print $1}')
     SIGNAL=$(awk <<<"$WIFI_INFO" '{print $2}')
     QUALITY=$(dbm_to_percent "$SIGNAL")%
     BSSID=$(~/Applications/WiFi\ Unredactor.app/Contents/MacOS/wifi-unredactor | jq -r '.bssid')
     OUI=$(echo "$BSSID" | tr : '\n' | head -n 3 | xargs printf "%02s" | tr '[:lower:]' '[:upper:]')
-    VENDOR=$(abbr_str $(get_vendor "$OUI"))
+    VENDOR=$(abbr_str "$(get_vendor "$OUI")")
     for VAR in IPV4 IPV6 SSID QUALITY VENDOR; do
         if [[ -n ${!VAR} ]]; then
             echo -n "${!VAR} " | tr ' ' ' '

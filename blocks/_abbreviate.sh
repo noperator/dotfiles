@@ -2,7 +2,7 @@
 
 abbr_ipv6() {
     if [[ ! -z "$1" ]]; then
-        python3 -c "from ipaddress import ip_address as ip; print(ip('$1').compressed)" |
+        python3 -c "import sys; from ipaddress import ip_address as ip; print(ip(sys.argv[1]).compressed)" "$1" |
             awk -F : '{print $1 "*" $NF}'
     fi
 }

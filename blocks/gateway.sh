@@ -8,12 +8,12 @@ print_fa_icon 'arrow-up'
 
 ROUTE_V4=$(get_default_route 'inet')
 if ! [[ -z "$ROUTE_V4" ]]; then
-    IP_V4=$(abbr_ipv4 $(awk <<<"$ROUTE_V4" '{print $1}'))
+    IP_V4=$(abbr_ipv4 "$(awk <<<"$ROUTE_V4" '{print $1}')")
     IFACE_V4=$(awk <<<"$ROUTE_V4" '{print $2}')
-    MAC_V4=$(get_neighbor 'inet' $(awk <<<"$ROUTE_V4" '{print $1}'))
+    MAC_V4=$(get_neighbor 'inet' "$(awk <<<"$ROUTE_V4" '{print $1}')")
     if [[ -n "$MAC_V4" ]]; then
         OUI_V4=$(sed <<<"$MAC_V4" -E 's/.{6}$//')
-        VENDOR_V4=$(abbr_str $(get_vendor "$OUI_V4"))
+        VENDOR_V4=$(abbr_str "$(get_vendor "$OUI_V4")")
     fi
 fi
 
@@ -22,10 +22,10 @@ if ! [[ -z "$ROUTE_V6" ]]; then
     IP_V6=$(awk <<<"$ROUTE_V6" '{print $1}')
     IFACE_V6=$(awk <<<"$ROUTE_V6" '{print $2}')
     MAC_V6=$(get_neighbor 'inet6' "$IP_V6")
-    IP_V6=$(abbr_ipv6 $(sed <<<$IP_V6 -E 's/%.*//'))
+    IP_V6=$(abbr_ipv6 "$(sed <<<"$IP_V6" -E 's/%.*//')")
     if [[ -n "$MAC_V6" ]]; then
         OUI_V6=$(sed <<<"$MAC_V6" -E 's/.{6}$//')
-        VENDOR_V6=$(abbr_str $(get_vendor "$OUI_V6"))
+        VENDOR_V6=$(abbr_str "$(get_vendor "$OUI_V6")")
     fi
 fi
 
