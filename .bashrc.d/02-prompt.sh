@@ -219,12 +219,21 @@ set_title() {
     export MEMBRANE_TITLE="$title"
 }
 
+set_terminal_bg() {
+    if [[ "$REMOTE_SHELL" == 'true' ]]; then
+        printf '\033]11;#451818\007'
+    else
+        printf '\033]111\007'
+    fi
+}
+
 prompt_command() {
     # Set Alacritty title to current working directory, which is picked up when
     # `window.dynamic_title: true` in Alacritty config. This isn't really
     # prompt-related, but this is the best place to put it so the terminal
     # title is always kept up to date.
     # - https://github.com/alacritty/alacritty/issues/3588#issuecomment-613189338
+    set_terminal_bg
     set_title
 
     LAST_EXIT_CODE="$?"
