@@ -71,7 +71,23 @@ csc() {
     # bat --paging never --style plain "$HOME"/.ssh/{config,*/config}
     cat "$HOME"/.ssh/{config,*/config}
 }
-skg() { ssh-keygen -t rsa -b 4096 -o -a 100 -q -N '' -f "$HOME/.ssh/$1"; }
+
+skg() {
+    local name="$1"
+    local passphrase="${2-}"
+
+    [[ -n "$name" ]] || {
+        echo "usage: skg <name> [passphrase]" >&2
+        return 1
+    }
+
+    ssh-keygen \
+        -t ed25519 \
+        -a 200 \
+        -q \
+        -N "$passphrase" \
+        -f "$HOME/.ssh/$name"
+}
 
 alias ssh="TERM=xterm-256color $(which ssh)"
 case "$OSTYPE" in
